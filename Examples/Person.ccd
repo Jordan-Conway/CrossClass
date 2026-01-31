@@ -1,0 +1,10 @@
+// Defines a public class called Person
+public class Person
+fields:
+    string name
+    int32 age
+    int32 height
+
+config:
+    // Instances are compared by reference    
+    equality : ref
