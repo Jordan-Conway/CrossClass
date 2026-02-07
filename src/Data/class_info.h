@@ -5,14 +5,14 @@
 #include "./Tokens/visability.h"
 
 struct Equality {
-    EqualityType type;
+    enum EqualityType type;
     char* (*excluded_fields)[];
 };
 
 struct ClassInfo {
-    Visability visability;
-    StoreType store_type;
+    enum Visability visability;
+    enum StoreType store_type;
     char* name;
-    Equality equality;
-    Field (*fields)[];
+    struct Equality equality;
+    struct Field (*fields)[];
 };
