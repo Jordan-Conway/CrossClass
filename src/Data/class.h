@@ -6,15 +6,13 @@
 
 struct Equality {
     EqualityType type;
-    char* excluded_fields;
-    int num_excluded_fields;
+    char* (*excluded_fields)[];
 };
 
-struct Class {
+struct ClassInfo {
     Visability visability;
     StoreType store_type;
-    Equality equality;
-    Field* fields;
-    int num_fields;
     char* name;
+    Equality equality;
+    Field (*fields)[];
 };

@@ -1,3 +1,6 @@
+#ifndef TOKEN_TYPE
+#define TOKEN_TYPE
+
 enum Type {
     CHAR,
     STRING,
@@ -15,7 +18,13 @@ enum Type {
     BOOL,
 
     VOID,
+
+    TIME,
+    DATE,
+    DATETIME,
     
     SELF, // Refers to the item being defined by the file
     DEFINED // Refers to an item defined in another file
 };
+
+#endif
