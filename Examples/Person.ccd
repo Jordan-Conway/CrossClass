@@ -1,10 +1,21 @@
 // Defines a public class called Person
-public class Person
-fields:
-    string name
-    int32 age
-    int32 height
+version: 0.1
 
-config:
-    // Instances are compared by reference    
-    equality : ref
+name: Person
+
+type: class
+
+visability: public
+
+equality: value
+
+fields:
+    name:
+        type: string
+        visability: public
+    age:
+        type: int32
+        visability: public
+    date_of_birth:
+        type: date
+        visability: private
