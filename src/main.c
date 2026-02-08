@@ -24,7 +24,6 @@ int main(int argc, char* argv[]) {
     
     line_list = get_head_of_line_data_list(line_list);
     delete_list(line_list);
-    free(line_list);
 
     fclose(fptr);
 

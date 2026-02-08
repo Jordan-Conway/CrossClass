@@ -1,4 +1,5 @@
 #include "./line_data_list.h"
+#include "Data/line_data.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,16 +15,22 @@ struct Line_Data_Node* create_line_data_list(){
 }
 
 struct Line_Data_Node* append_line_data(struct Line_Data_Node* list, struct Line_Data* data){
-    struct Line_Data_Node* tail = create_line_data_list();
+    struct Line_Data_Node* tail = list;
 
-    tail->prev = list;
-    tail->data = data;
-
-    if (list != NULL){
-        list->next = tail;
+    while (tail && tail->next) {
+        tail = tail->next;
     }
 
-    return tail;
+    struct Line_Data_Node* new_tail = create_line_data_list();
+
+    new_tail->prev = tail;
+    new_tail->data = data;
+
+    if (list != NULL){
+        tail->next = new_tail;
+    }
+
+    return new_tail;
 } 
 
 struct Line_Data_Node* get_head_of_line_data_list(struct Line_Data_Node *list){
@@ -39,22 +46,23 @@ struct Line_Data_Node* get_head_of_line_data_list(struct Line_Data_Node *list){
     return list;
 }
 
+void delete_data(struct Line_Data* data){
+    if (data) {
+        free(data->left);
+        free(data->right);
+    }
+    free(data);
+}
+
 void delete_list(struct Line_Data_Node* list){
-    struct Line_Data_Node* current_tail = get_head_of_line_data_list(list);
+    struct Line_Data_Node* current_head = get_head_of_line_data_list(list);
 
-    while (current_tail->next != NULL) {
-        current_tail = current_tail->next;
+    while (current_head->next != NULL) {
+        delete_data(current_head->data);
+        current_head = current_head->next;
+        free(current_head->prev);
     }
-    while (current_tail != NULL) {
-        if (current_tail->data != NULL) {
-            free(current_tail->data->left);
-            free(current_tail->data->right);
-            free(current_tail->data);
-        }
-        current_tail = current_tail->prev;
 
-        if(current_tail != NULL){
-            free(current_tail->next);
-        }
-    }
+    delete_data(current_head->data);
+    free(current_head);
 }
