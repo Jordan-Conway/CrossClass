@@ -1,9 +1,9 @@
 // Defines a public class called Person
 version: 0.1
 
-name: Person
-
 type: class
+
+name: Person
 
 visability: public
 

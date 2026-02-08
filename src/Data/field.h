@@ -1,10 +1,13 @@
+#ifndef FIELD
+#define FIELD
+
 #include <stdbool.h>
 #include "./Tokens/store_type.h"
-#include "./Tokens/type.h"
+#include "./Tokens/data_type.h"
 #include "./Tokens/visability.h"
 
 struct Field {
-    enum Type data_type;
+    enum DataType data_type;
     enum Visability visability;
     enum StoreType store_type;
     char* name;
@@ -12,3 +15,5 @@ struct Field {
     bool isSigned;
     bool isConstant;
 };
+
+#endif
