@@ -3,8 +3,6 @@
 #include "../../src/line_data_list.h"
 #include <CUnit/Basic.h>
 #include <CUnit/CUError.h>
-#include <CUnit/CUnit.h>
-#include <CUnit/TestDB.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -86,27 +84,8 @@ void test_get_head_of_line_data_list() {
     delete_list(list);
 }  
 
-int run_line_data_list_tests() {
-    CU_pSuite test_suite = NULL;
-
-    if (CU_initialize_registry() != CUE_SUCCESS){
-        return CU_get_error();
-    }
-
-    test_suite = CU_add_suite("Line Data List Tests Suite", NULL, NULL);
-
-    if (test_suite == NULL) {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
+void add_line_data_list_tests(CU_pSuite test_suite) {
     CU_add_test(test_suite, "Test Create Line Data List", test_create_line_data_list);
     CU_add_test(test_suite, "Test Append Line Data", test_append_line_data);
     CU_add_test(test_suite, "Test Get Head of Line Data List", test_get_head_of_line_data_list);
-
-    CU_basic_set_mode(CU_BRM_VERBOSE);
-    CU_basic_run_tests();
-    CU_cleanup_registry();
-
-    return CU_get_error();
 }
