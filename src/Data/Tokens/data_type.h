@@ -1,7 +1,7 @@
 #ifndef TOKEN_TYPE
 #define TOKEN_TYPE
 
-enum Type {
+enum DataType {
     CHAR,
     STRING,
 
