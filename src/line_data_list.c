@@ -45,11 +45,12 @@ void delete_list(struct Line_Data_Node* list){
     while (current_tail->next != NULL) {
         current_tail = current_tail->next;
     }
-
     while (current_tail != NULL) {
-        free(current_tail->data->left);
-        free(current_tail->data->right);
-        free(current_tail->data);
+        if (current_tail->data != NULL) {
+            free(current_tail->data->left);
+            free(current_tail->data->right);
+            free(current_tail->data);
+        }
         current_tail = current_tail->prev;
 
         if(current_tail != NULL){
