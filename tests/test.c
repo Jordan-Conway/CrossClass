@@ -1,3 +1,4 @@
+#include "./data_reader_tests/data_reader_tests.h"
 #include "./line_data_list_tests/line_data_list_tests.h"
 #include <CUnit/Basic.h>
 #include <CUnit/TestDB.h>
@@ -17,6 +18,7 @@ int main() {
     }
 
     add_line_data_list_tests(test_suite);
+    add_data_reader_tests(test_suite);
 
     CU_basic_set_mode(CU_BRM_VERBOSE);
     CU_basic_run_tests();
