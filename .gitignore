@@ -54,6 +54,9 @@ dkms.conf
 # debug information files
 *.dwo
 
+# Clang
+/.cache/*
+
 # build directory contents
 /build/*
 !/build/.gitkeep
