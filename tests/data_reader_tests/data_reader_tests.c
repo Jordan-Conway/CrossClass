@@ -10,7 +10,7 @@
 void test_read_ccd_file(){
     FILE* file = tmpfile();
 
-    fputs("Version:0.1\n", file);
+    fputs("version:0.1\n", file);
     fputs("// This is a comment\n", file);
     fputs("type:class\n", file);
     fputs("name:test\n", file);
@@ -23,18 +23,18 @@ void test_read_ccd_file(){
 
     CU_ASSERT_PTR_NOT_NULL(lines);
     CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "version"));
-    CU_ASSERT(strcmp(lines->data->right, "0.1"));
+    CU_ASSERT(strcmp(lines->data->left, "version") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "0.1") == 0);
 
     CU_ASSERT_PTR_NOT_NULL(lines->next);
     CU_ASSERT_PTR_NOT_NULL(lines->next->data);
-    CU_ASSERT(strcmp(lines->next->data->left, "type"));
-    CU_ASSERT(strcmp(lines->next->data->right, "class"));
+    CU_ASSERT(strcmp(lines->next->data->left, "type") == 0);
+    CU_ASSERT(strcmp(lines->next->data->right, "class") == 0);
 
     CU_ASSERT_PTR_NOT_NULL(lines->next);
     CU_ASSERT_PTR_NOT_NULL(lines->next->data);
-    CU_ASSERT(strcmp(lines->next->data->left, "name"));
-    CU_ASSERT(strcmp(lines->next->data->right, "test"));
+    CU_ASSERT(strcmp(lines->next->next->data->left, "name") == 0);
+    CU_ASSERT(strcmp(lines->next->next->data->right, "test") == 0);
 
     CU_ASSERT_PTR_NULL(lines->next->next->next);
 
