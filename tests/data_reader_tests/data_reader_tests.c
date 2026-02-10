@@ -14,6 +14,8 @@ void test_read_ccd_file(){
     fputs("// This is a comment\n", file);
     fputs("type:class\n", file);
     fputs("name:test\n", file);
+    fputs("fields:\n", file);
+    fputs("    test_field:\n", file);
 
     rewind(file);
 
@@ -25,18 +27,41 @@ void test_read_ccd_file(){
     CU_ASSERT_PTR_NOT_NULL(lines->data);
     CU_ASSERT(strcmp(lines->data->left, "version") == 0);
     CU_ASSERT(strcmp(lines->data->right, "0.1") == 0);
+    CU_ASSERT(lines->data->indentation == 0);
 
-    CU_ASSERT_PTR_NOT_NULL(lines->next);
-    CU_ASSERT_PTR_NOT_NULL(lines->next->data);
-    CU_ASSERT(strcmp(lines->next->data->left, "type") == 0);
-    CU_ASSERT(strcmp(lines->next->data->right, "class") == 0);
+    lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines->next);
-    CU_ASSERT_PTR_NOT_NULL(lines->next->data);
-    CU_ASSERT(strcmp(lines->next->next->data->left, "name") == 0);
-    CU_ASSERT(strcmp(lines->next->next->data->right, "test") == 0);
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, "type") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "class") == 0);
+    CU_ASSERT(lines->data->indentation == 0);
 
-    CU_ASSERT_PTR_NULL(lines->next->next->next);
+    lines = lines->next;
+
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, "name") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "test") == 0);
+    CU_ASSERT(lines->data->indentation == 0);
+
+    lines = lines->next;
+
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, "fields") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "") == 0);
+    CU_ASSERT(lines->data->indentation == 0);
+
+    lines = lines->next;
+
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, "test_field") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "") == 0);
+    CU_ASSERT(lines->data->indentation == 4);
+
+    CU_ASSERT_PTR_NULL(lines->next);
 
     delete_list(lines);
 

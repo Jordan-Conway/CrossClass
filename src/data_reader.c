@@ -2,6 +2,7 @@
 
 #include "./Data/line_data.h"
 #include "./line_data_list.h"
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,36 +29,43 @@ struct Line_Data* parse_line(const char* line){
     {
         char currentChar = *(line + i);
 
-        if(currentChar == '\n'){
+        if(currentChar == '\n' || currentChar == '\0'){
             if (is_left){
                 error_invalid_line("Found end of line without finding ':'");
             }
-            line_data->right[i - left_length -1] = '\0';
+            line_data->right[i - left_length - line_data->indentation -1] = '\0';
             break;
         }
 
         if(currentChar == ':'){
             if (is_left){
                 is_left = false;
-                line_data->left[i] = '\0';
+                line_data->left[left_length] = '\0';
                 continue;
             }
             error_invalid_line("Found ':' on right side of declaration");
             continue;
         }
 
+        if(isspace(currentChar)) {
+            if(is_left){
+                line_data->indentation++;
+                continue;
+            }
+        }
+
         if(is_left)
         {
-            line_data->left[i] = currentChar;
+            line_data->left[left_length] = currentChar;
             left_length ++;
         }
         else{
             // -1 to account for ':'
-            line_data->right[i - left_length - 1] = currentChar;
+            line_data->right[i - left_length - line_data->indentation - 1] = currentChar;
         }
     }
 
-    // TODO trim whitespace from left and right
+    // TODO trim whitespace from right
 
     return line_data;
 }
