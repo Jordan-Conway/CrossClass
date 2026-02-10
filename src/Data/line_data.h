@@ -4,6 +4,7 @@
 #include "./Tokens/tokens.h"
 
 struct Line_Data {
+    int indentation;
     char* left;
     char* right;
 };
