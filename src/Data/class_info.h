@@ -16,7 +16,7 @@ struct Class_Info {
     enum Visability visability;
     enum StoreType store_type;
     char* name;
-    struct Equality equality;
+    struct Equality* equality;
     struct Field (*fields)[];
 };
 
