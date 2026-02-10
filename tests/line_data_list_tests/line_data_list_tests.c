@@ -14,6 +14,7 @@ struct Line_Data* create_empty_line_data() {
     struct Line_Data* data = (struct Line_Data*)calloc(1, sizeof(struct Line_Data));
     data->left = NULL;
     data->right = NULL;
+    data->indentation = 0;
 
     return data;
 }

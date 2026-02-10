@@ -15,10 +15,9 @@ int main(int argc, char* argv[]) {
 
     struct Line_Data_Node* line_list = read_ccd_file(fptr);
     
-    printf("No next? %d", line_list->next == NULL);
     while (line_list->next != NULL) {
-        printf("Left: %s", line_list->data->left);
-        printf("Right: %s", line_list->data->right);
+        printf("Left: %s\n", line_list->data->left);
+        printf("Right: %s\n", line_list->data->right);
         line_list = line_list->next;
     }
     

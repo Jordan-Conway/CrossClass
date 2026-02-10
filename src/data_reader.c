@@ -19,6 +19,7 @@ struct Line_Data* parse_line(const char* line){
     struct Line_Data* line_data = (struct Line_Data*)calloc(1, sizeof(struct Line_Data));
     line_data->left = (char*)calloc(MAX_LINE_LENGTH, sizeof(char));
     line_data->right = (char*)calloc(MAX_LINE_LENGTH,sizeof(char));
+    line_data->indentation = 0;
 
     bool is_left = true;
     int left_length = 0;
@@ -31,14 +32,14 @@ struct Line_Data* parse_line(const char* line){
             if (is_left){
                 error_invalid_line("Found end of line without finding ':'");
             }
-            line_data->right[i - left_length -1] = currentChar;
+            line_data->right[i - left_length -1] = '\0';
             break;
         }
 
         if(currentChar == ':'){
             if (is_left){
                 is_left = false;
-                line_data->left[i] = '\n';
+                line_data->left[i] = '\0';
                 continue;
             }
             error_invalid_line("Found ':' on right side of declaration");
