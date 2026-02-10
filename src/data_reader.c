@@ -24,6 +24,7 @@ struct Line_Data* parse_line(const char* line){
 
     bool is_left = true;
     int left_length = 0;
+    int right_indentation = 0;
     
     for(int i=0; i<MAX_LINE_LENGTH; i++)
     {
@@ -33,7 +34,8 @@ struct Line_Data* parse_line(const char* line){
             if (is_left){
                 error_invalid_line("Found end of line without finding ':'");
             }
-            line_data->right[i - left_length - line_data->indentation -1] = '\0';
+            int right_next_index = i - left_length - line_data->indentation - right_indentation -1;
+            line_data->right[right_next_index] = '\0';
             break;
         }
 
@@ -50,8 +52,11 @@ struct Line_Data* parse_line(const char* line){
         if(isspace(currentChar)) {
             if(is_left){
                 line_data->indentation++;
-                continue;
             }
+            else {
+                right_indentation++;
+            }
+            continue;
         }
 
         if(is_left)
@@ -61,11 +66,10 @@ struct Line_Data* parse_line(const char* line){
         }
         else{
             // -1 to account for ':'
-            line_data->right[i - left_length - line_data->indentation - 1] = currentChar;
+            int right_next_index = i - left_length - right_indentation - line_data->indentation - 1;
+            line_data->right[right_next_index] = currentChar;
         }
     }
-
-    // TODO trim whitespace from right
 
     return line_data;
 }
