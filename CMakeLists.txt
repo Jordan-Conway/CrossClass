@@ -33,11 +33,27 @@ add_executable(crossclass
 
 target_include_directories(crossclass PRIVATE ${PROJECT_INCLUDES})
 
+set(BUILD_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
+
+set_target_properties( crossclass
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/crossclass/lib
+    LIBRARY_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/crossclass/lib
+    RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/crossclass/bin
+)
+
 # Test executable
 add_executable(crossclass_tests
     tests/test.c
     ${SHARED_SRC}
     ${TESTS_SRC}
+)
+
+set_target_properties( crossclass_tests
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/tests/lib
+    LIBRARY_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/tests/lib
+    RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/tests/bin
 )
 
 target_include_directories(crossclass_tests PRIVATE ${PROJECT_INCLUDES})
