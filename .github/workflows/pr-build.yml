@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-      - CI
 
 jobs:
   build:
@@ -13,6 +12,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: ./.ci/install_dependencies.sh
 
       - name: Build
         run: ./.ci/build.sh
