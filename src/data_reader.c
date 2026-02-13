@@ -24,6 +24,7 @@ struct Line_Data* parse_line(const char* line){
 
     bool is_left = true;
     int left_length = 0;
+    int right_length = 0;
     int right_indentation = 0;
     
     for(int i=0; i<MAX_LINE_LENGTH; i++)
@@ -50,13 +51,14 @@ struct Line_Data* parse_line(const char* line){
         }
 
         if(isspace(currentChar)) {
-            if(is_left){
+            if(is_left && left_length == 0){
                 line_data->indentation++;
+                continue;
             }
-            else {
+            if(!is_left && right_length == 0){
                 right_indentation++;
+                continue;
             }
-            continue;
         }
 
         if(is_left)
@@ -68,6 +70,7 @@ struct Line_Data* parse_line(const char* line){
             // -1 to account for ':'
             int right_next_index = i - left_length - right_indentation - line_data->indentation - 1;
             line_data->right[right_next_index] = currentChar;
+            right_length++;
         }
     }
 

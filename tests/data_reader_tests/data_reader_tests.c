@@ -78,6 +78,25 @@ void test_read_ccd_file(){
     fclose(file);
 }
 
+void test_read_ccd_file_handle_spaces() {
+    FILE* file = tmpfile();
+
+    fputs("ver sion:0 .1", file);
+
+    rewind(file);
+
+    struct Line_Data_Node* lines = read_ccd_file(file);
+
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp("ver sion", lines->data->left) == 0);
+    CU_ASSERT(strcmp("0 .1", lines->data->right) == 0);
+    CU_ASSERT(lines->data->indentation == 0);
+    printf("Indent: %d\n", lines->data->indentation);
+    CU_ASSERT_PTR_NULL(lines->next);
+}
+
 void add_data_reader_tests(CU_pSuite test_suite) {
     CU_ADD_TEST(test_suite, test_read_ccd_file);
+    CU_ADD_TEST(test_suite, test_read_ccd_file_handle_spaces);
 }
