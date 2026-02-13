@@ -3,6 +3,7 @@
 #include "DataParser/data_parser_result.h"
 #include "class_info.h"
 #include "./Data/Tokens/equality_type.h"
+#include "line_data_list.h"
 #include "store_type.h"
 #include "visability.h"
 #include <stdbool.h>
@@ -38,6 +39,7 @@ struct Class_Info* create_default_class() {
 struct Data_Parser_Result* parse_line_data(struct Line_Data_Node* line_data_list){
     char* errorMessage = NULL;
     struct Data_Parser_Result* result = create_default_result();
+    line_data_list = get_head_of_line_data_list(line_data_list);
     if (line_data_list == NULL) {
         asprintf(&result->error_message, "List with no data given to data parser");
         goto parse_failed;

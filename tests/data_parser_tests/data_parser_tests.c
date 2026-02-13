@@ -58,7 +58,25 @@ void test_parse_lines_no_type_fails() {
 }
 
 void test_parse_lines_unsupported_type_fails() {
+    struct Line_Data* line1 = create_default_line_data();
+    struct Line_Data* line2 = create_default_line_data();
 
+    strcpy(line1->left, "version");
+    strcpy(line1->right, "0.1");
+    strcpy(line2->left, "type");
+    strcpy(line2->right, "unsupported");
+
+    struct Line_Data_Node* lines = append_line_data(NULL, line1);
+    append_line_data(lines, line2);
+
+    struct Data_Parser_Result* result = parse_line_data(lines);
+
+    CU_ASSERT(result->is_error == true);
+    CU_ASSERT(result->result == NULL);
+    CU_ASSERT(result->error_message != NULL);
+
+    delete_list(lines);
+    delete_data_parser_result(result);
 }
 
 void add_data_parser_tests(CU_pSuite test_suite) {
