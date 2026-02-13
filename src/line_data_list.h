@@ -1,3 +1,6 @@
+#ifndef LINE_DATA_LIST
+#define LINE_DATA_LIST
+
 #include "./Data/line_data.h"
 
 #include <stdbool.h>
@@ -18,3 +21,5 @@ struct Line_Data_Node* get_head_of_line_data_list(struct Line_Data_Node *list);
 
 // Deletes all entries in the list regardless of which is passed in
 void delete_list(struct Line_Data_Node* list);
+
+#endif
