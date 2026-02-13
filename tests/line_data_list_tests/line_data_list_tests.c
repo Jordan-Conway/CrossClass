@@ -41,8 +41,6 @@ void test_append_line_data() {
     list = create_line_data_list();
 
     struct Line_Data* line_data_1 = create_empty_line_data();
-    line_data_1->left = (char*)malloc(100 * sizeof(char));
-    line_data_1->right = (char*)malloc(100 * sizeof(char));
     line_data_1->indentation = 0;
     strcpy(line_data_1->left, "version");
     strcpy(line_data_1->right, "0.1");
