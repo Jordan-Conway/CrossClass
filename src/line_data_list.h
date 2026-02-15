@@ -18,3 +18,6 @@ struct Line_Data_Node* get_head_of_line_data_list(struct Line_Data_Node *list);
 
 // Deletes all entries in the list regardless of which is passed in
 void delete_list(struct Line_Data_Node* list);
+
+// Compares the data content of two nodes
+bool Line_Data_Node_Eq(const struct Line_Data_Node* a, const struct Line_Data_Node* b);
