@@ -11,7 +11,7 @@ struct Line_Data {
 };
  
 // Compares two Line_Data structs for equality based on value
-bool Line_Data_Eq(const struct Line_Data *a, const struct Line_Data *b);
+bool line_data_equality(const struct Line_Data *a, const struct Line_Data *b);
 
 #endif
 

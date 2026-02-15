@@ -20,4 +20,4 @@ struct Line_Data_Node* get_head_of_line_data_list(struct Line_Data_Node *list);
 void delete_list(struct Line_Data_Node* list);
 
 // Compares the data content of two nodes
-bool Line_Data_Node_Eq(const struct Line_Data_Node* a, const struct Line_Data_Node* b);
+bool line_data_node_equality(const struct Line_Data_Node* a, const struct Line_Data_Node* b);

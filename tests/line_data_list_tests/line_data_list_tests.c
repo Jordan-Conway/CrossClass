@@ -85,8 +85,39 @@ void test_get_head_of_line_data_list() {
     delete_list(list);
 }  
 
+void test_line_data_equality(){
+    struct Line_Data a = { .indentation = 4, .left = "int",    .right = "count" };
+    struct Line_Data b = { .indentation = 4, .left = "int",    .right = "count" };
+    struct Line_Data c = { .indentation = 0, .left = "char *", .right = "buffer" };
+
+    CU_ASSERT_TRUE(line_data_equality(&a, &b));
+    CU_ASSERT_FALSE(line_data_equality(&a, &c));
+    CU_ASSERT_TRUE(line_data_equality(NULL, NULL));
+    CU_ASSERT_FALSE(line_data_equality(&a, NULL));
+
+}
+
+void test_line_data_node_equality(void) {
+    struct Line_Data a_data = { .indentation = 4, .left = "int",  .right = "count" };
+    struct Line_Data b_data = { .indentation = 4, .left = "int",  .right = "count" };
+    struct Line_Data c_data = { .indentation = 0, .left = "char", .right = "buffer" };
+
+    struct Line_Data_Node a = { .data = &a_data, .next = NULL, .prev = NULL };
+    struct Line_Data_Node b = { .data = &b_data, .next = NULL, .prev = NULL };
+    struct Line_Data_Node c = { .data = &c_data, .next = NULL, .prev = NULL };
+
+    CU_ASSERT_TRUE(line_data_node_equality(&a, &b));
+    CU_ASSERT_FALSE(line_data_node_equality(&a, &c));
+    CU_ASSERT_TRUE(line_data_node_equality(&a, &a));
+    CU_ASSERT_TRUE(line_data_node_equality(NULL, NULL));
+    CU_ASSERT_FALSE(line_data_node_equality(&a, NULL));
+}
+
+
 void add_line_data_list_tests(CU_pSuite test_suite) {
     CU_add_test(test_suite, "Test Create Line Data List", test_create_line_data_list);
     CU_add_test(test_suite, "Test Append Line Data", test_append_line_data);
     CU_add_test(test_suite, "Test Get Head of Line Data List", test_get_head_of_line_data_list);
+    CU_add_test(test_suite, "Test Line Data Equality", test_line_data_equality);
+    CU_add_test(test_suite, "Test Line Data Node Equality", test_line_data_node_equality);
 }

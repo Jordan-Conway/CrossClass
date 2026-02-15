@@ -68,12 +68,12 @@ void delete_list(struct Line_Data_Node* list){
     free(current_head);
 }
 
-bool Line_Data_Node_Eq(const struct Line_Data_Node* a, const struct Line_Data_Node* b){
+bool line_data_node_equality(const struct Line_Data_Node* a, const struct Line_Data_Node* b){
 
   if (a == b) return true;
 
   if (!a || !b) return false;
 
-  return Line_Data_Eq(a->data, b->data);
+  return line_data_equality(a->data, b->data);
 
 }

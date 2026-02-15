@@ -2,7 +2,7 @@
 #include <string.h> 
 #include <stdlib.h> 
 
-bool Line_Data_Eq(const struct Line_Data *a, const struct Line_Data *b) {
+bool line_data_equality(const struct Line_Data *a, const struct Line_Data *b) {
    
     if (a == b) {
         return true;
