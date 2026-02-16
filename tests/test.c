@@ -1,4 +1,5 @@
 #include "./data_reader_tests/data_reader_tests.h"
+#include "./line_data_tests/line_data_tests.h"
 #include "./line_data_list_tests/line_data_list_tests.h"
 #include <CUnit/Basic.h>
 #include <CUnit/TestDB.h>
@@ -19,6 +20,7 @@ int main() {
         return CU_get_error();
     }
 
+    add_line_data_tests(test_suite);
     add_line_data_list_tests(test_suite);
     add_data_reader_tests(test_suite);
 
