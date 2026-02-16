@@ -1,6 +1,7 @@
 #include "./line_data_list.h"
 #include "Data/line_data.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -65,4 +66,14 @@ void delete_list(struct Line_Data_Node* list){
 
     delete_data(current_head->data);
     free(current_head);
+}
+
+bool line_data_node_equality(const struct Line_Data_Node* a, const struct Line_Data_Node* b){
+
+  if (a == b) return true;
+
+  if (!a || !b) return false;
+
+  return line_data_equality(a->data, b->data);
+
 }
