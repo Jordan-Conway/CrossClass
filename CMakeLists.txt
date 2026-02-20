@@ -3,6 +3,8 @@ project(crossclass C)
 
 set(CMAKE_C_STANDARD 17)
 
+# set(CMAKE_BUILD_TYPE Debug)
+
 set(PROJECT_INCLUDES
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/Data
@@ -14,6 +16,7 @@ set(PROJECT_INCLUDES
 file(GLOB SHARED_SRC
     ${CMAKE_SOURCE_DIR}/src/Data/*.c
     ${CMAKE_SOURCE_DIR}/src/Data/Tokens/*.c
+    ${CMAKE_SOURCE_DIR}/src/DataParser/*.c
     ${CMAKE_SOURCE_DIR}/src/*.c
 )
 

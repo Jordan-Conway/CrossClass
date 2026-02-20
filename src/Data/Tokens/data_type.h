@@ -2,29 +2,31 @@
 #define TOKEN_TYPE
 
 enum DataType {
-    CHAR,
-    STRING,
+    DATATYPE_CHAR,
+    DATATYPE_STRING,
 
-    INT8, 
-    INT16,
-    INT32, 
-    INT64,
-    INT128,
+    DATATYPE_INT8, 
+    DATATYPE_INT16,
+    DATATYPE_INT32, 
+    DATATYPE_INT64,
+    DATATYPE_INT128,
 
-    FLOAT,
-    DOUBLE,
-    LONG_DOUBLE,
+    DATATYPE_FLOAT,
+    DATATYPE_DOUBLE,
+    DATATYPE_LONG_DOUBLE,
 
-    BOOL,
+    DATATYPE_BOOL,
 
-    VOID,
+    DATATYPE_VOID,
 
-    TIME,
-    DATE,
-    DATETIME,
+    DATATYPE_TIME,
+    DATATYPE_DATE,
+    DATATYPE_DATETIME,
     
-    SELF, // Refers to the item being defined by the file
-    DEFINED // Refers to an item defined in another file
+    DATATYPE_SELF, // Refers to the item being defined by the file
+    DATATYPE_DEFINED, // Refers to an item defined in another file
+
+    DATATYPE_NOT_SET
 };
 
 #endif

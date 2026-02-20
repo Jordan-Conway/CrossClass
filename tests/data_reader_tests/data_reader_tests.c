@@ -22,8 +22,6 @@ void test_read_ccd_file(){
 
     struct Line_Data_Node* lines = read_ccd_file(file);
 
-    printf("Beginning asserts\n");
-
     CU_ASSERT_PTR_NOT_NULL(lines);
     CU_ASSERT_PTR_NOT_NULL(lines->data);
     CU_ASSERT(strcmp(lines->data->left, "version") == 0);
@@ -67,7 +65,6 @@ void test_read_ccd_file(){
     CU_ASSERT_PTR_NOT_NULL(lines);
     CU_ASSERT_PTR_NOT_NULL(lines->data);
     CU_ASSERT(strcmp(lines->data->left, "type") == 0);
-    printf("%s\n", lines->data->right);
     CU_ASSERT(strcmp(lines->data->right, "int32") == 0);
     CU_ASSERT(lines->data->indentation == 8);
 
@@ -92,8 +89,11 @@ void test_read_ccd_file_handle_spaces() {
     CU_ASSERT(strcmp("ver sion", lines->data->left) == 0);
     CU_ASSERT(strcmp("0 .1", lines->data->right) == 0);
     CU_ASSERT(lines->data->indentation == 0);
-    printf("Indent: %d\n", lines->data->indentation);
     CU_ASSERT_PTR_NULL(lines->next);
+
+    delete_list(lines);
+
+    fclose(file);
 }
 
 void add_data_reader_tests(CU_pSuite test_suite) {

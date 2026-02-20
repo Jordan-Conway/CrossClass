@@ -1,3 +1,6 @@
+#ifndef LINE_DATA_LIST
+#define LINE_DATA_LIST
+
 #include "./Data/line_data.h"
 
 #include <stdbool.h>
@@ -21,3 +24,5 @@ void delete_list(struct Line_Data_Node* list);
 
 // Compares the data content of two nodes
 bool line_data_node_equality(const struct Line_Data_Node* a, const struct Line_Data_Node* b);
+
+#endif
