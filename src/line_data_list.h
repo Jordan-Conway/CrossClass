@@ -1,3 +1,6 @@
+#ifndef LINE_DATA_LIST
+#define LINE_DATA_LIST
+
 #include "./Data/line_data.h"
 
 #include <stdbool.h>
@@ -24,3 +27,5 @@ bool line_data_node_equality(const struct Line_Data_Node* a, const struct Line_D
 
 // Counts the number of nodes after a given node
 int count_ahead(struct Line_Data_Node* node);
+
+#endif
