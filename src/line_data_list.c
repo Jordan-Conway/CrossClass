@@ -77,3 +77,14 @@ bool line_data_node_equality(const struct Line_Data_Node* a, const struct Line_D
   return line_data_equality(a->data, b->data);
 
 }
+
+int count_ahead(struct Line_Data_Node* node){
+    int count = 0;
+
+    while (node->next != NULL){
+        count++;
+        node = node->next;
+    }
+
+    return count;
+}

@@ -19,6 +19,20 @@ struct Line_Data* create_empty_line_data() {
     return data;
 }
 
+void test_line_data_list_count_ahead(){
+    struct Line_Data* dummy_data = create_empty_line_data();
+
+    struct Line_Data_Node head = { .data = dummy_data, .next = NULL, .prev = NULL };
+    struct Line_Data_Node middle = { .data = dummy_data, .next = NULL, .prev = &head };
+    struct Line_Data_Node tail = { .data = dummy_data, .next = NULL, .prev = &middle };
+    head.next = &middle;
+    middle.next = &tail;
+
+    CU_ASSERT(count_ahead(&head) == 2);
+    CU_ASSERT(count_ahead(&middle) == 1);
+    CU_ASSERT(count_ahead(&tail) == 0);
+}
+
 void test_create_line_data_list() {
     list = create_line_data_list();
     struct Line_Data_Node* expected_list = (struct Line_Data_Node*)calloc(1, sizeof(struct Line_Data_Node));
@@ -79,8 +93,7 @@ void test_get_head_of_line_data_list() {
 
     CU_ASSERT(list->data == NULL);
     CU_ASSERT(list->prev == NULL);
-    CU_ASSERT(list->next->next != NULL);
-    CU_ASSERT(list->next->next->next == NULL);
+    CU_ASSERT(count_ahead(list) == 2);
     
     delete_list(list);
 }  
@@ -103,6 +116,7 @@ void test_line_data_node_equality(void) {
 }
 
 void add_line_data_list_tests(CU_pSuite test_suite) {
+    CU_add_test(test_suite, "Test Count Ahead", test_line_data_list_count_ahead);
     CU_add_test(test_suite, "Test Create Line Data List", test_create_line_data_list);
     CU_add_test(test_suite, "Test Append Line Data", test_append_line_data);
     CU_add_test(test_suite, "Test Get Head of Line Data List", test_get_head_of_line_data_list);

@@ -23,55 +23,46 @@ struct Line_Data* parse_line(const char* line){
     line_data->indentation = 0;
 
     bool is_left = true;
-    int left_length = 0;
-    int right_length = 0;
-    int right_indentation = 0;
+    int length = 0; // length of the current section
     
     for(int i=0; i<MAX_LINE_LENGTH; i++)
     {
         char currentChar = *(line + i);
 
         if(currentChar == '\n' || currentChar == '\0'){
-            if (is_left){
+            if(is_left){
                 error_invalid_line("Found end of line without finding ':'");
             }
-            int right_next_index = i - left_length - line_data->indentation - right_indentation -1;
-            line_data->right[right_next_index] = '\0';
+            line_data->right[length] = '\0';
             break;
         }
 
         if(currentChar == ':'){
-            if (is_left){
+            if(is_left){
                 is_left = false;
-                line_data->left[left_length] = '\0';
+                line_data->left[length] = '\0';
+                length = 0;
                 continue;
             }
             error_invalid_line("Found ':' on right side of declaration");
             continue;
         }
 
-        if(isspace(currentChar)) {
-            if(is_left && left_length == 0){
+        if(isspace(currentChar) && length == 0){
+            if(is_left){
                 line_data->indentation++;
-                continue;
             }
-            if(!is_left && right_length == 0){
-                right_indentation++;
-                continue;
-            }
+            continue;
         }
 
         if(is_left)
         {
-            line_data->left[left_length] = currentChar;
-            left_length ++;
+            line_data->left[length] = tolower(currentChar);
         }
         else{
-            // -1 to account for ':'
-            int right_next_index = i - left_length - right_indentation - line_data->indentation - 1;
-            line_data->right[right_next_index] = currentChar;
-            right_length++;
+            line_data->right[length] = currentChar;
         }
+        length++;
     }
 
     return line_data;

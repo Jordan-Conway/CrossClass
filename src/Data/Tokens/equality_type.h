@@ -2,8 +2,8 @@
 #define TOKEN_EQUALITYTYPE
 
 enum EqualityType {
-    BY_VALUE,
-    BY_REFERENCE
+    EQUAL_BY_VALUE,
+    EQUAL_BY_REFERENCE
 };
 
 #endif
