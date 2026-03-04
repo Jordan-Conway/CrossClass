@@ -94,9 +94,63 @@ void test_read_ccd_file_handle_spaces() {
     CU_ASSERT(lines->data->indentation == 0);
     printf("Indent: %d\n", lines->data->indentation);
     CU_ASSERT_PTR_NULL(lines->next);
+
+    fclose(file);
+}
+
+void test_read_ccd_file_lowercase_left(){
+    FILE* file = tmpfile();
+
+    fputs("lowercase left:lowercase right\n", file);
+    fputs("lowercase left:uppercase right\n", file);
+    fputs("uppercase left:lowercase right\n", file);
+    fputs("uppercase left:uppercase right\n", file);
+
+    rewind(file);
+
+    struct Line_Data_Node* lines = read_ccd_file(file);
+
+    printf("Beginning asserts\n");
+
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, "lowercase left") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "lowercase right") == 0);
+    CU_ASSERT(lines->data->indentation == 0);
+
+    lines = lines->next;
+
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, "lowercase left") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "uppercase right") == 0);
+    CU_ASSERT(lines->data->indentation == 0);
+
+    lines = lines->next;
+
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, "uppercase left") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "lowercase right") == 0);
+    CU_ASSERT(lines->data->indentation == 0);
+
+    lines = lines->next;
+
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, "uppercase left") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "uppercase right") == 0);
+    CU_ASSERT(lines->data->indentation == 0);
+
+    CU_ASSERT_PTR_NULL(lines->next);
+
+    delete_list(lines);
+
+    fclose(file);
 }
 
 void add_data_reader_tests(CU_pSuite test_suite) {
     CU_ADD_TEST(test_suite, test_read_ccd_file);
     CU_ADD_TEST(test_suite, test_read_ccd_file_handle_spaces);
+    CU_ADD_TEST(test_suite, test_read_ccd_file_lowercase_left);
 }
