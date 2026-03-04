@@ -23,4 +23,4 @@ void delete_list(struct Line_Data_Node* list);
 bool line_data_node_equality(const struct Line_Data_Node* a, const struct Line_Data_Node* b);
 
 // Counts the number of nodes after a given node
-int count_ahead(struct Line_Data_Node* node)
+int count_ahead(struct Line_Data_Node* node);
