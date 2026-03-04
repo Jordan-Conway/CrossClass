@@ -102,9 +102,9 @@ void test_read_ccd_file_lowercase_left(){
     FILE* file = tmpfile();
 
     fputs("lowercase left:lowercase right\n", file);
-    fputs("lowercase left:uppercase right\n", file);
-    fputs("uppercase left:lowercase right\n", file);
-    fputs("uppercase left:uppercase right\n", file);
+    fputs("lowercase left:UpPeRcAsE right\n", file);
+    fputs("UpPeRcAsE left:lowercase right\n", file);
+    fputs("UpPeRcAsE left:UpPeRcAsE right\n", file);
 
     rewind(file);
 
@@ -123,7 +123,7 @@ void test_read_ccd_file_lowercase_left(){
     CU_ASSERT_PTR_NOT_NULL(lines);
     CU_ASSERT_PTR_NOT_NULL(lines->data);
     CU_ASSERT(strcmp(lines->data->left, "lowercase left") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "uppercase right") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "UpPeRcAsE right") == 0);
     CU_ASSERT(lines->data->indentation == 0);
 
     lines = lines->next;
@@ -139,7 +139,7 @@ void test_read_ccd_file_lowercase_left(){
     CU_ASSERT_PTR_NOT_NULL(lines);
     CU_ASSERT_PTR_NOT_NULL(lines->data);
     CU_ASSERT(strcmp(lines->data->left, "uppercase left") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "uppercase right") == 0);
+    CU_ASSERT(strcmp(lines->data->right, "UpPeRcAsE right") == 0);
     CU_ASSERT(lines->data->indentation == 0);
 
     CU_ASSERT_PTR_NULL(lines->next);
