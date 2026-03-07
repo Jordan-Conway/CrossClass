@@ -10,12 +10,15 @@ visability: public
 equality: value
 
 fields:
-    name:
+    field: 
+        name: name
         type: string
         visability: public
-    age:
+    field:
+        name: age
         type: int32
         visability: public
-    date_of_birth:
+    field: 
+        name: date_of_birth
         type: date
         visability: private
