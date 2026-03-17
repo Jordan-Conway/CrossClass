@@ -7,6 +7,15 @@
 #include <stdio.h>
 #include <string.h>
 
+// Generic function to test a whole line
+void test_line(struct Line_Data_Node* lines, char expected_left[], char expected_right[], int expected_indentation){
+    CU_ASSERT_PTR_NOT_NULL(lines);
+    CU_ASSERT_PTR_NOT_NULL(lines->data);
+    CU_ASSERT(strcmp(lines->data->left, expected_left) == 0);
+    CU_ASSERT(strcmp(lines->data->right, expected_right) == 0);
+    CU_ASSERT(lines->data->indentation == expected_indentation);
+}
+
 void test_read_ccd_file(){
     FILE* file = tmpfile();
 
@@ -24,52 +33,27 @@ void test_read_ccd_file(){
 
     printf("Beginning asserts\n");
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "version") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "0.1") == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "version", "0.1", 0);
 
     lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "type") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "class") == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "type", "class", 0);
 
     lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "name") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "test") == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "name", "test", 0);
 
     lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "fields") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "") == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "fields", "", 0);
 
     lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "test_field") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "") == 0);
-    CU_ASSERT(lines->data->indentation == 4);
+    test_line(lines, "test_field", "", 4);
 
     lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "type") == 0);
-    printf("%s\n", lines->data->right);
-    CU_ASSERT(strcmp(lines->data->right, "int32") == 0);
-    CU_ASSERT(lines->data->indentation == 8);
+    test_line(lines, "type", "int32", 8);
 
     CU_ASSERT_PTR_NULL(lines->next);
 
@@ -87,11 +71,7 @@ void test_read_ccd_file_handle_spaces() {
 
     struct Line_Data_Node* lines = read_ccd_file(file);
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp("ver sion", lines->data->left) == 0);
-    CU_ASSERT(strcmp("0 .1", lines->data->right) == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "ver sion", "0 .1", 0);
     printf("Indent: %d\n", lines->data->indentation);
     CU_ASSERT_PTR_NULL(lines->next);
 
@@ -112,35 +92,19 @@ void test_read_ccd_file_lowercase_left(){
 
     printf("Beginning asserts\n");
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "lowercase left") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "lowercase right") == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "lowercase left", "lowercase right", 0);
 
     lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "lowercase left") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "UpPeRcAsE right") == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "lowercase left", "UpPeRcAsE right", 0);
 
     lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "uppercase left") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "lowercase right") == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "uppercase left", "lowercase right", 0);
 
     lines = lines->next;
 
-    CU_ASSERT_PTR_NOT_NULL(lines);
-    CU_ASSERT_PTR_NOT_NULL(lines->data);
-    CU_ASSERT(strcmp(lines->data->left, "uppercase left") == 0);
-    CU_ASSERT(strcmp(lines->data->right, "UpPeRcAsE right") == 0);
-    CU_ASSERT(lines->data->indentation == 0);
+    test_line(lines, "uppercase left", "UpPeRcAsE right", 0);
 
     CU_ASSERT_PTR_NULL(lines->next);
 
