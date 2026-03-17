@@ -3,6 +3,7 @@
 #include "./data_type.h"
 #include "./visability.h"
 
+// Defines a single attribute of a class
 union Token{
     enum EqualityType equality_type;
     enum StoreType store_type;

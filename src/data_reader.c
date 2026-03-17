@@ -10,13 +10,23 @@
 // TODO: Handle arbitrary line lengths
 size_t MAX_LINE_LENGTH = 100;
 
+// Simple error handler
 void error_invalid_line(char* const reason_msg){
     printf("Line is invalid\n");
     printf("%s\n", reason_msg);
     exit(1);        
 }
 
+// Parse a single line (left to right)
 struct Line_Data* parse_line(const char* line){
+    /*
+     * A line is either:
+     * - Whitespace (ignore)
+     * - A comment (ignore)
+     * - The start of a list (no right data)
+     * - An attribute (key (left): value (right))
+     * - An error (raise)
+     */
     struct Line_Data* line_data = (struct Line_Data*)calloc(1, sizeof(struct Line_Data));
     line_data->left = (char*)calloc(MAX_LINE_LENGTH, sizeof(char));
     line_data->right = (char*)calloc(MAX_LINE_LENGTH,sizeof(char));
@@ -25,10 +35,12 @@ struct Line_Data* parse_line(const char* line){
     bool is_left = true;
     int length = 0; // length of the current section
     
+    // Parse character by character
     for(int i=0; i<MAX_LINE_LENGTH; i++)
     {
         char currentChar = *(line + i);
 
+        // Handle the end of the line
         if(currentChar == '\n' || currentChar == '\0'){
             if(is_left){
                 error_invalid_line("Found end of line without finding ':'");
@@ -37,8 +49,9 @@ struct Line_Data* parse_line(const char* line){
             break;
         }
 
+        // Handle swaps between left and right
         if(currentChar == ':'){
-            if(is_left){
+            if(is_left){ //Store left_data and start parsing right
                 is_left = false;
                 line_data->left[length] = '\0';
                 length = 0;
@@ -48,6 +61,7 @@ struct Line_Data* parse_line(const char* line){
             continue;
         }
 
+        // Handle indentation
         if(isspace(currentChar) && length == 0){
             if(is_left){
                 line_data->indentation++;
@@ -55,6 +69,7 @@ struct Line_Data* parse_line(const char* line){
             continue;
         }
 
+        // Store the character to line_data
         if(is_left)
         {
             line_data->left[length] = tolower(currentChar);
@@ -68,6 +83,7 @@ struct Line_Data* parse_line(const char* line){
     return line_data;
 }
 
+// Parse a file (top to bottom)
 struct Line_Data_Node* read_ccd_file(FILE *file) {
     char* current_line = (char *)calloc(MAX_LINE_LENGTH, sizeof(char));
     struct Line_Data_Node* line_data_list = NULL;
@@ -75,8 +91,10 @@ struct Line_Data_Node* read_ccd_file(FILE *file) {
     long chars_read;
     int lines_read = 0;
 
+    // Read in each line
     do{
         chars_read = getline(&current_line, &MAX_LINE_LENGTH, file);
+        // Handle null lines
         if (chars_read <= 0){
             if(lines_read == 0){
                 goto empty_file;

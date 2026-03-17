@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Currently just prints the .ccd file indicated by argv - Development Behaviour
 int main(int argc, char* argv[]) {
     printf("%d\n", argc);
     

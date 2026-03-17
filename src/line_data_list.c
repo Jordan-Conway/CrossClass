@@ -1,3 +1,7 @@
+/*
+ * Implement a doubly linked list data structure to store the file
+ * Lines = Nodes
+ */
 #include "./line_data_list.h"
 #include "Data/line_data.h"
 

@@ -6,6 +6,7 @@
 #include "./Tokens/data_type.h"
 #include "./Tokens/visability.h"
 
+// Defines a single variable/method of a class
 struct Field {
     enum DataType data_type;
     enum Visability visability;
