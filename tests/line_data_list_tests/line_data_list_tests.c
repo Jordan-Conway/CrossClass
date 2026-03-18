@@ -11,6 +11,7 @@
 
 struct Line_Data_Node* list = NULL;
 
+// Auxiliary for testing
 struct Line_Data* create_empty_line_data() {
     struct Line_Data* data = (struct Line_Data*)calloc(1, sizeof(struct Line_Data));
     data->left = NULL;
@@ -100,7 +101,6 @@ void test_get_head_of_line_data_list() {
     
     delete_list(list);
 }  
-
 
 void test_line_data_node_equality(void) {
     struct Line_Data a_data = { .indentation = 4, .left = "int",  .right = "count" };

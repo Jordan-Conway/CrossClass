@@ -22,6 +22,7 @@ void test_read_ccd_file(){
     fputs("version:0.1\n", file);
     fputs("// This is a comment\n", file);
     fputs("type:class\n", file);
+    fputs("\n   \n", file); // Test for whitespace
     fputs("name: test\n", file);
     fputs("fields:\n", file);
     fputs("    test_field:\n", file);
@@ -32,29 +33,22 @@ void test_read_ccd_file(){
     struct Line_Data_Node* lines = read_ccd_file(file);
 
     printf("Beginning asserts\n");
-
     test_line(lines, "version", "0.1", 0);
-
     lines = lines->next;
 
     test_line(lines, "type", "class", 0);
-
     lines = lines->next;
 
     test_line(lines, "name", "test", 0);
-
     lines = lines->next;
 
     test_line(lines, "fields", "", 0);
-
     lines = lines->next;
 
     test_line(lines, "test_field", "", 4);
-
     lines = lines->next;
 
     test_line(lines, "type", "int32", 8);
-
     CU_ASSERT_PTR_NULL(lines->next);
 
     delete_list(lines);
@@ -93,21 +87,16 @@ void test_read_ccd_file_lowercase_left(){
     struct Line_Data_Node* lines = read_ccd_file(file);
 
     printf("Beginning asserts\n");
-
     test_line(lines, "lowercase left", "lowercase right", 0);
-
     lines = lines->next;
 
     test_line(lines, "lowercase left", "UpPeRcAsE right", 0);
-
     lines = lines->next;
 
     test_line(lines, "uppercase left", "lowercase right", 0);
-
     lines = lines->next;
 
     test_line(lines, "uppercase left", "UpPeRcAsE right", 0);
-
     CU_ASSERT_PTR_NULL(lines->next);
 
     delete_list(lines);
