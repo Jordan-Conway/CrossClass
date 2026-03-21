@@ -1,6 +1,7 @@
 #ifndef TOKEN_TYPE
 #define TOKEN_TYPE
 
+// Defines the valid types of data a token can store
 enum DataType {
     DATA_DATA_CHAR,
     DATA_STRING,
