@@ -15,13 +15,7 @@ struct Line_Data {
 bool line_data_equality(const struct Line_Data *a, const struct Line_Data *b);
 
 // Frees up the memory claimed by a Line_Data instance
-void delete_data(struct Line_Data* data){
-    if (data) {
-        free(data->left);
-        free(data->right);
-    }
-    free(data);
-}
+void delete_data(struct Line_Data* data);
 
 #endif
 
