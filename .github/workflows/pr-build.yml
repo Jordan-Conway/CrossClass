@@ -40,6 +40,9 @@ jobs:
           name: build-output
           path: ./build
 
+      - name: Install dependencies
+        run: ./.ci/install_dependencies.sh
+
       - name: Ensure permissions
         run: chmod +x ./build/tests/bin/crossclass_tests
       
