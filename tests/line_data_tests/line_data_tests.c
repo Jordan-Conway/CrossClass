@@ -20,12 +20,6 @@ void test_line_data_equality() {
   CU_ASSERT_FALSE(line_data_equality(&original, &bad_indentation));
   CU_ASSERT_FALSE(line_data_equality(&original, &bad_left));
   CU_ASSERT_FALSE(line_data_equality(&original, &bad_right));
-
-  delete_data(&original);
-  delete_data(&copy);
-  delete_data(&bad_indentation);
-  delete_data(&bad_left);
-  delete_data(&bad_right);
 }
 
 void add_line_data_tests(CU_pSuite test_suite) {

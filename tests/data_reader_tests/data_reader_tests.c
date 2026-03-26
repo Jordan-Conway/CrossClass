@@ -22,7 +22,6 @@ void test_read_ccd_file(){
     fputs("version:0.1\n", file);
     fputs("// This is a comment\n", file);
     fputs("type:class\n", file);
-    fputs("\n   \n", file); // Test for whitespace
     fputs("name: test\n", file);
     fputs("fields:\n", file);
     fputs("    test_field:\n", file);

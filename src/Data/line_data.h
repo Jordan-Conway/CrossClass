@@ -2,9 +2,7 @@
 #define LINE_DATA
 
 #include <stdbool.h>
-#include "./Tokens/tokens.h" // Included but unused
 
-// Defines what is stored about a single line
 struct Line_Data {
     int indentation;
     char* left;

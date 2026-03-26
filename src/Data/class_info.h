@@ -7,13 +7,12 @@
 #include "./Tokens/data_type.h"
 #include "./Tokens/visability.h"
 
-// Extends how equality is checked for classes
+// Defines how equality is checked for objects
 struct Equality {
-    enum EqualityType type; // How are we comparing
-    char* (*excluded_fields)[]; // What gets ignored when comparing
+    enum EqualityType type;
+    char* (*excluded_fields)[]; // Fields to exclude from comparison
 };
 
-// Defines what is stored about a class
 struct Class_Info {
     enum Visability visability;
     enum StoreType store_type;

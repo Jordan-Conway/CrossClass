@@ -1,11 +1,11 @@
 #ifndef TOKEN_VISABILITY
 #define TOKEN_VISABILITY
 
-// Defines where a token can be accessed
+// Defines the visability of an object or detail of an object
 enum Visability {
-    VISABILITY_PUBLIC, // Accessible in all classes
-    VISABILITY_PRIVATE, // Accessible only in the same class
-    VISABILITY_INTERNAL  // Accessible only from the same assembly/file
+    VISABILITY_PUBLIC,
+    VISABILITY_PRIVATE,
+    VISABILITY_INTERNAL
 };
 
 #endif

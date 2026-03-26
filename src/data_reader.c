@@ -23,8 +23,8 @@ struct Line_Data* parse_line(const char* line){
      * A line is one of:
      * - Whitespace (ignore)
      * - A comment (ignore)
-     * - The start of a list (no right data)
-     * - An attribute (key [left]: value [right])
+     * - The start of a section (no right data)
+     * - A detail (key [left]: value [right])
      * - An error (raise)
      */
     struct Line_Data* line_data = (struct Line_Data*)calloc(1, sizeof(struct Line_Data));
@@ -104,10 +104,8 @@ struct Line_Data_Node* read_ccd_file(FILE *file) {
     long chars_read;
     int lines_read = 0;
 
-    // Read in each line
     do{
         chars_read = getline(&current_line, &MAX_LINE_LENGTH, file);
-        // Handle null lines
         if (chars_read <= 0){
             if(lines_read == 0){
                 goto empty_file;

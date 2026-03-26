@@ -5,7 +5,6 @@
 // Compares two Line_Data structs for equality based on value
 bool line_data_equality(const struct Line_Data *a, const struct Line_Data *b) {
    
-    // Trivial cases
     if (a == b) {
         return true;
     }
@@ -14,7 +13,6 @@ bool line_data_equality(const struct Line_Data *a, const struct Line_Data *b) {
         return false;
     }
 
-    // Guard clauses for non-trivial cases
     if (a->indentation != b->indentation) {
         return false;
     }
@@ -36,6 +34,7 @@ bool line_data_equality(const struct Line_Data *a, const struct Line_Data *b) {
 }
 
 // Frees up the memory claimed by a Line_Data instance
+// WARNING: Don't use if left or right are string literals
 void delete_data(struct Line_Data* data){
     if (data) {
         free(data->left);
