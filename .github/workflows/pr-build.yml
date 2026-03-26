@@ -39,6 +39,9 @@ jobs:
         with:
           name: build-output
           path: ./build
+
+      - name: Ensure permissions
+        run: chmod +x ./build/tests/bin/crossclass_tests
       
       - name: Run Tests
         run: ./.ci/test.sh
