@@ -7,14 +7,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// TODO: Handle arbitrary line lengths
-size_t MAX_LINE_LENGTH = 100;
-
 // Simple error handler
 void error_invalid_line(char* const reason_msg){
     printf("Line is invalid\n");
     printf("%s\n", reason_msg);
     exit(1);        
+}
+
+// Determine the length of a line by reading 32 character chunks
+size_t get_line_length(FILE *file, size_t* left_length, size_t* right_length){
+    int total_length = 0;
+    int chunk_length = 0;
+    char buffer[32];
+    bool is_done = false;
+    bool colon_seen = false;
+    bool is_left = true;
+
+    do{
+        // Count number of characters
+        do{
+            buffer[chunk_length] = fgetc(file);       
+            if(feof(file) || buffer[chunk_length] == '\n' || buffer[chunk_length] == '\0'){
+                is_done = true;
+            }
+            if(buffer[chunk_length] == ':'){ // Test for colon (switch to counting right side)
+                colon_seen = true;
+            }
+            chunk_length++;
+        } while(chunk_length < 32 && !is_done && !colon_seen);
+
+        // Put back onto the input stream
+        for(int i = chunk_length - 1; i > -1; i--)
+        {
+            ungetc(buffer[i], file);
+        }
+
+        total_length += chunk_length;
+        fseek(file, chunk_length, SEEK_CUR); // Make sure we don't read the same part repeatedly
+        chunk_length = 0;
+
+        // Switch to counting right side
+        if(colon_seen){
+            if(!is_left){
+                error_invalid_line("Found ':' on right side of declaration");
+            }
+            if(total_length == 1){
+                error_invalid_line("Left is empty");
+            }
+            *left_length = total_length;
+            is_left = false;
+            colon_seen = false;
+        }
+    } while(!is_done);
+
+    *right_length = total_length - *left_length;
+    fseek(file, -total_length, SEEK_CUR); // Roll back the file pointer for the parser
+    return total_length;
 }
 
 // Parses the left side of a line. The result is stored in result. Moves line up to the first ':'. Return the amount of indentation
@@ -27,10 +75,6 @@ int parse_left(const char** line, char** result) {
         while(**line == ' ' && nextIndex == 0){
             indent++;
             (*line)++;
-        }
-
-        if(nextIndex >= MAX_LINE_LENGTH) {
-            error_invalid_line("Exceeded max line length");
         }
 
         char currentChar = **line;
@@ -80,7 +124,7 @@ void parse_right(const char** line, char** result) {
 }
 
 // Parse a single line (left to right)
-struct Line_Data* parse_line(const char* line){
+struct Line_Data* parse_line(const char* line, const size_t LEFT_LENGTH, const size_t RIGHT_LENGTH){
     /*
      * A line is one of:
      * - Whitespace (ignore)
@@ -90,8 +134,8 @@ struct Line_Data* parse_line(const char* line){
      * - An error (raise)
      */
     struct Line_Data* line_data = (struct Line_Data*)calloc(1, sizeof(struct Line_Data));
-    line_data->left = (char*)calloc(MAX_LINE_LENGTH, sizeof(char));
-    line_data->right = (char*)calloc(MAX_LINE_LENGTH,sizeof(char));
+    line_data->left = (char*)calloc(LEFT_LENGTH, sizeof(char));
+    line_data->right = (char*)calloc(RIGHT_LENGTH,sizeof(char));
 
     line_data->indentation = parse_left(&line, &line_data->left);
     line++; //Line comes back from parse_left pointing at ':'
@@ -104,14 +148,17 @@ struct Line_Data* parse_line(const char* line){
 
 // Parse a file (top to bottom)
 struct Line_Data_Node* read_ccd_file(FILE *file) {
-    char* current_line = (char *)calloc(MAX_LINE_LENGTH, sizeof(char));
+    char* current_line = (char *)calloc(1, sizeof(char));
     struct Line_Data_Node* line_data_list = NULL;
 
     long chars_read;
     int lines_read = 0;
 
     do{
-        chars_read = getline(&current_line, &MAX_LINE_LENGTH, file);
+        size_t left_length, right_length;
+        size_t line_length = get_line_length(file, &left_length, &right_length);
+        current_line = (char *)realloc(current_line, line_length * sizeof(char));
+        chars_read = getline(&current_line, &line_length, file);
         if (chars_read <= 0){
             if(lines_read == 0){
                 goto empty_file;
@@ -133,18 +180,13 @@ struct Line_Data_Node* read_ccd_file(FILE *file) {
             continue;
         }
 
-        if (chars_read == MAX_LINE_LENGTH)
-        {
-            error_invalid_line("Line longer than max permitted");
-        }
-
         // Last line of file won't have a new line
         if (*(current_line + chars_read -1) != '\n')
         {
             *(current_line + chars_read) = '\n';
         }
         
-        line_data_list = append_line_data(line_data_list, parse_line(current_line));
+        line_data_list = append_line_data(line_data_list, parse_line(current_line, left_length, right_length));
 
     }while(chars_read != -1);
     goto success;
