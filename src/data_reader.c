@@ -14,11 +14,11 @@ void error_invalid_line(char* const reason_msg){
     exit(1);        
 }
 
-// Determine the length of a line by reading 128 character chunks
+// Determine the length of a line by reading 32 character chunks
 size_t get_line_length(FILE *file){
     int total_length = 0;
     int chunk_length = 0;
-    char buffer[128];
+    char buffer[32];
     bool is_done = false;
 
     do{
@@ -30,7 +30,7 @@ size_t get_line_length(FILE *file){
                 break;
             }
             chunk_length++;
-        } while(chunk_length < 128);
+        } while(chunk_length < 32);
 
         // Put back onto the input stream
         for(int i = chunk_length - 1; i > 0; i--)
