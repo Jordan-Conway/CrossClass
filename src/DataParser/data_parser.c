@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Data_Parser_Result* create_default_result() {
+static struct Data_Parser_Result* create_default_result() {
     struct Data_Parser_Result* result = (struct Data_Parser_Result*)malloc(sizeof(struct Data_Parser_Result));
 
     result->is_error = false;
@@ -73,6 +73,7 @@ struct Data_Parser_Result* parse_line_data(struct Line_Data_Node* line_data_list
         result->error_message = "Type either missing or not found";
         goto failure;
     }
+    line_data_list = line_data_list->next;
 
     bool parsed = false;
     switch (type) {

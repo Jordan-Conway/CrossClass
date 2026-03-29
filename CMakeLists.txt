@@ -24,6 +24,7 @@ file(GLOB SHARED_SRC
 
 file(GLOB TESTS_SRC
     ${CMAKE_SOURCE_DIR}/tests/*/*.c
+    ${CMAKE_SOURCE_DIR}/tests/*/*/*.c
 )
 
 list(REMOVE_ITEM SHARED_SRC
