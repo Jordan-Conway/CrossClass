@@ -1,21 +1,24 @@
 // Defines a public class called Person
-version: 0.1
+version: 0.0.1
 
 type: class
 
 name: Person
 
-visability: public
+visibility: public
 
 equality: value
 
 fields:
-    name:
+    field: 
+        name: name
         type: string
-        visability: public
-    age:
+        visibility: public
+    field:
+        name: age
         type: int32
-        visability: public
-    date_of_birth:
+        visibility: public
+    field: 
+        name: date_of_birth
         type: date
-        visability: private
+        visibility: private
