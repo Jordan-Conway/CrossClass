@@ -4,7 +4,7 @@
 #include "../../../line_data_list.h"
 #include "../../../Data/Tokens/equality_type.h"
 #include "../../../Data/Tokens/store_type.h"
-#include "../../../Data/Tokens/visability.h"
+#include "../../../Data/Tokens/visibility.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -18,23 +18,23 @@ struct Class_Info* create_default_class() {
     class_info->fields = NULL;
     class_info->name = NULL;
     class_info->store_type = STORETYPE_NOT_SET;
-    class_info->visability = VISABILITY_NOT_SET;
+    class_info->visibility = VISIBILITY_NOT_SET;
 
     return class_info;
 }
 
-enum Visability parse_visability(char* value) {
+enum Visibility parse_visibility(char* value) {
     if (strcmp(value, "public") == 0) {
-        return VISABILITY_PUBLIC;
+        return VISIBILITY_PUBLIC;
     }
     if (strcmp(value, "private") == 0) {
-        return VISABILITY_PRIVATE;
+        return VISIBILITY_PRIVATE;
     }
     if (strcmp(value, "internal") == 0) {
-        return VISABILITY_INTERNAL;
+        return VISIBILITY_INTERNAL;
     }
 
-    return VISABILITY_NOT_SET;
+    return VISIBILITY_NOT_SET;
 }
 
 bool try_parse_class_data(struct Line_Data_Node* line, struct Data_Parser_Result* result, const struct Version* version) {
@@ -45,8 +45,8 @@ bool try_parse_class_data(struct Line_Data_Node* line, struct Data_Parser_Result
             class_info->name = line->data->right;
             goto next_line;
         }
-        if(strcmp(line->data->left, "visability") == 0) {
-            class_info->visability = parse_visability(line->data->right);
+        if(strcmp(line->data->left, "visibility") == 0) {
+            class_info->visibility = parse_visibility(line->data->right);
             goto next_line;
         }
 
