@@ -3,8 +3,9 @@
 
 // Defines how a field should be stored
 enum StoreType {
-    STORE_BY_VALUE,
-    STORE_BY_REFERENCE,
+    STORETYPE_STORE_BY_VALUE,
+    STORETYPE_STORE_BY_REFERENCE,
+    STORETYPE_NOT_SET
 };
 
 #endif
