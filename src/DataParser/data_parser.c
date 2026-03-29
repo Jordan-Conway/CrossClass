@@ -29,7 +29,8 @@ struct Version* ensure_version(const struct Line_Data_Node* line) {
     printf("Left is version\n");
     char* version_string = line->data->right;
 
-    if (strlen(version_string) != 6) {
+    // TODO properly split string to allow multi-digit version numbers e.g. 0.12.1
+    if (strlen(version_string) != 5) {
         printf("Malformed version found. Version should be formatted as x.x.x, instead found %s\n", version_string);
         return NULL;
     }
