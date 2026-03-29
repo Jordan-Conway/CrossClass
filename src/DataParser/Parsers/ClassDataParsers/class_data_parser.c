@@ -3,6 +3,7 @@
 #include "class_info.h"
 #include "./Data/Tokens/equality_type.h"
 #include "store_type.h"
+#include "version.h"
 #include "visability.h"
 #include <stdlib.h>
 
@@ -21,7 +22,7 @@ struct Class_Info* create_default_class() {
     return class_info;
 }
 
-bool try_parse_class_data(struct Line_Data_Node* line, struct Data_Parser_Result* result) {
+bool try_parse_class_data(struct Line_Data_Node* line, struct Data_Parser_Result* result, const struct Version* version) {
     struct Class_Info* class_info = create_default_class();
 
     return true;

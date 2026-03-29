@@ -17,6 +17,7 @@ file(GLOB SHARED_SRC
     ${CMAKE_SOURCE_DIR}/src/Data/*.c
     ${CMAKE_SOURCE_DIR}/src/Data/Tokens/*.c
     ${CMAKE_SOURCE_DIR}/src/DataParser/Parsers/*.c
+    ${CMAKE_SOURCE_DIR}/src/DataParser/Parsers/*/*.c
     ${CMAKE_SOURCE_DIR}/src/DataParser/*.c
     ${CMAKE_SOURCE_DIR}/src/*.c
 )
