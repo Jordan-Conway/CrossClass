@@ -1,9 +1,9 @@
 #include "./data_parser.h"
 
-#include "DataParser/data_parser_result.h"
-#include "line_data_list.h"
-#include "object_type.h"
-#include "version.h"
+#include "./data_parser_result.h"
+#include "../Data/line_data.h"
+#include "../Data/Tokens/object_type.h"
+#include "../Data/version.h"
 #include "./Parsers/ClassDataParsers/class_data_parser.h"
 #include <stdbool.h>
 #include <stdio.h>

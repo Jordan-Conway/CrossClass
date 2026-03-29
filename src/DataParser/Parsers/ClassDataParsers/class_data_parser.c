@@ -1,10 +1,10 @@
 #include "./class_data_parser.h"
 
-#include "class_info.h"
-#include "./Data/Tokens/equality_type.h"
-#include "store_type.h"
-#include "version.h"
-#include "visability.h"
+#include "../../../Data/class_info.h"
+#include "../../../line_data_list.h"
+#include "../../../Data/Tokens/equality_type.h"
+#include "../../../Data/Tokens/store_type.h"
+#include "../../../Data/Tokens/visability.h"
 #include <stdlib.h>
 #include <string.h>
 
