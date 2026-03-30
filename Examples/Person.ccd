@@ -5,7 +5,7 @@ type: class
 
 name: Person
 
-visability: public
+visibility: public
 
 equality: value
 
@@ -13,12 +13,12 @@ fields:
     field: 
         name: name
         type: string
-        visability: public
+        visibility: public
     field:
         name: age
         type: int32
-        visability: public
+        visibility: public
     field: 
         name: date_of_birth
         type: date
-        visability: private
+        visibility: private

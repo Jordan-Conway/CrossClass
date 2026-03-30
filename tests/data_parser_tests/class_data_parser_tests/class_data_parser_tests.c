@@ -8,7 +8,7 @@
 #include "line_data.h"
 #include "line_data_list.h"
 #include "store_type.h"
-#include "visability.h"
+#include "visibility.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,7 +52,7 @@ void test_class_data_parser_no_details_returns_default_values() {
     CU_ASSERT_PTR_NULL(class_info->equality->excluded_fields);
     CU_ASSERT_PTR_NULL(class_info->fields);
     CU_ASSERT(class_info->store_type == STORETYPE_NOT_SET);
-    CU_ASSERT(class_info->visability == VISABILITY_NOT_SET);
+    CU_ASSERT(class_info->visibility == VISIBILITY_NOT_SET);
 
     free(class_info);
 }
@@ -81,11 +81,11 @@ void test_class_data_parser_name_is_parsed() {
     free(class_info);
 }
 
-void test_class_data_parser_visabilty_is_parsed() {
+void test_class_data_parser_visibilty_is_parsed() {
     struct Version version = create_default_version();
     struct Data_Parser_Result result = create_default_result();
     struct Line_Data* line_data = (struct Line_Data*)malloc(sizeof(typeof(*line_data)));
-    line_data->left = "visability";
+    line_data->left = "visibility";
     line_data->right = "public";
     line_data->indentation = 0;
     struct Line_Data_Node line = {
@@ -99,7 +99,7 @@ void test_class_data_parser_visabilty_is_parsed() {
 
     struct Class_Info* class_info = result.result;
 
-    CU_ASSERT(class_info->visability == VISABILITY_PUBLIC);
+    CU_ASSERT(class_info->visibility == VISIBILITY_PUBLIC);
 
     free(line_data);
     free(class_info);
@@ -108,5 +108,5 @@ void test_class_data_parser_visabilty_is_parsed() {
 void add_class_data_parser_tests(CU_pSuite test_suite) {
     CU_ADD_TEST(test_suite, test_class_data_parser_no_details_returns_default_values);
     CU_ADD_TEST(test_suite, test_class_data_parser_name_is_parsed);
-    CU_ADD_TEST(test_suite, test_class_data_parser_visabilty_is_parsed);
+    CU_ADD_TEST(test_suite, test_class_data_parser_visibilty_is_parsed);
 }
