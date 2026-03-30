@@ -7,14 +7,21 @@
 #include <stdio.h>
 #include <string.h>
 
+int known_failed_tests = 0;
+int* failed_tests_ptr;
+
 // Generic function to test a whole line
-void test_line(char source_line[], struct Line_Data_Node* lines, char expected_left[], char expected_right[], int expected_indentation){
-    printf("%s\n", source_line); // The generic function is too abstract without this
+void test_line(const char source_func[], const int source_line, struct Line_Data_Node* lines, char expected_left[], char expected_right[], int expected_indentation){
     CU_ASSERT_PTR_NOT_NULL(lines);
     CU_ASSERT_PTR_NOT_NULL(lines->data);
     CU_ASSERT(strcmp(lines->data->left, expected_left) == 0);
     CU_ASSERT(strcmp(lines->data->right, expected_right) == 0);
     CU_ASSERT(lines->data->indentation == expected_indentation);
+
+    if(*failed_tests_ptr > known_failed_tests){
+        printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func, source_line);
+        known_failed_tests++; // Allows for multiple tests to be caught
+    }
 }
 
 void test_read_ccd_file(){
@@ -33,22 +40,22 @@ void test_read_ccd_file(){
     struct Line_Data_Node* lines = read_ccd_file(file);
 
     printf("Beginning asserts\n");
-    test_line("Read CCD File 0", lines, "version", "0.1", 0);
+    test_line(__func__, __LINE__, lines, "version", "0.1", 0);
     lines = lines->next;
 
-    test_line("Read CCD File 1", lines, "type", "class", 0);
+    test_line(__func__, __LINE__, lines, "type", "class", 0);
     lines = lines->next;
 
-    test_line("Read CCD File 2", lines, "name", "test", 0);
+    test_line(__func__, __LINE__, lines, "name", "test", 0);
     lines = lines->next;
 
-    test_line("Read CCD File 3", lines, "fields", "", 0);
+    test_line(__func__, __LINE__, lines, "fields", "", 0);
     lines = lines->next;
 
-    test_line("Read CCD File 4", lines, "test_field", "", 4);
+    test_line(__func__, __LINE__, lines, "test_field", "", 4);
     lines = lines->next;
 
-    test_line("Read CCD File 5", lines, "type", "int32", 8);
+    test_line(__func__, __LINE__, lines, "type", "int32", 8);
     CU_ASSERT_PTR_NULL(lines->next);
 
     delete_list(lines);
@@ -65,7 +72,7 @@ void test_read_ccd_file_handle_spaces() {
 
     struct Line_Data_Node* lines = read_ccd_file(file);
 
-    test_line("Handle Spaces", lines, "ver sion", "0 .1", 0);
+    test_line(__func__, __LINE__, lines, "ver sion", "0 .1", 0);
     printf("Indent: %d\n", lines->data->indentation);
     CU_ASSERT_PTR_NULL(lines->next);
 
@@ -87,16 +94,16 @@ void test_read_ccd_file_lowercase_left(){
     struct Line_Data_Node* lines = read_ccd_file(file);
 
     printf("Beginning asserts\n");
-    test_line("Lowercase Left 0", lines, "lowercase left", "lowercase right", 0);
+    test_line(__func__, __LINE__, lines, "lowercase left", "lowercase right", 0);
     lines = lines->next;
 
-    test_line("Lowercase Left 1", lines, "lowercase left", "UpPeRcAsE right", 0);
+    test_line(__func__, __LINE__, lines, "lowercase left", "UpPeRcAsE right", 0);
     lines = lines->next;
 
-    test_line("Lowercase Left 2", lines, "uppercase left", "lowercase right", 0);
+    test_line(__func__, __LINE__, lines, "uppercase left", "lowercase right", 0);
     lines = lines->next;
 
-    test_line("Lowercase Left 3", lines, "uppercase left", "UpPeRcAsE right", 0);
+    test_line(__func__, __LINE__, lines, "uppercase left", "UpPeRcAsE right", 0);
     CU_ASSERT_PTR_NULL(lines->next);
 
     delete_list(lines);
@@ -119,22 +126,22 @@ void test_trailing_whitespace_is_trimmed(){
     struct Line_Data_Node* lines = read_ccd_file(file);
 
     printf("Beginning asserts\n");
-    test_line("Trim Trailing 0", lines, "nothing trailing", "nothing trailing", 0);
+    test_line(__func__, __LINE__, lines, "nothing trailing", "nothing trailing", 0);
     lines = lines->next;
 
-    test_line("Trim Trailing 1", lines, "trailing left", "nothing trailing", 0);
+    test_line(__func__, __LINE__, lines, "trailing left", "nothing trailing", 0);
     lines = lines->next;
 
-    test_line("Trim Trailing 2", lines, "nothing trailing", "trailing right", 0);
+    test_line(__func__, __LINE__, lines, "nothing trailing", "trailing right", 0);
     lines = lines->next;
 
-    test_line("Trim Trailing 3", lines, "trailing left", "trailing right", 0);
+    test_line(__func__, __LINE__, lines, "trailing left", "trailing right", 0);
     lines = lines->next;
     
-    test_line("Trim Trailing 4", lines, "empty right nothing trailing", "", 0);
+    test_line(__func__, __LINE__, lines, "empty right nothing trailing", "", 0);
     lines = lines->next;
 
-    test_line("Trim Trailing 5", lines, "empty right trailing left", "", 0);
+    test_line(__func__, __LINE__, lines, "empty right trailing left", "", 0);
     CU_ASSERT_PTR_NULL(lines->next);
 
     delete_list(lines);
@@ -143,29 +150,40 @@ void test_trailing_whitespace_is_trimmed(){
 }
 
 void test_arbitrary_line_lengths(){
+    const char long_string = { [0 ... 99] = 'a', [100] = '\0'};
+
     FILE* file = tmpfile();
 
     fputs("short left:short right\n", file);
-    fputs("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:short right\n", file);
-    fputs("short left:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n", file);
-    fputs("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n", file);
-
+    // "a...a:short right"
+    fputs(long_string, file);
+    fputs(":short right\n", file);
+    // "short left:a...a"
+    fputs("short left:", file);
+    fputs(long_string, file);
+    fputs("\n", file);
+    // "a...a:a...a"
+    fputs(long_string, file);
+    fputs(":", file);
+    fputs(long_string, file);
+    fputs("\n", file);
+    
     rewind(file);
 
     struct Line_Data_Node* lines = read_ccd_file(file);
 
     // Remember, left side will be lowercase
     printf("Beginning asserts\n");
-    test_line("Arbitrary Length 0", lines, "short left", "short right", 0);
+    test_line(__func__, __LINE__, lines, "short left", "short right", 0);
     lines = lines->next;
 
-    test_line("Arbitrary Length 1", lines, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "short right", 0);
+    test_line(__func__, __LINE__, lines, long_string, "short right", 0);
     lines = lines->next;
 
-    test_line("Arbitrary Length 2", lines, "short left", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", 0);
+    test_line(__func__, __LINE__, lines, "short left", long_string, 0);
     lines = lines->next;
 
-    test_line("Arbitrary Length 3", lines, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", 0);
+    test_line(__func__, __LINE__, lines, long_string, long_string, 0);
     CU_ASSERT_PTR_NULL(lines->next);
 
     delete_list(lines);
@@ -174,6 +192,7 @@ void test_arbitrary_line_lengths(){
 }
 
 void add_data_reader_tests(CU_pSuite test_suite) {
+    failed_tests_ptr = &CU_get_registry()->uiNumberOfTests;
     CU_ADD_TEST(test_suite, test_read_ccd_file);
     CU_ADD_TEST(test_suite, test_read_ccd_file_handle_spaces);
     CU_ADD_TEST(test_suite, test_read_ccd_file_lowercase_left);
