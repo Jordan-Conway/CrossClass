@@ -8,10 +8,10 @@
 #include <string.h>
 
 int known_failed_tests = 0;
-int* failed_tests_ptr;
+const int* failed_tests_ptr;
 
 // Generic function to test a whole line
-void test_line(const char source_func[], const int source_line, struct Line_Data_Node* lines, char expected_left[], char expected_right[], int expected_indentation){
+void test_line(const char source_func[], const int source_line, struct Line_Data_Node* lines, const char expected_left[], const char expected_right[], int expected_indentation){
     CU_ASSERT_PTR_NOT_NULL(lines);
     CU_ASSERT_PTR_NOT_NULL(lines->data);
     CU_ASSERT(strcmp(lines->data->left, expected_left) == 0);
