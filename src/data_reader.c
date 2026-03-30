@@ -21,7 +21,6 @@ size_t get_line_length(FILE *file, size_t* left_length, size_t* right_length){
     char buffer[32];
     bool is_done = false;
     bool colon_seen = false;
-    bool is_left = true;
 
     do{
         // Count number of characters
@@ -46,16 +45,9 @@ size_t get_line_length(FILE *file, size_t* left_length, size_t* right_length){
         fseek(file, chunk_length, SEEK_CUR); // Make sure we don't read the same part repeatedly
         chunk_length = 0;
 
-        // Switch to counting right side
-        if(colon_seen){
-            if(!is_left){
-                error_invalid_line("Found ':' on right side of declaration");
-            }
-            if(total_length == 1){
-                error_invalid_line("Left is empty");
-            }
+        // Switch to counting right side upon first colon
+        if(colon_seen && *left_length == 0){
             *left_length = total_length;
-            is_left = false;
             colon_seen = false;
         }
     } while(!is_done);
@@ -148,14 +140,14 @@ struct Line_Data* parse_line(const char* line, const size_t LEFT_LENGTH, const s
 
 // Parse a file (top to bottom)
 struct Line_Data_Node* read_ccd_file(FILE *file) {
-    char* current_line = (char *)calloc(1, sizeof(char));
+    char* current_line = NULL;
     struct Line_Data_Node* line_data_list = NULL;
 
     long chars_read;
     int lines_read = 0;
 
     do{
-        size_t left_length, right_length;
+        size_t left_length = 0, right_length = 0;
         size_t line_length = get_line_length(file, &left_length, &right_length);
         current_line = (char *)realloc(current_line, line_length * sizeof(char));
         chars_read = getline(&current_line, &line_length, file);
@@ -184,6 +176,10 @@ struct Line_Data_Node* read_ccd_file(FILE *file) {
         if (*(current_line + chars_read -1) != '\n')
         {
             *(current_line + chars_read) = '\n';
+        }
+
+        if(line_length == 1){
+            error_invalid_line("Left is empty");
         }
         
         line_data_list = append_line_data(line_data_list, parse_line(current_line, left_length, right_length));
