@@ -157,16 +157,16 @@ void test_arbitrary_line_lengths(){
 
     fputs("short left:short right\n", file);
     // "a...a:short right"
-    fputs(long_string, file);
+    fputs(*long_string, file);
     fputs(":short right\n", file);
     // "short left:a...a"
     fputs("short left:", file);
-    fputs(long_string, file);
+    fputs(*long_string, file);
     fputs("\n", file);
     // "a...a:a...a"
-    fputs(long_string, file);
+    fputs(*long_string, file);
     fputs(":", file);
-    fputs(long_string, file);
+    fputs(*long_string, file);
     fputs("\n", file);
     
     rewind(file);
@@ -178,13 +178,13 @@ void test_arbitrary_line_lengths(){
     test_line(__func__, __LINE__, lines, "short left", "short right", 0);
     lines = lines->next;
 
-    test_line(__func__, __LINE__, lines, long_string, "short right", 0);
+    test_line(__func__, __LINE__, lines, *long_string, "short right", 0);
     lines = lines->next;
 
-    test_line(__func__, __LINE__, lines, "short left", long_string, 0);
+    test_line(__func__, __LINE__, lines, "short left", *long_string, 0);
     lines = lines->next;
 
-    test_line(__func__, __LINE__, lines, long_string, long_string, 0);
+    test_line(__func__, __LINE__, lines, *long_string, *long_string, 0);
     CU_ASSERT_PTR_NULL(lines->next);
 
     delete_list(lines);
