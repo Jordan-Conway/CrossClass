@@ -4,11 +4,11 @@
 #include <stdbool.h>
 #include "./Tokens/store_type.h"
 #include "./Tokens/data_type.h"
-#include "./Tokens/visability.h"
+#include "./Tokens/visibility.h"
 
 struct Field {
     enum DataType data_type;
-    enum Visability visability;
+    enum Visibility visibility;
     enum StoreType store_type;
     char* name;
     int name_length;
