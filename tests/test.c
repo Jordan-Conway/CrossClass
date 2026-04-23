@@ -8,9 +8,6 @@
 #include <CUnit/TestRun.h>
 #include <stdio.h>
 
-const int* known_failed_tests_ptr;
-const int* failed_tests_ptr;
-
 int main() {
     CU_pSuite test_suite = NULL;
 
@@ -24,11 +21,6 @@ int main() {
         CU_cleanup_registry();
         return CU_get_error();
     }
-
-    // Used in generic functions to allow multiple errors to be caught
-    int known_failed_tests = 0;
-    known_failed_tests_ptr = &known_failed_tests;
-    failed_tests_ptr = &CU_get_registry()->uiNumberOfTests;
 
     add_line_data_tests(test_suite);
     add_data_reader_tests(test_suite);
