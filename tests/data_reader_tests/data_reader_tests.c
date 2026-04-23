@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 
+extern const int* known_failed_tests_ptr;
+extern const int* failed_tests_ptr;
+
 // Generic function to test a whole line
 void test_line(const char source_func[], const int source_line, struct Line_Data_Node* lines, const char expected_left[], const char expected_right[], int expected_indentation){
     CU_ASSERT_PTR_NOT_NULL(lines);
@@ -15,9 +18,9 @@ void test_line(const char source_func[], const int source_line, struct Line_Data
     CU_ASSERT(strcmp(lines->data->right, expected_right) == 0);
     CU_ASSERT(lines->data->indentation == expected_indentation);
 
-    if(*failed_tests_ptr > known_failed_tests){
+    if(*failed_tests_ptr > *known_failed_tests){
         printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func, source_line);
-        known_failed_tests++; // Allows for multiple tests to be caught
+        (*known_failed_tests)++; // Allows for multiple tests to be caught
     }
 }
 

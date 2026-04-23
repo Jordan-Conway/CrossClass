@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern const int* known_failed_tests_ptr;
+extern const int* failed_tests_ptr;
+
 // Generic function to test for an error
 void test_error_raised(const char source_func[], const int source_line, FILE* test_file){
     struct Line_Data_Node* lines = read_ccd_file(test_file);
@@ -19,9 +22,9 @@ void test_error_raised(const char source_func[], const int source_line, FILE* te
     CU_ASSERT(result->is_error == true);
     CU_ASSERT_PTR_NOT_NULL(result->error_message);
 
-    if(*failed_tests_ptr > known_failed_tests){
+    if(*failed_tests_ptr > *known_failed_tests){
         printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func, source_line);
-        known_failed_tests++; // Allows for multiple tests to be caught
+        (*known_failed_tests)++; // Allows for multiple tests to be caught
     }
 
     free(result);
