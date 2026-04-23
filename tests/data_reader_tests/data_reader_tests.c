@@ -18,9 +18,9 @@ void test_line(const char source_func[], const int source_line, struct Line_Data
     CU_ASSERT(strcmp(lines->data->right, expected_right) == 0);
     CU_ASSERT(lines->data->indentation == expected_indentation);
 
-    if(*failed_tests_ptr > *known_failed_tests){
+    if(*failed_tests_ptr > *known_failed_tests_ptr){
         printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func, source_line);
-        (*known_failed_tests)++; // Allows for multiple tests to be caught
+        (*known_failed_tests_ptr)++; // Allows for multiple tests to be caught
     }
 }
 

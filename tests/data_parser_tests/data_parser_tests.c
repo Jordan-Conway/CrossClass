@@ -22,9 +22,9 @@ void test_error_raised(const char source_func[], const int source_line, FILE* te
     CU_ASSERT(result->is_error == true);
     CU_ASSERT_PTR_NOT_NULL(result->error_message);
 
-    if(*failed_tests_ptr > *known_failed_tests){
+    if(*failed_tests_ptr > *known_failed_tests_ptr){
         printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func, source_line);
-        (*known_failed_tests)++; // Allows for multiple tests to be caught
+        (*known_failed_tests_ptr)++; // Allows for multiple tests to be caught
     }
 
     free(result);
