@@ -24,7 +24,7 @@ void test_error_raised(const char source_func[], const int source_line, FILE* te
 
     if(*failed_tests_ptr > *known_failed_tests_ptr){
         printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func, source_line);
-        (*known_failed_tests_ptr)++; // Allows for multiple tests to be caught
+        *known_failed_tests_ptr += 1; // Allows for multiple tests to be caught
     }
 
     free(result);

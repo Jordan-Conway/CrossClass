@@ -20,7 +20,7 @@ void test_line(const char source_func[], const int source_line, struct Line_Data
 
     if(*failed_tests_ptr > *known_failed_tests_ptr){
         printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func, source_line);
-        (*known_failed_tests_ptr)++; // Allows for multiple tests to be caught
+        *known_failed_tests_ptr += 1; // Allows for multiple tests to be caught
     }
 }
 
