@@ -8,23 +8,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void test_data_reader_missing_version_fails() {
-    FILE* test_file = tmpfile();
+int known_failed_tests = 0;
+const int* failed_tests_ptr;
 
-    fputs("Not a version: 0.0.1\n", test_file);
-    rewind(test_file);
-
+// Generic function to test for an error
+void test_error_raised(const char source_func[], const int source_line, FILE* test_file){
     struct Line_Data_Node* lines = read_ccd_file(test_file);
     struct Data_Parser_Result* result = parse_line_data(lines);
 
     CU_ASSERT_PTR_NOT_NULL(lines);
     CU_ASSERT_PTR_NOT_NULL(result);
     CU_ASSERT(result->result == NULL);
-    CU_ASSERT(result->is_error = true);
+    CU_ASSERT(result->is_error == true);
     CU_ASSERT_PTR_NOT_NULL(result->error_message);
+
+    if(*failed_tests_ptr > known_failed_tests){
+        printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func, source_line);
+        known_failed_tests++; // Allows for multiple tests to be caught
+    }
 
     free(result);
     delete_list(lines);
+}
+
+void test_data_reader_missing_version_fails() {
+    FILE* test_file = tmpfile();
+
+    fputs("Not a version: 0.0.1\n", test_file);
+    rewind(test_file);
+
+    test_error_raised(__func__, __LINE__, test_file);
+
     fclose(test_file);
 }
 
@@ -35,18 +49,7 @@ void test_data_reader_version_not_first_fails() {
     fputs("version: 0.0.1", test_file);
     rewind(test_file);
 
-    struct Line_Data_Node* lines = read_ccd_file(test_file);
-    struct Data_Parser_Result* result = parse_line_data(lines);
-
-    CU_ASSERT_PTR_NOT_NULL(lines);
-
-    CU_ASSERT(result->result == NULL);
-    CU_ASSERT(result->is_error == true);
-    CU_ASSERT_PTR_NOT_NULL(result->error_message);
-
-    printf("Result is null: %d\n", result == NULL);
-    free(result);
-    delete_list(lines);
+    test_error_raised(__func__, __LINE__, test_file);
 
     fclose(test_file);
 }
@@ -57,16 +60,8 @@ void test_data_reader_version_malformed_fails() {
     fputs("version:0.1", test_file);
     rewind(test_file);
 
-    struct Line_Data_Node* lines = read_ccd_file(test_file);
-    struct Data_Parser_Result* result = parse_line_data(lines);
+    test_error_raised(__func__, __LINE__, test_file);
 
-    CU_ASSERT_PTR_NOT_NULL(result);
-    CU_ASSERT_PTR_NULL(result->result);
-    CU_ASSERT_PTR_NOT_NULL(result->error_message);
-    CU_ASSERT(result->is_error == true);
-
-    free(result);
-    delete_list(lines);
     fclose(test_file);
 }
 
@@ -76,16 +71,8 @@ void test_data_reader_version_extra_content_fails() {
     fputs("version:0.0.1.2", test_file);
     rewind(test_file);
 
-    struct Line_Data_Node* lines = read_ccd_file(test_file);
-    struct Data_Parser_Result* result = parse_line_data(lines);
+    test_error_raised(__func__, __LINE__, test_file);
 
-    CU_ASSERT_PTR_NOT_NULL(result);
-    CU_ASSERT_PTR_NULL(result->result);
-    CU_ASSERT_PTR_NOT_NULL(result->error_message);
-    CU_ASSERT(result->is_error == true);
-
-    free(result);
-    delete_list(lines);
     fclose(test_file);
 }
 
@@ -96,16 +83,8 @@ void test_data_reader_missing_type_fails() {
     fputs("Not a type: type", test_file);
     rewind(test_file);
 
-    struct Line_Data_Node* lines = read_ccd_file(test_file);
-    struct Data_Parser_Result* result = parse_line_data(lines);
+    test_error_raised(__func__, __LINE__, test_file);
 
-    CU_ASSERT_PTR_NOT_NULL(result);
-    CU_ASSERT_PTR_NULL(result->result);
-    CU_ASSERT_PTR_NOT_NULL(result->error_message);
-    CU_ASSERT(result->is_error == true);
-
-    free(result);
-    delete_list(lines);
     fclose(test_file);
 }
 
@@ -117,20 +96,13 @@ void test_data_reader_unsupported_type_fails() {
     fputs("type: unsupported", test_file);
     rewind(test_file);
 
-    struct Line_Data_Node* lines = read_ccd_file(test_file);
-    struct Data_Parser_Result* result = parse_line_data(lines);
+    test_error_raised(__func__, __LINE__, test_file);
 
-    CU_ASSERT_PTR_NOT_NULL(result);
-    CU_ASSERT_PTR_NULL(result->result);
-    CU_ASSERT_PTR_NOT_NULL(result->error_message);
-    CU_ASSERT(result->is_error == true);
-
-    free(result);
-    delete_list(lines);
     fclose(test_file);
 }
 
 void add_data_parser_tests(CU_pSuite test_suite) {
+    failed_tests_ptr = &CU_get_registry()->uiNumberOfTests;
     CU_ADD_TEST(test_suite, test_data_reader_missing_version_fails);
     CU_ADD_TEST(test_suite, test_data_reader_version_not_first_fails);
     CU_ADD_TEST(test_suite, test_data_reader_version_malformed_fails);
