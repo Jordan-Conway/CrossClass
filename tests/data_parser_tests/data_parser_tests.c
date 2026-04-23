@@ -8,9 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int known_failed_tests = 0;
-const int* failed_tests_ptr;
-
 // Generic function to test for an error
 void test_error_raised(const char source_func[], const int source_line, FILE* test_file){
     struct Line_Data_Node* lines = read_ccd_file(test_file);
@@ -102,7 +99,6 @@ void test_data_reader_unsupported_type_fails() {
 }
 
 void add_data_parser_tests(CU_pSuite test_suite) {
-    failed_tests_ptr = &CU_get_registry()->uiNumberOfTests;
     CU_ADD_TEST(test_suite, test_data_reader_missing_version_fails);
     CU_ADD_TEST(test_suite, test_data_reader_version_not_first_fails);
     CU_ADD_TEST(test_suite, test_data_reader_version_malformed_fails);

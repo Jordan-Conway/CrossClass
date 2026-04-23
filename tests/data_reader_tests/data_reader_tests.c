@@ -7,9 +7,6 @@
 #include <stdio.h>
 #include <string.h>
 
-int known_failed_tests = 0;
-const int* failed_tests_ptr;
-
 // Generic function to test a whole line
 void test_line(const char source_func[], const int source_line, struct Line_Data_Node* lines, const char expected_left[], const char expected_right[], int expected_indentation){
     CU_ASSERT_PTR_NOT_NULL(lines);
@@ -192,7 +189,6 @@ void test_arbitrary_line_lengths(){
 }
 
 void add_data_reader_tests(CU_pSuite test_suite) {
-    failed_tests_ptr = &CU_get_registry()->uiNumberOfTests;
     CU_ADD_TEST(test_suite, test_read_ccd_file);
     CU_ADD_TEST(test_suite, test_read_ccd_file_handle_spaces);
     CU_ADD_TEST(test_suite, test_read_ccd_file_lowercase_left);
