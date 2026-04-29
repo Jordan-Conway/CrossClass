@@ -14,6 +14,8 @@ set(PROJECT_INCLUDES
 )
 
 file(GLOB SHARED_SRC
+    ${CMAKE_SOURCE_DIR}/src/Commands/*.c
+    ${CMAKE_SOURCE_DIR}/src/Commands/*/*.c
     ${CMAKE_SOURCE_DIR}/src/Data/*.c
     ${CMAKE_SOURCE_DIR}/src/Data/Tokens/*.c
     ${CMAKE_SOURCE_DIR}/src/DataParser/Parsers/*.c
