@@ -161,7 +161,7 @@ struct Line_Data_Node* read_ccd_file(FILE *file) {
         lines_read++;
 
         // Skip empty lines
-        if(chars_read < 2)
+        if(left_length == 0)
         {
             continue;
         }
