@@ -197,7 +197,7 @@ void test_handle_whitespace_lines(){
     fputs("\n", file);
     fputs(" \n", file);
     fputs("  \n", file);
-    fputs("Non Empty Line:\n")
+    fputs("Non Empty Line:\n", file);
     fputs("   \n", file);
 
     rewind(file);
