@@ -197,15 +197,17 @@ void test_handle_whitespace_lines(){
     fputs("\n", file);
     fputs(" \n", file);
     fputs("  \n", file);
+    fputs("Non Empty Line:\n")
     fputs("   \n", file);
 
     rewind(file);
 
     struct Line_Data_Node* lines = read_ccd_file(file);
 
-    CU_ASSERT(lines == NULL);
-    
-    //Don't need to clear as lines should be NULL
+    test_line(__func__, __LINE__, lines, "non Empty Line", "", 0);
+    CU_ASSERT_PTR_NULL(lines->next);
+
+    delete_list(lines);
 
     fclose(file);
 }

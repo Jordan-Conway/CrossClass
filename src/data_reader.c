@@ -145,6 +145,7 @@ struct Line_Data_Node* read_ccd_file(FILE *file) {
 
     long chars_read;
     int lines_read = 0;
+    bool non_empty_line_found = false;
 
     do{
         size_t left_length = 0, right_length = 0;
@@ -183,8 +184,11 @@ struct Line_Data_Node* read_ccd_file(FILE *file) {
         }
         
         line_data_list = append_line_data(line_data_list, parse_line(current_line, left_length, right_length));
-
+        non_empty_line_found = true;
     }while(chars_read != -1);
+    if(!non_empty_line_found){
+        goto empty_file;
+    }
     goto success;
 
 empty_file:
