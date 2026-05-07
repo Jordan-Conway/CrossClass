@@ -1,4 +1,7 @@
 #include "./command_list.h"
+#include "./HelpCommand/help_command.h"
+#include "./VersionCommand/version_command.h"
+#include <stdlib.h>
 
 struct Command_Data Help_Command_Data = {
     .command_function = help_command,
@@ -8,4 +11,9 @@ struct Command_Data Help_Command_Data = {
 struct Command_Data Invalid_Command_Data = {
     .command_function = NULL,
     .type = VC_NOT_SET
+};
+
+struct Command_Data Version_Command_Data = {
+    .command_function = version_command,
+    .type = VC_VERSION
 };

@@ -11,6 +11,10 @@ bool args_are_valid(struct Command_Data* command, int argc, char* argv[]) {
         return true;
     }
 
+    if(command->type == VC_VERSION) {
+        return true;
+    }
+
     return true;
 }
 
@@ -23,6 +27,14 @@ struct Command_Data* parse_command(int* argc, char** argv[]) {
         strcmp((*argv)[0], "--help") == 0
     ) {
         result = &Help_Command_Data;
+        goto parsed;
+    }
+
+    if(
+        strcmp((*argv)[0], "-v") == 0 ||
+        strcmp((*argv)[0], "--version") == 0
+    ) {
+        result = &Version_Command_Data;
         goto parsed;
     }
 

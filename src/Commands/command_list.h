@@ -1,11 +1,9 @@
 #ifndef COMMAND_LIST
 #define COMMAND_LIST
 
-#include "./HelpCommand/help_command.h"
-#include <stdlib.h>
-
 enum valid_command {
     VC_HELP,
+    VC_VERSION,
     VC_NOT_SET
 };
 
@@ -16,5 +14,6 @@ struct Command_Data {
 
 extern struct Command_Data Invalid_Command_Data;
 extern struct Command_Data Help_Command_Data;
+extern struct Command_Data Version_Command_Data;
 
 #endif
