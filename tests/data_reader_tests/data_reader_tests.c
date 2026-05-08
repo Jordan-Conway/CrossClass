@@ -191,10 +191,32 @@ void test_arbitrary_line_lengths(){
     fclose(file);
 }
 
+void test_handle_whitespace_lines(){
+    FILE* file = tmpfile();
+
+    fputs("\n", file);
+    fputs(" \n", file);
+    fputs("  \n", file);
+    fputs("non empty left:non empty right\n", file);
+    fputs("   \n", file);
+
+    rewind(file);
+
+    struct Line_Data_Node* lines = read_ccd_file(file);
+
+    test_line(__func__, __LINE__, lines, "non empty left", "non empty right", 0);
+    CU_ASSERT_PTR_NULL(lines->next);
+
+    delete_list(lines);
+
+    fclose(file);
+}
+
 void add_data_reader_tests(CU_pSuite test_suite) {
     CU_ADD_TEST(test_suite, test_read_ccd_file);
     CU_ADD_TEST(test_suite, test_read_ccd_file_handle_spaces);
     CU_ADD_TEST(test_suite, test_read_ccd_file_lowercase_left);
     CU_ADD_TEST(test_suite, test_trailing_whitespace_is_trimmed);
     CU_ADD_TEST(test_suite, test_arbitrary_line_lengths);
+    CU_ADD_TEST(test_suite, test_handle_whitespace_lines);
 }
