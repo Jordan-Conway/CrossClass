@@ -11,7 +11,7 @@ bool validate_parse_command_args(int argc, char* argv[]) {
     return true;
 }
 
-enum command_result parse_file_command(int argc, char* argv[]) {
+struct command_result parse_file_command(int argc, char* argv[]) {
     FILE *fptr = fopen(argv[1], "r");
 
     struct Line_Data_Node* line_list = read_ccd_file(fptr);
@@ -24,5 +24,10 @@ enum command_result parse_file_command(int argc, char* argv[]) {
     free(parse_result);
     fclose(fptr);
 
-    return COMMAND_RESULT_SUCCESS;
+    struct command_result result = {
+        .status = COMMAND_RESULT_SUCCESS,
+        .message = "Ok"
+    };
+
+    return result;
 }

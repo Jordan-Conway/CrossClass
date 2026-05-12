@@ -18,21 +18,21 @@ bool args_are_valid(struct Command_Data* command, int argc, char* argv[]) {
     return true;
 }
 
-struct Command_Data* parse_command(int* argc, char** argv[]) {
+struct Command_Data* parse_command(int argc, char* argv[]) {
     struct Command_Data* result = (typeof(result))malloc(sizeof(*result));
     result->command_function = NULL;
     if(
-        *argc == 0 ||
-        strcmp((*argv)[0], "-h") == 0 ||
-        strcmp((*argv)[0], "--help") == 0
+        argc == 0 ||
+        strcmp(argv[0], "-h") == 0 ||
+        strcmp(argv[0], "--help") == 0
     ) {
         result = &Help_Command_Data;
         goto parsed;
     }
 
     if(
-        strcmp((*argv)[0], "-v") == 0 ||
-        strcmp((*argv)[0], "--version") == 0
+        strcmp(argv[0], "-v") == 0 ||
+        strcmp(argv[0], "--version") == 0
     ) {
         result = &Version_Command_Data;
         goto parsed;
@@ -44,7 +44,7 @@ struct Command_Data* parse_command(int* argc, char** argv[]) {
     }
 
 parsed:
-    if(!args_are_valid(result, *argc, *argv)) {
+    if(!args_are_valid(result, argc, argv)) {
         result = &Invalid_Command_Data;
     }
 

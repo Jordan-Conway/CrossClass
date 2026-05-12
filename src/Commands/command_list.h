@@ -8,7 +8,7 @@ enum valid_command {
 };
 
 struct Command_Data {
-    enum command_result (*command_function)(int, char*[]);
+    struct command_result (*command_function)(int, char*[]);
     enum valid_command type;
 };
 

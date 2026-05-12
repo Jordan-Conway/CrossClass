@@ -9,6 +9,6 @@ bool validate_help_command_args(int argc, char* argv[]);
 /*
     Prints the help page
 */
-enum command_result help_command(int argc, char* argv[]);
+struct command_result help_command(int argc, char* argv[]);
 
 #endif

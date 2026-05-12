@@ -9,6 +9,6 @@ bool validate_parse_command_args(int argc, char* argv[]);
 /*
     Parses a given ccd file
 */
-enum command_result parse_file_command(int argc, char* argv[]);
+struct command_result parse_file_command(int argc, char* argv[]);
 
 #endif
