@@ -2,8 +2,9 @@
 #define COMMAND
 
 enum command_status {
-    COMMAND_RESULT_FAILURE = 0,
-    COMMAND_RESULT_SUCCESS = 1
+    COMMAND_RESULT_SUCCESS = 0,
+    COMMAND_RESULT_FAILURE = 1,
+    COMMAND_RESULT_NOT_SET = 2,
 };
 
 struct command_result {

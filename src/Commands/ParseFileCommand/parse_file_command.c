@@ -12,22 +12,35 @@ bool validate_parse_command_args(int argc, char* argv[]) {
 }
 
 struct command_result parse_file_command(int argc, char* argv[]) {
-    FILE *fptr = fopen(argv[1], "r");
+    struct command_result result = {
+        .status = COMMAND_RESULT_NOT_SET,
+        .message = ""
+    };
+
+    FILE *fptr = fopen(argv[0], "r");
+
+    if(fptr == NULL) {
+        result.status = COMMAND_RESULT_FAILURE;
+        result.message = "Failed to open file";
+        exit(1);
+    }
 
     struct Line_Data_Node* line_list = read_ccd_file(fptr);
     struct Data_Parser_Result* parse_result = parse_line_data(line_list);
 
-    printf("Parsed successfully: %d\n", !parse_result->is_error);
-    printf("Error message %s\n", parse_result->error_message == NULL ? "" : parse_result->error_message);
+    if(parse_result->error_message) {
+        printf("Error message %s\n", parse_result->error_message);
+    }
+    else {
+        printf("Parsed successfully\n");
+    }
 
     delete_list(line_list);
     free(parse_result);
     fclose(fptr);
 
-    struct command_result result = {
-        .status = COMMAND_RESULT_SUCCESS,
-        .message = "Ok"
-    };
+    result.status = COMMAND_RESULT_SUCCESS;
+    result.message = "Ok";
 
     return result;
 }

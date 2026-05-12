@@ -4,8 +4,6 @@
 #include "../command.h"
 #include <stdbool.h>
 
-bool validate_parse_command_args(int argc, char* argv[]);
-
 /*
     Parses a given ccd file
 */

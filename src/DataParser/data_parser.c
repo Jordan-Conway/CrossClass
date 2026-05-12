@@ -21,12 +21,10 @@ static struct Data_Parser_Result* create_default_result() {
 }
 
 struct Version* ensure_version(const struct Line_Data_Node* line) {
-    printf("Getting version\n");
     if (strcmp("version", line->data->left) != 0) {
         printf("Expected to find version, instead found %s\n", line->data->left);
         return NULL;
     }
-    printf("Left is version\n");
     char* version_string = line->data->right;
 
     // TODO properly split string to allow multi-digit version numbers e.g. 0.12.1
