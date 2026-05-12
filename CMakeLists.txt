@@ -14,6 +14,8 @@ set(PROJECT_INCLUDES
 )
 
 file(GLOB SHARED_SRC
+    ${CMAKE_SOURCE_DIR}/src/Commands/*.c
+    ${CMAKE_SOURCE_DIR}/src/Commands/*/*.c
     ${CMAKE_SOURCE_DIR}/src/Data/*.c
     ${CMAKE_SOURCE_DIR}/src/Data/Tokens/*.c
     ${CMAKE_SOURCE_DIR}/src/DataParser/Parsers/*.c
@@ -23,8 +25,9 @@ file(GLOB SHARED_SRC
 )
 
 file(GLOB TESTS_SRC
-    ${CMAKE_SOURCE_DIR}/tests/*/*.c
-    ${CMAKE_SOURCE_DIR}/tests/*/*/*.c
+    ${CMAKE_SOURCE_DIR}/tests/Unit/*.c
+    ${CMAKE_SOURCE_DIR}/tests/Unit/*/*.c
+    ${CMAKE_SOURCE_DIR}/tests/Unit/*/*/*.c
 )
 
 list(REMOVE_ITEM SHARED_SRC
@@ -50,7 +53,7 @@ set_target_properties( crossclass
 
 # Test executable
 add_executable(crossclass_tests
-    tests/test.c
+    tests/Unit/test.c
     ${SHARED_SRC}
     ${TESTS_SRC}
 )
