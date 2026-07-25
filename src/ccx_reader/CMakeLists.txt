@@ -12,3 +12,5 @@ target_include_directories(
     ccx_reader
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+
+set_target_properties(ccx_reader PROPERTIES PREFIX "")

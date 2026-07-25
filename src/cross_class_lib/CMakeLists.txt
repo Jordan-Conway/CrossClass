@@ -22,3 +22,5 @@ target_link_libraries(
     PRIVATE
     ccx_reader
 )
+
+set_target_properties(cross_class_lib PROPERTIES PREFIX "")
