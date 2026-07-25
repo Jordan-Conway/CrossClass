@@ -1,70 +1,19 @@
 cmake_minimum_required(VERSION 3.28)
-project(crossclass C)
 
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 
-# set(CMAKE_BUILD_TYPE Debug)
+project(CrossClass)
 
-set(PROJECT_INCLUDES
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/Data
-    ${CMAKE_SOURCE_DIR}/src/Data/Tokens
-    ${CMAKE_SOURCE_DIR}/tests
-    ${CMAKE_SOURCE_DIR}/tests/*/*
-)
+add_subdirectory(src/ccx_reader)
 
-file(GLOB SHARED_SRC
-    ${CMAKE_SOURCE_DIR}/src/Commands/*.c
-    ${CMAKE_SOURCE_DIR}/src/Commands/*/*.c
-    ${CMAKE_SOURCE_DIR}/src/Data/*.c
-    ${CMAKE_SOURCE_DIR}/src/Data/Tokens/*.c
-    ${CMAKE_SOURCE_DIR}/src/DataParser/Parsers/*.c
-    ${CMAKE_SOURCE_DIR}/src/DataParser/Parsers/*/*.c
-    ${CMAKE_SOURCE_DIR}/src/DataParser/*.c
-    ${CMAKE_SOURCE_DIR}/src/*.c
-)
-
-file(GLOB TESTS_SRC
-    ${CMAKE_SOURCE_DIR}/tests/Unit/*.c
-    ${CMAKE_SOURCE_DIR}/tests/Unit/*/*.c
-    ${CMAKE_SOURCE_DIR}/tests/Unit/*/*/*.c
-)
-
-list(REMOVE_ITEM SHARED_SRC
-    ${CMAKE_SOURCE_DIR}/src/main.c
-)
-
-# Main application
-add_executable(crossclass
+add_executable(${CMAKE_PROJECT_NAME}
     src/main.c
-    ${SHARED_SRC}
 )
 
-target_include_directories(crossclass PRIVATE ${PROJECT_INCLUDES})
-
-set(BUILD_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
-
-set_target_properties( crossclass
-    PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/crossclass/lib
-    LIBRARY_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/crossclass/lib
-    RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/crossclass/bin
+target_link_libraries(
+    ${CMAKE_PROJECT_NAME}
+    PRIVATE
+    ccx_reader
 )
 
-# Test executable
-add_executable(crossclass_tests
-    tests/Unit/test.c
-    ${SHARED_SRC}
-    ${TESTS_SRC}
-)
-
-set_target_properties( crossclass_tests
-    PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/tests/lib
-    LIBRARY_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/tests/lib
-    RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIRECTORY}/tests/bin
-)
-
-target_include_directories(crossclass_tests PRIVATE ${PROJECT_INCLUDES})
-find_library(CUNIT_LIB cunit REQUIRED)
-target_link_libraries(crossclass_tests PRIVATE ${CUNIT_LIB})

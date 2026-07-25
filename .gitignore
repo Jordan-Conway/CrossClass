@@ -57,6 +57,7 @@ dkms.conf
 # Clang
 /.cache/*
 
-# build directory contents
-/build/*
-!/build/.gitkeep
+# build output
+bin/
+build/
+lib/

@@ -1,0 +1,43 @@
+#ifndef LINE_DATA
+#define LINE_DATA
+
+#include <stdbool.h>
+
+struct Line_Data {
+  int indentation;
+  char *left;
+  char *right;
+};
+
+struct Line_Data_Node {
+  struct Line_Data *data;
+  struct Line_Data_Node *prev;
+  struct Line_Data_Node *next;
+};
+
+// Frees up the memory claimed by a Line_Data instance
+void delete_data(struct Line_Data *data);
+
+struct Line_Data_Node *create_line_data_list();
+
+// Appends data to the end of the linked list
+struct Line_Data_Node *append_line_data(struct Line_Data_Node *,
+                                        struct Line_Data *data);
+
+// Gets the head of the list
+struct Line_Data_Node *get_head_of_line_data_list(struct Line_Data_Node *list);
+
+// Deletes all entries in the list regardless of which is passed in
+void delete_list(struct Line_Data_Node *list);
+
+// Compares two Line_Data structs for equality based on value
+bool line_data_equality(const struct Line_Data *a, const struct Line_Data *b);
+
+// Compares the data content of two nodes
+bool line_data_node_equality(const struct Line_Data_Node *a,
+                             const struct Line_Data_Node *b);
+
+// Counts the number of nodes after a given node
+int count_ahead(struct Line_Data_Node *node);
+
+#endif
