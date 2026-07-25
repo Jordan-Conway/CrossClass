@@ -6,14 +6,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 project(CrossClass)
 
 add_subdirectory(src/ccx_reader)
-
-add_executable(${CMAKE_PROJECT_NAME}
-    src/main.c
-)
-
-target_link_libraries(
-    ${CMAKE_PROJECT_NAME}
-    PRIVATE
-    ccx_reader
-)
+add_subdirectory(src/cross_class_lib)
+add_subdirectory(src/cross_class_cli)
 

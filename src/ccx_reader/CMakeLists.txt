@@ -11,4 +11,4 @@ target_sources(ccx_reader
 target_include_directories(
     ccx_reader
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes)

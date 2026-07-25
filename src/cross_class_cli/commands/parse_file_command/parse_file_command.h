@@ -7,6 +7,6 @@
 /*
     Parses a given ccd file
 */
-struct command_result parse_file_command(int argc, char* argv[]);
+struct command_result parse_file_command(int argc, char *argv[]);
 
 #endif
