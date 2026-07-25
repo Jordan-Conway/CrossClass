@@ -27,10 +27,17 @@ set_target_properties(ccx_reader PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${Source_Code_Directory}/ccx_reader/includes"
 )
 
+add_library(cross_class_lib SHARED IMPORTED)
+set_target_properties(cross_class_lib PROPERTIES
+    IMPORTED_LOCATION "${Shared_Object_Directory}/cross_class_lib.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${Source_Code_Directory}/cross_class_lib/includes"
+)
+
 #endregion
 
 #region test project directories
 add_subdirectory(./ccx_reader_tests)
+add_subdirectory(./cross_class_lib_tests)
 #endregion
 
 #region create test executable
@@ -45,6 +52,8 @@ target_link_libraries(CrossClassTests
     PRIVATE
     ccx_reader
     ccx_reader_tests
+    cross_class_lib
+    cross_class_lib_tests
     ${CUNIT_LIBRARY}
 )
 #endregion
