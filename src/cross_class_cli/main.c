@@ -1,2 +1,13 @@
-#include <stdio.h>
-int main(int argc, char *argv[]) { printf("Hello World\n"); }
+#include "./commands/command.h"
+#include "./commands/command_list.h"
+
+int main(int argc, char *argv[]) {
+
+  argc--;
+  argv++;
+
+  struct Command_Data *command = parse_command(argc, argv);
+  struct command_result result = command->command_function(argc, argv);
+
+  return result.status;
+}

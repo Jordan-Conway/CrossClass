@@ -41,14 +41,14 @@ add_subdirectory(./cross_class_lib_tests)
 #endregion
 
 #region create test executable
-add_executable(CrossClassTests)
+add_executable(cross_class_tests)
 
-target_sources(CrossClassTests
+target_sources(cross_class_tests
     PUBLIC
     test.c)
 
 
-target_link_libraries(CrossClassTests
+target_link_libraries(cross_class_tests
     PRIVATE
     ccx_reader
     ccx_reader_tests
