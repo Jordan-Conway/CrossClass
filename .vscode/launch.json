@@ -8,8 +8,10 @@
             "name": "(gdb) Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/crossclass/bin/crossclass",
-            "args": ["${workspaceFolder}/Examples/Person.ccd"],
+            "program": "${workspaceFolder}/bin/cross_class_cli",
+            "args": [
+                "${workspaceFolder}/Examples/Person.ccd"
+            ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
@@ -32,7 +34,7 @@
             "name": "(gdb) Debug tests",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/tests/bin/crossclass_tests",
+            "program": "${workspaceFolder}/tests/unit/bin/cross_class_tests",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
