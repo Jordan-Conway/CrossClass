@@ -33,7 +33,9 @@ enum DataType {
 enum DataType data_type_from_str(char *str);
 
 // Defines how an object should be implement equality
-enum EqualityType { EQUAL_BY_VALUE, EQUAL_BY_REFERENCE };
+enum EqualityType { EQUAL_BY_VALUE, EQUAL_BY_REFERENCE, EQUAL_NOT_SET };
+
+enum EqualityType equality_type_from_str(char *str);
 
 enum Object_Type {
   OBJECT_TYPE_CLASS,

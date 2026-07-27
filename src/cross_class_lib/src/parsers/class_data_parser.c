@@ -28,10 +28,16 @@ struct Field *create_default_field() {
   field->data_type = DATA_NOT_SET;
   field->store_type = STORETYPE_NOT_SET;
   field->isConstant = true;
-  field->isSigned = true;
   field->visibility = VISIBILITY_NOT_SET;
 
   return field;
+}
+
+struct Equality *create_default_equality() {
+  struct Equality *equality = malloc(sizeof(typeof(equality)));
+  equality->type = EQUAL_NOT_SET;
+
+  return equality;
 }
 
 struct Field *parse_field(struct Line_Data_Node **line) {
@@ -85,6 +91,8 @@ bool try_parse_class_data(struct Line_Data_Node *line,
       class_info->name = line->data->right;
     } else if (strcmp(line->data->left, "visibility") == 0) {
       class_info->visibility = visibility_from_str(line->data->right);
+    } else if (strcmp(line->data->left, "equality") == 0) {
+      class_info->equality->type = equality_type_from_str(line->data->right);
     } else if (strcmp(line->data->left, "fields") == 0) {
       line = line->next;
       class_info->fields = parse_fields(&line);

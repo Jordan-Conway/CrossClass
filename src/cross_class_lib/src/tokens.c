@@ -34,6 +34,13 @@ enum DataType data_type_from_str(char *str) {
   return DATA_NOT_SET;
 }
 
+enum EqualityType equality_type_from_str(char *str) {
+  match(str, "value", EQUAL_BY_VALUE);
+  match(str, "ref", EQUAL_BY_REFERENCE);
+
+  return EQUAL_NOT_SET;
+}
+
 enum Visibility visibility_from_str(char *str) {
   match(str, "public", VISIBILITY_PUBLIC);
   match(str, "private", VISIBILITY_PRIVATE);

@@ -38,7 +38,6 @@ void assert_field_equality(const struct Field *expected,
   CU_ASSERT(expected->data_type == actual->data_type);
   CU_ASSERT(expected->store_type == actual->store_type);
   CU_ASSERT(expected->isConstant == actual->isConstant);
-  CU_ASSERT(expected->isSigned == actual->isSigned);
   CU_ASSERT(expected->visibility == actual->visibility);
 }
 
@@ -103,6 +102,25 @@ void test_class_data_parser_visibilty_is_parsed() {
   free(class_info);
 }
 
+void test_class_data_parser_equality_is_parsed() {
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+  struct Line_Data *line_data =
+      (struct Line_Data *)malloc(sizeof(typeof(*line_data)));
+  line_data->left = "equality";
+  line_data->right = "ref";
+  line_data->indentation = 0;
+  struct Line_Data_Node line = {.prev = NULL, .next = NULL, .data = line_data};
+
+  bool parsed = try_parse_class_data(&line, &result, &version);
+  assert_parse_success(parsed, &result);
+
+  CU_ASSERT(result.result->equality->type == EQUAL_BY_REFERENCE);
+  CU_ASSERT(result.result->equality->excluded_fields == NULL);
+
+  free(line_data);
+}
+
 void test_class_data_parser_fields_are_parsed() {
   // Arrange
   struct Version version = create_default_version();
@@ -131,6 +149,7 @@ void test_class_data_parser_fields_are_parsed() {
   line_data_list.next->next->next->next =
       malloc(sizeof(typeof(struct Line_Data_Node)));
   line_data_list.next->next->next->next->data = &field_visibility_line_data;
+  line_data_list.next->next->next->next->next = NULL;
   struct Field expectedField = {
       .name = "id", .data_type = DATA_STRING, .visibility = VISIBILITY_PUBLIC};
 
@@ -160,5 +179,6 @@ void add_class_data_parser_tests(CU_pSuite test_suite) {
               test_class_data_parser_no_details_returns_default_values);
   CU_ADD_TEST(test_suite, test_class_data_parser_name_is_parsed);
   CU_ADD_TEST(test_suite, test_class_data_parser_visibilty_is_parsed);
+  CU_ADD_TEST(test_suite, test_class_data_parser_equality_is_parsed);
   CU_ADD_TEST(test_suite, test_class_data_parser_fields_are_parsed);
 }

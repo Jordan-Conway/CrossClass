@@ -9,7 +9,6 @@ struct Field {
   enum Visibility visibility;
   enum StoreType store_type;
   char *name;
-  bool isSigned;
   bool isConstant;
 };
 
