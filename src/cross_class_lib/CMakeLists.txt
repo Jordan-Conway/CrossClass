@@ -4,11 +4,13 @@ target_sources(cross_class_lib
     PRIVATE
     src/data_parser.c
     src/parsers/class_data_parser.c
+    src/tokens.c
     src/version.c
     PUBLIC
     includes/class_info.h
     includes/data_parser.h
     includes/field.h
+    includes/linked_list.h
     includes/tokens.h
     includes/parsers/class_data_parser.h)
 
