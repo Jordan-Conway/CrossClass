@@ -49,6 +49,8 @@ enum StoreType {
   STORETYPE_NOT_SET
 };
 
+enum StoreType store_type_from_str(char *str);
+
 // Defines the visibility of an object or detail of an object
 enum Visibility {
   VISIBILITY_PUBLIC,

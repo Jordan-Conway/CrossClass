@@ -56,6 +56,8 @@ struct Field *parse_field(struct Line_Data_Node **line) {
       field->visibility = visibility_from_str(field_property_value);
     } else if (strcmp(field_property_name, "const") == 0) {
       field->isConstant = str_to_bool(field_property_value);
+    } else if (strcmp(field_property_name, "store") == 0) {
+      field->store_type = store_type_from_str(field_property_value);
     }
     *line = (*line)->next;
   }

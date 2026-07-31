@@ -15,13 +15,16 @@ fields:
         type: string
         visibility: public
         const: false
+        store: ref
     field:
         name: age
         type: int32
         visibility: public
         const: false
+        store: value
     field: 
         name: date_of_birth
         type: date
         visibility: private
         const: true
+        store: ref

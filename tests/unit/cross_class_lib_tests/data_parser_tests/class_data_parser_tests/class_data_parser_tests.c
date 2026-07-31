@@ -151,13 +151,15 @@ void test_class_data_parser_fields_are_parsed() {
   append_line(&line_data_list, "type", "string", 8);
   append_line(&line_data_list, "visibility", "public", 8);
   append_line(&line_data_list, "const", "false", 8);
+  append_line(&line_data_list, "store", "ref", 8);
   while (line_data_list->prev != NULL) {
     line_data_list = line_data_list->prev;
   }
   struct Field expectedField = {.name = "id",
                                 .data_type = DATA_STRING,
                                 .visibility = VISIBILITY_PUBLIC,
-                                .isConstant = false};
+                                .isConstant = false,
+                                .store_type = STORETYPE_STORE_BY_REFERENCE};
 
   // Act
   bool parsed = try_parse_class_data(line_data_list, &result, &version);

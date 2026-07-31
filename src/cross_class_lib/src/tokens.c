@@ -41,6 +41,13 @@ enum EqualityType equality_type_from_str(char *str) {
   return EQUAL_NOT_SET;
 }
 
+enum StoreType store_type_from_str(char *str) {
+  match(str, "value", STORETYPE_STORE_BY_VALUE);
+  match(str, "ref", STORETYPE_STORE_BY_REFERENCE);
+
+  return STORETYPE_NOT_SET;
+}
+
 enum Visibility visibility_from_str(char *str) {
   match(str, "public", VISIBILITY_PUBLIC);
   match(str, "private", VISIBILITY_PRIVATE);
