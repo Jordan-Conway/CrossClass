@@ -71,7 +71,7 @@ struct Field_List *parse_fields(struct Line_Data_Node **line) {
     *line = (*line)->next;
     current_result->data = parse_field(line);
 
-    current_result->next = malloc(sizeof(typeof(*result)));
+    current_result->next = malloc(sizeof(typeof(*current_result)));
     current_result->next->prev = current_result;
     current_result = current_result->next;
   }
