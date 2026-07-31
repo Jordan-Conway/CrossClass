@@ -16,14 +16,13 @@ struct Class_Info *create_default_class() {
 
   class_info->fields = NULL;
   class_info->name = NULL;
-  class_info->store_type = STORETYPE_NOT_SET;
   class_info->visibility = VISIBILITY_NOT_SET;
 
   return class_info;
 }
 
 struct Field *create_default_field() {
-  struct Field *field = malloc(sizeof(typeof(field)));
+  struct Field *field = malloc(sizeof(typeof(*field)));
 
   field->data_type = DATA_NOT_SET;
   field->store_type = STORETYPE_NOT_SET;
@@ -34,15 +33,17 @@ struct Field *create_default_field() {
 }
 
 struct Equality *create_default_equality() {
-  struct Equality *equality = malloc(sizeof(typeof(equality)));
+  struct Equality *equality = malloc(sizeof(typeof(*equality)));
   equality->type = EQUAL_NOT_SET;
 
   return equality;
 }
 
+bool str_to_bool(char *str) { return (strcmp(str, "true") == 0); }
+
 struct Field *parse_field(struct Line_Data_Node **line) {
   int field_indentation = (*line)->data->indentation;
-  struct Field *field = malloc(sizeof(typeof(field)));
+  struct Field *field = malloc(sizeof(typeof(*field)));
 
   while (*line != NULL && (*line)->data->indentation == field_indentation) {
     char *field_property_name = (*line)->data->left;
@@ -53,6 +54,8 @@ struct Field *parse_field(struct Line_Data_Node **line) {
       field->data_type = data_type_from_str(field_property_value);
     } else if (strcmp(field_property_name, "visibility") == 0) {
       field->visibility = visibility_from_str(field_property_value);
+    } else if (strcmp(field_property_name, "const") == 0) {
+      field->isConstant = str_to_bool(field_property_value);
     }
     *line = (*line)->next;
   }
@@ -61,14 +64,14 @@ struct Field *parse_field(struct Line_Data_Node **line) {
 }
 
 struct Field_List *parse_fields(struct Line_Data_Node **line) {
-  struct Field_List *result = malloc(sizeof(typeof(result)));
+  struct Field_List *result = malloc(sizeof(typeof(*result)));
   struct Field_List *current_result = result;
 
   while (*line != NULL && strcmp((*line)->data->left, "field") == 0) {
     *line = (*line)->next;
     current_result->data = parse_field(line);
 
-    current_result->next = malloc(sizeof(typeof(result)));
+    current_result->next = malloc(sizeof(typeof(*result)));
     current_result->next->prev = current_result;
     current_result = current_result->next;
   }

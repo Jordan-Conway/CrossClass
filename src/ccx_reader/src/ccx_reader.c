@@ -110,7 +110,7 @@ void parse_right(const char **line, char **result) {
 
   // Trim trailing whitespace
   int currIndex = nextIndex - 1;
-  while (isspace((*result)[currIndex])) {
+  while (currIndex > -1 && isspace((*result)[currIndex])) {
     currIndex--;
   }
   (*result)[currIndex + 1] = '\0';

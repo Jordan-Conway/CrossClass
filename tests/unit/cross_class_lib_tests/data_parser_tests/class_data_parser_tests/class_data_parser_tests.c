@@ -54,7 +54,6 @@ void test_class_data_parser_no_details_returns_default_values() {
   CU_ASSERT(class_info->equality->type == EQUAL_BY_REFERENCE);
   CU_ASSERT_PTR_NULL(class_info->equality->excluded_fields);
   CU_ASSERT_PTR_NULL(class_info->fields);
-  CU_ASSERT(class_info->store_type == STORETYPE_NOT_SET);
   CU_ASSERT(class_info->visibility == VISIBILITY_NOT_SET);
 
   free(class_info);
@@ -136,6 +135,8 @@ void test_class_data_parser_fields_are_parsed() {
       .indentation = 8, .left = "type", .right = "string"};
   struct Line_Data field_visibility_line_data = {
       .indentation = 8, .left = "visibility", .right = "public"};
+  struct Line_Data field_is_const_data = {
+      .indentation = 8, .left = "const", .right = "false"};
 
   struct Line_Data_Node line_data_list = {.data = &fields_line_data,
                                           .prev = NULL};
@@ -149,9 +150,14 @@ void test_class_data_parser_fields_are_parsed() {
   line_data_list.next->next->next->next =
       malloc(sizeof(typeof(struct Line_Data_Node)));
   line_data_list.next->next->next->next->data = &field_visibility_line_data;
-  line_data_list.next->next->next->next->next = NULL;
-  struct Field expectedField = {
-      .name = "id", .data_type = DATA_STRING, .visibility = VISIBILITY_PUBLIC};
+  line_data_list.next->next->next->next->next =
+      malloc(sizeof(typeof(struct Line_Data_Node)));
+  line_data_list.next->next->next->next->next->data = &field_is_const_data;
+  line_data_list.next->next->next->next->next->next = NULL;
+  struct Field expectedField = {.name = "id",
+                                .data_type = DATA_STRING,
+                                .visibility = VISIBILITY_PUBLIC,
+                                .isConstant = false};
 
   // Act
   bool parsed = try_parse_class_data(&line_data_list, &result, &version);

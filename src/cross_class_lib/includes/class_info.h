@@ -15,7 +15,6 @@ LIST_NODE(Field_List, Field);
 
 struct Class_Info {
   enum Visibility visibility;
-  enum StoreType store_type;
   char *name;
   struct Equality *equality;
   struct Field_List *fields;

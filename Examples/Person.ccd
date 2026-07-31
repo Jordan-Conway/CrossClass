@@ -14,11 +14,14 @@ fields:
         name: name
         type: string
         visibility: public
+        const: false
     field:
         name: age
         type: int32
         visibility: public
+        const: false
     field: 
         name: date_of_birth
         type: date
         visibility: private
+        const: true
