@@ -5,6 +5,7 @@ target_sources(cross_class_lib
     src/data_parser.c
     src/parsers/class_data_parser.c
     src/tokens.c
+    src/transpilers/c_sharp_transpiler.c
     src/version.c
     PUBLIC
     includes/class_info.h
@@ -12,6 +13,8 @@ target_sources(cross_class_lib
     includes/field.h
     includes/linked_list.h
     includes/tokens.h
+    includes/transpilers/c_sharp_transpiler.h
+    includes/transpilers/transpiler.h
     includes/parsers/class_data_parser.h)
 
 target_include_directories(

@@ -3,6 +3,8 @@
 #include "ccx_line_data.h"
 #include "ccx_reader.h"
 #include "data_parser.h"
+#include "transpilers/c_sharp_transpiler.h"
+#include "transpilers/transpiler.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -32,8 +34,13 @@ struct command_result parse_file_command(int argc, char *argv[]) {
     printf("Parsed successfully\n");
   }
 
+  struct TranspilerConfig config = {.output_file = "./out.cs"};
+  struct TranspilerResult *transpile_result =
+      transpile_c_sharp(parse_result->result, &config);
+
   delete_list(line_list);
   free(parse_result);
+  free(transpile_result);
   fclose(fptr);
 
   result.status = COMMAND_RESULT_SUCCESS;
