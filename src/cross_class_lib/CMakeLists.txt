@@ -6,6 +6,7 @@ target_sources(cross_class_lib
     src/parsers/class_data_parser.c
     src/tokens.c
     src/transpilers/c_sharp_transpiler.c
+    src/transpilers/transpiler.c
     src/version.c
     PUBLIC
     includes/class_info.h

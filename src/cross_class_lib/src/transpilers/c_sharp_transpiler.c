@@ -16,6 +16,16 @@ struct Lines *default_line_list_node() {
   return line_list_node;
 }
 
+struct Lines *append_line(struct Lines *current_line, char *new_line) {
+  current_line->next = malloc(sizeof(typeof(*current_line)));
+  current_line->next->next = NULL;
+  current_line->next->prev = current_line;
+  current_line = current_line->next;
+  current_line->data = new_line;
+
+  return current_line;
+}
+
 struct Lines *get_first_line(struct Lines *line_list) {
   while (line_list->prev != NULL) {
     line_list = line_list->prev;
@@ -71,8 +81,10 @@ transpile_c_sharp(const struct Class_Info *class_info,
   struct Lines *usings = default_line_list_node();
   struct Lines *class_lines = default_line_list_node();
 
-  class_lines->data =
-      create_class_name_line(class_info->name, class_info->visibility);
+  class_lines =
+      append_line(class_lines, create_class_name_line(class_info->name,
+                                                      class_info->visibility));
+  class_lines = append_line(class_lines, "}");
 
   usings->next = get_first_line(class_lines);
   result->file_data = get_first_line(usings);

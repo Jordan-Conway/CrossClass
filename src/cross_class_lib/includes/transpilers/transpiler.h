@@ -16,4 +16,7 @@ struct TranspilerResult {
   struct Lines *file_data;
 };
 
+bool write_result_to_file(const struct Lines *file_data,
+                          const struct TranspilerConfig *config);
+
 #endif

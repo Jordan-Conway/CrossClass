@@ -38,6 +38,15 @@ struct command_result parse_file_command(int argc, char *argv[]) {
   struct TranspilerResult *transpile_result =
       transpile_c_sharp(parse_result->result, &config);
 
+  if (transpile_result->success) {
+    bool written = write_result_to_file(transpile_result->file_data, &config);
+    if (written) {
+      printf("Successfully wrote output to %s\n", config.output_file);
+    } else {
+      printf("Failed to write output to %s\n", config.output_file);
+    }
+  }
+
   delete_list(line_list);
   free(parse_result);
   free(transpile_result);
