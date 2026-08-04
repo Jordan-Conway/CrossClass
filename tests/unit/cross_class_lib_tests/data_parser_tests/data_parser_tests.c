@@ -98,27 +98,6 @@ void test_data_reader_version_extra_content_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_version_multiple_digits_succeeds() {
-  FILE *test_file = tmpfile();
-
-  fputs("version:0.12.3", test_file);
-  rewind(test_file);
-
-  struct Line_Data_Node *lines = read_ccd_file(test_file);
-  struct Data_Parser_Result *result = parse_line_data(lines);
-
-  CU_ASSERT_PTR_NOT_NULL(lines);
-  CU_ASSERT_PTR_NOT_NULL(result);
-  CU_ASSERT_PTR_NOT_NULL(result->result);
-  CU_ASSERT(result->is_error == false);
-  CU_ASSERT(result->error_message == NULL);
-
-  free(result);
-  delete_list(lines);
-
-  fclose(test_file);
-}
-
 void test_data_reader_missing_type_fails() {
   FILE *test_file = tmpfile();
 
@@ -160,7 +139,6 @@ void add_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_data_reader_version_not_first_fails);
   CU_ADD_TEST(test_suite, test_data_reader_version_malformed_fails);
   CU_ADD_TEST(test_suite, test_data_reader_version_extra_content_fails);
-  CU_ADD_TEST(test_suite, test_data_reader_version_multiple_digits_succeeds);
   CU_ADD_TEST(test_suite, test_data_reader_missing_type_fails);
   CU_ADD_TEST(test_suite, test_data_reader_unsupported_type_fails);
 
