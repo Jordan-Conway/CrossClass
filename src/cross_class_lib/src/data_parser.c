@@ -26,40 +26,39 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
     return NULL;
   }
   char *version_string = line->data->right;
-  char backup_for_errors[50];
-  strcpy(backup_for_errors, version_string); // Copy just in case
 
   char parts[3] = {0, 0, 0};
   int current_part = 0;
   bool part_empty = true;
-  while (*version_string != '\0'){
-    if (*version_string == '.'){
+  int char_ptr = 0;
+  while (version_string[char_ptr] != '\0'){
+    if (version_string[char_ptr] == '.'){
       if (part_empty){
         printf("Malformed version found. Part of the version is empty, "
            "instead found %s\n",
-           backup_for_errors);
+           version_string);
         return NULL;
       }
       current_part += 1;
       if (current_part >= 3){
         printf("Malformed version found. Version should be formatted as x.x.x, "
            "instead found %s\n",
-           backup_for_errors);
+           version_string);
         return NULL;
       };
       part_empty = true;
     }
-    else if (isdigit(*version_string) == 0){
+    else if (isdigit(version_string[char_ptr]) == 0){
       printf("Malformed version found. Version should not contain non-numeric "
            "characters as digits, instead found %s\n",
-           backup_for_errors);
+           version_string);
       return NULL;
     }
     else if (part_empty){
-      parts[current_part] = atoi(version_string);
+      parts[current_part] = atoi(&version_string[char_ptr]);
       part_empty = false;
     };
-    (version_string)++;
+    char_ptr++;
   }
 
   struct Version *version = malloc(sizeof(typeof(*version)));
