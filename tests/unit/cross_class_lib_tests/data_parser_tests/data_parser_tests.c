@@ -101,7 +101,7 @@ void test_data_reader_version_extra_content_fails() {
 void test_data_reader_missing_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.1", test_file);
+  fputs("version:0.0.1"\n, test_file);
   fputs("Not a type: type", test_file);
   rewind(test_file);
 
@@ -119,7 +119,7 @@ void test_data_reader_missing_type_fails() {
 void test_data_reader_unsupported_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.1", test_file);
+  fputs("version:0.0.1\n", test_file);
   fputs("type: unsupported", test_file);
   rewind(test_file);
 
@@ -137,7 +137,7 @@ void test_data_reader_unsupported_type_fails() {
 void test_data_reader_success() {
   FILE *test_file = tmpfile();
 
-  fputs("version:123.456.789", test_file);
+  fputs("version:123.456.789\n", test_file);
   fputs("type: #testing#", test_file);
   rewind(test_file);
 
