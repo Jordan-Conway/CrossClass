@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
+#include <math.h>
 
 static struct Data_Parser_Result *create_default_result() {
   struct Data_Parser_Result *result =
@@ -27,12 +29,12 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
   }
   char *version_string = line->data->right;
 
-  char parts[3] = {0, 0, 0};
+  int parts[3] = {0, 0, 0};
   int current_part = 0;
   bool part_empty = true;
-  int char_ptr = 0;
-  while (version_string[char_ptr] != '\0'){
-    if (version_string[char_ptr] == '.'){
+  int char_index = 0;
+  while (version_string[char_index] != '\0'){
+    if (version_string[char_index] == '.'){
       if (part_empty){
         printf("Malformed version found. Part of the version is empty, "
            "instead found %s\n",
@@ -48,17 +50,19 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
       };
       part_empty = true;
     }
-    else if (isdigit(version_string[char_ptr]) == 0){
+    else if (isdigit(version_string[char_index]) == 0){
       printf("Malformed version found. Version should not contain non-numeric "
            "characters as digits, instead found %s\n",
            version_string);
       return NULL;
     }
     else if (part_empty){
-      parts[current_part] = atoi(&version_string[char_ptr]);
+      char *temp;
+      long int outcome = strtol(&version_string[char_index], &temp, 10);
+      parts[current_part] = (int)fmin(outcome, INT_MAX);
       part_empty = false;
     };
-    char_ptr++;
+    char_index++;
   }
   if(current_part != 2 || part_empty){
     printf("Malformed version found. Version should be formatted as x.x.x, "
@@ -79,6 +83,10 @@ enum Object_Type get_object_type(const struct Line_Data_Node *line) {
   if (strcmp(line->data->left, "type") != 0) {
     printf("Expect type, instead found %s\n", line->data->left);
     return OBJECT_TYPE_NONE;
+  }
+
+  if (strcmp(line->data->right, "#testing#") == 0) {
+    return OBJECT_TYPE_TEST_BYPASS;
   }
 
   if (strcmp(line->data->right, "class") == 0) {
@@ -106,6 +114,9 @@ parse_line_data(struct Line_Data_Node *line_data_list) {
     result->is_error = true;
     result->error_message = "Type either missing or not found";
     goto failure;
+  }
+  if (type == OBJECT_TYPE_TEST_BYPASS){
+    goto success;
   }
   line_data_list = line_data_list->next;
 
