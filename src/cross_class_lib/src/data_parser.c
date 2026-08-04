@@ -60,6 +60,12 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
     };
     char_ptr++;
   }
+  if(current_part != 2 || part_empty){
+    printf("Malformed version found. Version should be formatted as x.x.x, "
+           "instead found %s\n",
+           version_string);
+    return NULL;
+  }
 
   struct Version *version = malloc(sizeof(typeof(*version)));
   version->major = parts[0];
