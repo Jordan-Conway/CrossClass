@@ -101,7 +101,7 @@ void test_data_reader_version_extra_content_fails() {
 void test_data_reader_missing_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.1"\n, test_file);
+  fputs("version:0.0.1\n", test_file);
   fputs("Not a type: type", test_file);
   rewind(test_file);
 
