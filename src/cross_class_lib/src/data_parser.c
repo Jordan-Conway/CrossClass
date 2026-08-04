@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 static struct Data_Parser_Result *create_default_result() {
   struct Data_Parser_Result *result =
@@ -25,19 +26,46 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
     return NULL;
   }
   char *version_string = line->data->right;
+  char backup_for_errors[50];
+  strcpy(backup_for_errors, version_string); // Copy just in case
 
-  // TODO properly split string to allow multi-digit version numbers e.g. 0.12.1
-  if (strlen(version_string) != 5) {
-    printf("Malformed version found. Version should be formatted as x.x.x, "
+  char parts[3] = {0, 0, 0};
+  int current_part = 0;
+  bool part_empty = true;
+  while (*version_string != '\0'){
+    if (*version_string == '.'){
+      if (part_empty){
+        printf("Malformed version found. Part of the version is empty, "
            "instead found %s\n",
-           version_string);
-    return NULL;
+           backup_for_errors);
+        return NULL;
+      }
+      current_part += 1;
+      if (current_part >= 3){
+        printf("Malformed version found. Version should be formatted as x.x.x, "
+           "instead found %s\n",
+           backup_for_errors);
+        return NULL;
+      };
+      part_empty = true;
+    }
+    else if (isdigit(*version_string) == 0){
+      printf("Malformed version found. Version should not contain non-numeric "
+           "characters as digits, instead found %s\n",
+           backup_for_errors);
+      return NULL;
+    }
+    else if (part_empty){
+      parts[current_part] = atoi(version_string);
+      part_empty = false;
+    };
+    (version_string)++;
   }
 
   struct Version *version = malloc(sizeof(typeof(*version)));
-  version->major = atoi(&version_string[0]);
-  version->minor = atoi(&version_string[2]);
-  version->patch = atoi(&version_string[4]);
+  version->major = parts[0];
+  version->minor = parts[1];
+  version->patch = parts[2];
 
   return version;
 }
