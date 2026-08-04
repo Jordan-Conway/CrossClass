@@ -9,7 +9,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
-#include <math.h>
 
 static struct Data_Parser_Result *create_default_result() {
   struct Data_Parser_Result *result =
@@ -59,7 +58,11 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
     else if (part_empty){
       char *temp;
       long int outcome = strtol(&version_string[char_index], &temp, 10);
-      parts[current_part] = (int)fmin(outcome, INT_MAX);
+      if(outcome > INT_MAX || outcome < 0){
+        parts[current_part] = INT_MAX;
+      } else{
+        parts[current_part] = outcome;
+      }
       part_empty = false;
     };
     char_index++;

@@ -138,7 +138,7 @@ void test_data_reader_success() {
   FILE *test_file = tmpfile();
 
   fputs("version:123.456.789", test_file);
-  fputs("type: class", test_file);
+  fputs("type: #testing#", test_file);
   rewind(test_file);
 
   struct Line_Data_Node *lines = read_ccd_file(test_file);
@@ -163,7 +163,7 @@ void add_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_data_reader_version_extra_content_fails);
   CU_ADD_TEST(test_suite, test_data_reader_missing_type_fails);
   CU_ADD_TEST(test_suite, test_data_reader_unsupported_type_fails);
-
+  CU_ADD_TEST(test_suite, test_data_reader_success);
 
   add_class_data_parser_tests(test_suite);
 }
