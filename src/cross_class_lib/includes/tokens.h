@@ -39,8 +39,7 @@ enum EqualityType equality_type_from_str(char *str);
 
 enum Object_Type {
   OBJECT_TYPE_CLASS,
-  OBJECT_TYPE_TEST_BYPASS,
-  OBJECT_TYPE_NONE,
+  OBJECT_TYPE_NONE
 };
 
 // Defines how a field should be stored

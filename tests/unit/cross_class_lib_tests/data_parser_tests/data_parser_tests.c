@@ -138,17 +138,15 @@ void test_data_reader_success() {
   FILE *test_file = tmpfile();
 
   fputs("version:123.456.789\n", test_file);
-  fputs("type: #testing#", test_file);
+  fputs("type: class", test_file);
   rewind(test_file);
 
   struct Line_Data_Node *lines = read_ccd_file(test_file);
   struct Data_Parser_Result *result = parse_line_data(lines);
 
-  CU_ASSERT_PTR_NOT_NULL(lines);
-  CU_ASSERT_PTR_NOT_NULL(result);
-  CU_ASSERT(result->result == NULL);
-  CU_ASSERT(result->is_error == false);
-  CU_ASSERT(result->error_message == NULL);
+  test_error_raised(__func__, __LINE__, lines, result);
+  // Will only run if object type is correctly identified as class, and version is correct
+  CU_ASSERT(strcmp(result->error_message, "Failed to parse") == 0);
 
   free(result);
   delete_list(lines);

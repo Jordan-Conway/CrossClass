@@ -56,8 +56,7 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
       return NULL;
     }
     else if (part_empty){
-      char *temp;
-      long int outcome = strtol(&version_string[char_index], &temp, 10);
+      long int outcome = strtol(&version_string[char_index], NULL, 10);
       if(outcome > INT_MAX || outcome < 0){
         parts[current_part] = INT_MAX;
       } else{
@@ -88,10 +87,6 @@ enum Object_Type get_object_type(const struct Line_Data_Node *line) {
     return OBJECT_TYPE_NONE;
   }
 
-  if (strcmp(line->data->right, "#testing#") == 0) {
-    return OBJECT_TYPE_TEST_BYPASS;
-  }
-
   if (strcmp(line->data->right, "class") == 0) {
     return OBJECT_TYPE_CLASS;
   }
@@ -117,9 +112,6 @@ parse_line_data(struct Line_Data_Node *line_data_list) {
     result->is_error = true;
     result->error_message = "Type either missing or not found";
     goto failure;
-  }
-  if (type == OBJECT_TYPE_TEST_BYPASS){
-    goto success;
   }
   line_data_list = line_data_list->next;
 
