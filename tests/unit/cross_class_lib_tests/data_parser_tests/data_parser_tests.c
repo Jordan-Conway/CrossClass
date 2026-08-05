@@ -8,7 +8,6 @@
 #include <CUnit/TestDB.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 // Generic function to test for an error
 void test_error_raised(const char source_func[], const int source_line,
@@ -145,9 +144,11 @@ void test_data_reader_success() {
   struct Line_Data_Node *lines = read_ccd_file(test_file);
   struct Data_Parser_Result *result = parse_line_data(lines);
 
-  test_error_raised(__func__, __LINE__, lines, result);
-  // Will only run if object type is correctly identified as class, and version is correct
-  CU_ASSERT(strcmp(result->error_message, "Failed to parse") == 0);
+  CU_ASSERT_PTR_NOT_NULL(lines);
+  CU_ASSERT_PTR_NOT_NULL(result);
+  CU_ASSERT_PTR_NOT_NULL(result->result);
+  CU_ASSERT(result->is_error == false);
+  CU_ASSERT(result->error_message == NULL);
 
   free(result);
   delete_list(lines);
