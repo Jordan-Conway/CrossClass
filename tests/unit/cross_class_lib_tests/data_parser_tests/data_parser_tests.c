@@ -8,6 +8,7 @@
 #include <CUnit/TestDB.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Generic function to test for an error
 void test_error_raised(const char source_func[], const int source_line,
