@@ -51,35 +51,35 @@ struct Field *parse_field(struct Line_Data_Node **line) {
     char *field_property_value = (*line)->data->right;
     if (strcmp(field_property_name, "name") == 0) {
       if(attribute_seen[0]){
-        printf("This field has multiple name attributes: %s %s\n", field->name, field_property_value);
+        printf("This field has multiple name attributes: %s | %s\n", field->name, field_property_value);
         return NULL;
       }
       field->name = field_property_value;
       attribute_seen[0] = true;
     } else if (strcmp(field_property_name, "type") == 0) {
       if(attribute_seen[1]){
-        printf("This field has multiple type attributes: %s %s\n", field->data_type, field_property_value);
+        printf("This field has multiple type attributes: %s | %s\n", field->data_type, field_property_value);
         return NULL;
       }
       field->data_type = data_type_from_str(field_property_value);
       attribute_seen[1] = true;
     } else if (strcmp(field_property_name, "visibility") == 0) {
       if(attribute_seen[2]){
-        printf("This field has multiple visibility attributes: %s %s\n", field->visibility, field_property_value);
+        printf("This field has multiple visibility attributes: %s | %s\n", field->visibility, field_property_value);
         return NULL;
       }
       field->visibility = visibility_from_str(field_property_value);
       attribute_seen[2] = true;
     } else if (strcmp(field_property_name, "const") == 0) {
       if(attribute_seen[3]){
-        printf("This field has multiple const attributes: %s %s\n", field->isConstant, field_property_value);
+        printf("This field has multiple const attributes: %s | %s\n", field->isConstant, field_property_value);
         return NULL;
       }
       field->isConstant = str_to_bool(field_property_value);
       attribute_seen[3] = true;
     } else if (strcmp(field_property_name, "store") == 0) {
       if(attribute_seen[4]){
-        printf("This field has multiple store attributes: %s %s\n", field->store_type, field_property_value);
+        printf("This field has multiple store attributes: %s | %s\n", field->store_type, field_property_value);
         return NULL;
       }
       field->store_type = store_type_from_str(field_property_value);
@@ -120,19 +120,40 @@ bool try_parse_class_data(struct Line_Data_Node *line,
                           const struct Version *version) {
   struct Class_Info *class_info = create_default_class();
 
+  bool token_seen[4] = { false, false, false, false };
   while (line != NULL) {
     if (strcmp(line->data->left, "name") == 0) {
+      if(token_seen[0]){
+        printf("Error: This class has multiple name tokens");
+        return false;
+      }
       class_info->name = line->data->right;
+      token_seen[0] = true;
     } else if (strcmp(line->data->left, "visibility") == 0) {
+      if(token_seen[1]){
+        printf("Error: This class has multiple visibility tokens");
+        return false;
+      }
       class_info->visibility = visibility_from_str(line->data->right);
+      token_seen[1] = true;
     } else if (strcmp(line->data->left, "equality") == 0) {
+      if(token_seen[2]){
+        printf("Error: This class has multiple quality tokens");
+        return false;
+      }
       class_info->equality->type = equality_type_from_str(line->data->right);
+      token_seen[2] = true;
     } else if (strcmp(line->data->left, "fields") == 0) {
+      if(token_seen[3]){
+        printf("Error: This class has multiple field lists - please combine them");
+        return false;
+      }
       line = line->next;
       class_info->fields = parse_fields(&line);
       if(class_info->fields == NULL){
         return false;
       }
+      token_seen[3] = true;
     }
 
     if (line != NULL) {
