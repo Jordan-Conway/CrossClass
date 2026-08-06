@@ -5,6 +5,7 @@
 #include "ccx_line_data.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 struct Class_Info *create_default_class() {
   struct Class_Info *class_info =
@@ -91,6 +92,22 @@ struct Field *parse_field(struct Line_Data_Node **line) {
   return field;
 }
 
+bool assert_no_duplicate_fields(struct Field_List *fields, char *next_name){
+  // Compare against each node by backtracking to head
+  while(fields->prev != NULL){
+    fields = fields->prev; // Doing this first prevents the tail comparing against itself
+    if(strcmp(fields->data->name, next_name) == 0){
+      printf("This class has two fields with the name '%s'", next_name);
+      return false;
+    }
+  }
+  // Return back to the tail of the linked list
+  while(fields->next != NULL){
+    fields = fields->next;
+  }
+  return true;
+}
+
 struct Field_List *parse_fields(struct Line_Data_Node **line) {
   struct Field_List *result = malloc(sizeof(typeof(*result)));
   struct Field_List *current_result = result;
@@ -99,6 +116,9 @@ struct Field_List *parse_fields(struct Line_Data_Node **line) {
     *line = (*line)->next;
     current_result->data = parse_field(line);
     if(current_result->data == NULL){
+      return NULL;
+    }
+    if(assert_no_duplicate_fields(current_result, current_result->data->name) == false){
       return NULL;
     }
 
