@@ -45,6 +45,14 @@ void assert_parse_success(bool parsed,
   CU_ASSERT_PTR_NULL(result->error_message);
 }
 
+void assert_parse_failed(bool parsed,
+                          const struct Data_Parser_Result *result) {
+  CU_ASSERT_FALSE(parsed == false);
+  CU_ASSERT_PTR_NULL(result->result);
+  CU_ASSERT(result->is_error == true);
+  CU_ASSERT_PTR_NOT_NULL(result->error_message);
+}
+
 void assert_field_equality(const struct Field *expected,
                            const struct Field *actual) {
   CU_ASSERT(strcmp(expected->name, actual->name) == 0);
@@ -176,14 +184,174 @@ void test_class_data_parser_fields_are_parsed() {
   CU_ASSERT(id_field->visibility == expectedField.visibility);
 
   // Cleanup
-  while (line_data_list->next != NULL) {
-    line_data_list = line_data_list->next;
-  }
+  delete_list(line_data_list);
+}
+
+// REJECTERS
+void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate_attribute){
+  // Arrange
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+
+  struct Line_Data fields_line_data = {
+      .indentation = 0, .left = "fields", .right = ""};
+
+  struct Line_Data_Node *line_data_list =
+      malloc(sizeof(typeof(*line_data_list)));
+  line_data_list->data = &fields_line_data;
+  line_data_list->next = NULL;
+  line_data_list->prev = NULL;
+  append_line(&line_data_list, "field", "", 4);
+  append_line(&line_data_list, "name", "id", 8);
+  append_line(&line_data_list, "type", "string", 8);
+  append_line(&line_data_list, "visibility", "public", 8);
+  append_line(&line_data_list, "const", "false", 8);
+  append_line(&line_data_list, "store", "ref", 8);
+  append_line(&line_data_list, duplicate_attribute, "DUPLICATE", 8);
   while (line_data_list->prev != NULL) {
     line_data_list = line_data_list->prev;
-    free(line_data_list->next);
   }
-  free(line_data_list);
+
+  // Act
+  bool parsed = try_parse_class_data(line_data_list, &result, &version);
+
+  // Assert
+  assert_parse_failed(parsed, &result);
+
+  // Cleanup
+  delete_list(line_data_list);
+}
+
+void test_class_data_parser_rejects_duplicate_name_attibute_in_field(){
+  test_class_data_parser_rejects_duplicate_attribute_in_field("name");
+}
+
+void test_class_data_parser_rejects_duplicate_type_attibute_in_field(){
+  test_class_data_parser_rejects_duplicate_attribute_in_field("type");
+}
+
+void test_class_data_parser_rejects_duplicate_visibility_attibute_in_field(){
+  test_class_data_parser_rejects_duplicate_attribute_in_field("visibility");
+}
+
+void test_class_data_parser_rejects_duplicate_const_attibute_in_field(){
+  test_class_data_parser_rejects_duplicate_attribute_in_field("const");
+}
+
+void test_class_data_parser_rejects_duplicate_store_attibute_in_field(){
+  test_class_data_parser_rejects_duplicate_attribute_in_field("store");
+}
+
+void test_class_data_parser_rejects_duplicate_field_names(){
+  // Arrange
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+
+  struct Line_Data fields_line_data = {
+      .indentation = 0, .left = "fields", .right = ""};
+
+  struct Line_Data_Node *line_data_list =
+      malloc(sizeof(typeof(*line_data_list)));
+  line_data_list->data = &fields_line_data;
+  line_data_list->next = NULL;
+  line_data_list->prev = NULL;
+  append_line(&line_data_list, "field", "", 4);
+  append_line(&line_data_list, "name", "id", 8);
+  append_line(&line_data_list, "field", "", 4);
+  append_line(&line_data_list, "name", "id", 8);
+  while (line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+  }
+
+  // Act
+  bool parsed = try_parse_class_data(line_data_list, &result, &version);
+
+  // Assert
+  assert_parse_failed(parsed, &result);
+
+  // Cleanup
+  delete_list(line_data_list);
+}
+
+void test_class_data_parser_rejects_duplicate_name_token() {
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+  struct Line_Data *line_data =
+      (struct Line_Data *)malloc(sizeof(typeof(*line_data)));
+  line_data->left = "name";
+  line_data->right = "test_name";
+  line_data->indentation = 0;
+  struct Line_Data_Node line = {.prev = NULL, .next = NULL, .data = line_data};
+  append_line(&line_data_list, "name", "DUPLICATE", 0);
+
+  bool parsed = try_parse_class_data(&line, &result, &version);
+  assert_parse_failed(parsed, &result);
+
+  delete_list(line_data_list);
+}
+
+void test_class_data_parser_rejects_duplicate_visibility_token() {
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+  struct Line_Data *line_data =
+      (struct Line_Data *)malloc(sizeof(typeof(*line_data)));
+  line_data->left = "visibility";
+  line_data->right = "public";
+  line_data->indentation = 0;
+  struct Line_Data_Node line = {.prev = NULL, .next = NULL, .data = line_data};
+  append_line(&line_data_list, "visibility", "DUPLICATE", 0);
+
+  bool parsed = try_parse_class_data(&line, &result, &version);
+  assert_parse_failed(parsed, &result);
+
+  delete_list(line_data_list);
+}
+
+void test_class_data_parser_rejects_duplicate_equality_token() {
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+  struct Line_Data *line_data =
+      (struct Line_Data *)malloc(sizeof(typeof(*line_data)));
+  line_data->left = "equality";
+  line_data->right = "ref";
+  line_data->indentation = 0;
+  struct Line_Data_Node line = {.prev = NULL, .next = NULL, .data = line_data};
+  append_line(&line_data_list, "equality", "DUPLICATE", 0);
+
+  bool parsed = try_parse_class_data(&line, &result, &version);
+  assert_parse_failed(parsed, &result);
+
+  delete_list(line_data_list);
+}
+
+void test_class_data_parser_rejects_duplicate_fields_token() {
+  // Arrange
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+
+  struct Line_Data fields_line_data = {
+      .indentation = 0, .left = "fields", .right = ""};
+
+  struct Line_Data_Node *line_data_list =
+      malloc(sizeof(typeof(*line_data_list)));
+  line_data_list->data = &fields_line_data;
+  line_data_list->next = NULL;
+  line_data_list->prev = NULL;
+  append_line(&line_data_list, "field", "", 4);
+  append_line(&line_data_list, "name", "id", 8);
+  append_line(&line_data_list, "fields", "", 0);
+  while (line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+  }
+
+  // Act
+  bool parsed = try_parse_class_data(line_data_list, &result, &version);
+
+  // Assert
+  assert_parse_failed(parsed, &result);
+
+  // Cleanup
+  delete_list(line_data_list);
 }
 
 void add_class_data_parser_tests(CU_pSuite test_suite) {
@@ -193,4 +361,15 @@ void add_class_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_class_data_parser_visibilty_is_parsed);
   CU_ADD_TEST(test_suite, test_class_data_parser_equality_is_parsed);
   CU_ADD_TEST(test_suite, test_class_data_parser_fields_are_parsed);
+
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_name_attibute_in_field);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_type_attibute_in_field);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_attibute_in_field);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_const_attibute_in_field);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_store_attibute_in_field);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_field_names);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_name_token);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_token);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_equality_token);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_fields_token);
 }
