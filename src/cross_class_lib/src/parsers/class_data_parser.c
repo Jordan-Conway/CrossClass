@@ -45,19 +45,45 @@ struct Field *parse_field(struct Line_Data_Node **line) {
   int field_indentation = (*line)->data->indentation;
   struct Field *field = malloc(sizeof(typeof(*field)));
 
+  bool attribute_seen[5] = { false, false, false, false, false };
   while (*line != NULL && (*line)->data->indentation == field_indentation) {
     char *field_property_name = (*line)->data->left;
     char *field_property_value = (*line)->data->right;
     if (strcmp(field_property_name, "name") == 0) {
+      if(attribute_seen[0]){
+        printf("This field has multiple name attributes: %s %s\n", field->name, field_property_value);
+        return NULL;
+      }
       field->name = field_property_value;
+      attribute_seen[0] = true;
     } else if (strcmp(field_property_name, "type") == 0) {
+      if(attribute_seen[1]){
+        printf("This field has multiple type attributes: %s %s\n", field->data_type, field_property_value);
+        return NULL;
+      }
       field->data_type = data_type_from_str(field_property_value);
+      attribute_seen[1] = true;
     } else if (strcmp(field_property_name, "visibility") == 0) {
+      if(attribute_seen[2]){
+        printf("This field has multiple visibility attributes: %s %s\n", field->visibility, field_property_value);
+        return NULL;
+      }
       field->visibility = visibility_from_str(field_property_value);
+      attribute_seen[2] = true;
     } else if (strcmp(field_property_name, "const") == 0) {
+      if(attribute_seen[3]){
+        printf("This field has multiple const attributes: %s %s\n", field->isConstant, field_property_value);
+        return NULL;
+      }
       field->isConstant = str_to_bool(field_property_value);
+      attribute_seen[3] = true;
     } else if (strcmp(field_property_name, "store") == 0) {
+      if(attribute_seen[4]){
+        printf("This field has multiple store attributes: %s %s\n", field->store_type, field_property_value);
+        return NULL;
+      }
       field->store_type = store_type_from_str(field_property_value);
+      attribute_seen[4] = true;
     }
     *line = (*line)->next;
   }
@@ -72,6 +98,9 @@ struct Field_List *parse_fields(struct Line_Data_Node **line) {
   while (*line != NULL && strcmp((*line)->data->left, "field") == 0) {
     *line = (*line)->next;
     current_result->data = parse_field(line);
+    if(current_result->data == NULL){
+      return NULL;
+    }
 
     current_result->next = malloc(sizeof(typeof(*current_result)));
     current_result->next->prev = current_result;
@@ -101,6 +130,9 @@ bool try_parse_class_data(struct Line_Data_Node *line,
     } else if (strcmp(line->data->left, "fields") == 0) {
       line = line->next;
       class_info->fields = parse_fields(&line);
+      if(class_info->fields == NULL){
+        return false;
+      }
     }
 
     if (line != NULL) {
