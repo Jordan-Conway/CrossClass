@@ -4,6 +4,7 @@
 #include "../../includes/tokens.h"
 #include "ccx_line_data.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -59,28 +60,28 @@ struct Field *parse_field(struct Line_Data_Node **line) {
       attribute_seen[0] = true;
     } else if (strcmp(field_property_name, "type") == 0) {
       if(attribute_seen[1]){
-        printf("This field has multiple type attributes: %s | %s\n", field->data_type, field_property_value);
+        printf("This field has multiple type attributes\n");
         return NULL;
       }
       field->data_type = data_type_from_str(field_property_value);
       attribute_seen[1] = true;
     } else if (strcmp(field_property_name, "visibility") == 0) {
       if(attribute_seen[2]){
-        printf("This field has multiple visibility attributes: %s | %s\n", field->visibility, field_property_value);
+        printf("This field has multiple visibility attributes\n");
         return NULL;
       }
       field->visibility = visibility_from_str(field_property_value);
       attribute_seen[2] = true;
     } else if (strcmp(field_property_name, "const") == 0) {
       if(attribute_seen[3]){
-        printf("This field has multiple const attributes: %s | %s\n", field->isConstant, field_property_value);
+        printf("This field has multiple const attributes\n");
         return NULL;
       }
       field->isConstant = str_to_bool(field_property_value);
       attribute_seen[3] = true;
     } else if (strcmp(field_property_name, "store") == 0) {
       if(attribute_seen[4]){
-        printf("This field has multiple store attributes: %s | %s\n", field->store_type, field_property_value);
+        printf("This field has multiple store attributes\n");
         return NULL;
       }
       field->store_type = store_type_from_str(field_property_value);
