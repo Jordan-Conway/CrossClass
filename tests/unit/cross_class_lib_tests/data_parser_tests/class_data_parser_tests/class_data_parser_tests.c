@@ -245,15 +245,20 @@ void test_class_data_parser_rejects_duplicate_store_attibute_in_field(){
 void test_class_data_parser_rejects_duplicate_name_token() {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
-  struct Line_Data *line_data =
-      (struct Line_Data *)malloc(sizeof(typeof(*line_data)));
-  line_data->left = "name";
-  line_data->right = "test_name";
-  line_data->indentation = 0;
-  struct Line_Data_Node *line_data_list = {.prev = NULL, .next = NULL, .data = line_data};
-  append_line(&line_data_list, "name", "DUPLICATE", 0);
 
-  bool parsed = try_parse_class_data(&line, &result, &version);
+  struct Line_Data line_data = {.indentation = 0, .left = "name", .right = "test_name"};
+
+  struct Line_Data_Node *line_data_list =
+      malloc(sizeof(typeof(*line_data_list)));
+  line_data_list->data = &line_data;
+  line_data_list->next = NULL;
+  line_data_list->prev = NULL;
+  append_line(&line_data_list, "name", "DUPLICATE", 0);
+  while (line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+  }
+
+  bool parsed = try_parse_class_data(line_data_list, &result, &version);
   assert_parse_failed(parsed, &result);
 
   delete_list(line_data_list);
@@ -262,15 +267,20 @@ void test_class_data_parser_rejects_duplicate_name_token() {
 void test_class_data_parser_rejects_duplicate_visibility_token() {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
-  struct Line_Data *line_data =
-      (struct Line_Data *)malloc(sizeof(typeof(*line_data)));
-  line_data->left = "visibility";
-  line_data->right = "public";
-  line_data->indentation = 0;
-  struct Line_Data_Node *line_data_list = {.prev = NULL, .next = NULL, .data = line_data};
-  append_line(&line_data_list, "visibility", "DUPLICATE", 0);
 
-  bool parsed = try_parse_class_data(&line, &result, &version);
+  struct Line_Data line_data = {.indentation = 0, .left = "visibility", .right = "public"};
+
+  struct Line_Data_Node *line_data_list =
+      malloc(sizeof(typeof(*line_data_list)));
+  line_data_list->data = &line_data;
+  line_data_list->next = NULL;
+  line_data_list->prev = NULL;
+  append_line(&line_data_list, "visibility", "DUPLICATE", 0);
+  while (line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+  }
+
+  bool parsed = try_parse_class_data(line_data_list, &result, &version);
   assert_parse_failed(parsed, &result);
 
   delete_list(line_data_list);
@@ -279,15 +289,20 @@ void test_class_data_parser_rejects_duplicate_visibility_token() {
 void test_class_data_parser_rejects_duplicate_equality_token() {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
-  struct Line_Data *line_data =
-      (struct Line_Data *)malloc(sizeof(typeof(*line_data)));
-  line_data->left = "equality";
-  line_data->right = "ref";
-  line_data->indentation = 0;
-  struct Line_Data_Node *line_data_list = {.prev = NULL, .next = NULL, .data = line_data};
-  append_line(&line_data_list, "equality", "DUPLICATE", 0);
 
-  bool parsed = try_parse_class_data(&line, &result, &version);
+  struct Line_Data line_data = {.indentation = 0, .left = "equality", .right = "ref"};
+
+  struct Line_Data_Node *line_data_list =
+      malloc(sizeof(typeof(*line_data_list)));
+  line_data_list->data = &line_data;
+  line_data_list->next = NULL;
+  line_data_list->prev = NULL;
+  append_line(&line_data_list, "equality", "DUPLICATE", 0);
+  while (line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+  }
+
+  bool parsed = try_parse_class_data(line_data_list, &result, &version);
   assert_parse_failed(parsed, &result);
 
   delete_list(line_data_list);
