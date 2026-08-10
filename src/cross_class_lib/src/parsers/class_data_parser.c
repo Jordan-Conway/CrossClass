@@ -53,35 +53,35 @@ struct Field *parse_field(struct Line_Data_Node **line) {
     char *field_property_value = (*line)->data->right;
     if (strcmp(field_property_name, "name") == 0) {
       if(attribute_seen[0]){
-        printf("This field has multiple name attributes: %s | %s\n", field->name, field_property_value);
+        printf("Error: This field has multiple name attributes\n");
         return NULL;
       }
       field->name = field_property_value;
       attribute_seen[0] = true;
     } else if (strcmp(field_property_name, "type") == 0) {
       if(attribute_seen[1]){
-        printf("This field has multiple type attributes\n");
+        printf("Error: This field has multiple type attributes\n");
         return NULL;
       }
       field->data_type = data_type_from_str(field_property_value);
       attribute_seen[1] = true;
     } else if (strcmp(field_property_name, "visibility") == 0) {
       if(attribute_seen[2]){
-        printf("This field has multiple visibility attributes\n");
+        printf("Error: This field has multiple visibility attributes\n");
         return NULL;
       }
       field->visibility = visibility_from_str(field_property_value);
       attribute_seen[2] = true;
     } else if (strcmp(field_property_name, "const") == 0) {
       if(attribute_seen[3]){
-        printf("This field has multiple const attributes\n");
+        printf("Error: This field has multiple const attributes\n");
         return NULL;
       }
       field->isConstant = str_to_bool(field_property_value);
       attribute_seen[3] = true;
     } else if (strcmp(field_property_name, "store") == 0) {
       if(attribute_seen[4]){
-        printf("This field has multiple store attributes\n");
+        printf("Error: This field has multiple store attributes\n");
         return NULL;
       }
       field->store_type = store_type_from_str(field_property_value);
@@ -95,24 +95,23 @@ struct Field *parse_field(struct Line_Data_Node **line) {
 
 struct Field_List *parse_fields(struct Line_Data_Node **line) {
   struct Field_List *result = malloc(sizeof(typeof(*result)));
-  struct Field_List *current_result = result;
 
   while (*line != NULL && strcmp((*line)->data->left, "field") == 0) {
     *line = (*line)->next;
-    current_result->data = parse_field(line);
-    if(current_result->data == NULL){
+    result->data = parse_field(line);
+    if(result->data == NULL){
       return NULL;
     }
 
-    current_result->next = malloc(sizeof(typeof(*current_result)));
-    current_result->next->prev = current_result;
-    current_result = current_result->next;
+    result->next = malloc(sizeof(typeof(*result)));
+    result->next->prev = result;
+    result = result->next;
   }
 
   // We always allocate an extra field, so remove it here
-  current_result = current_result->prev;
-  free(current_result->next);
-  current_result->next = NULL;
+  result = result->prev;
+  free(result->next);
+  result->next = NULL;
 
   return result;
 }
