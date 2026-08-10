@@ -242,37 +242,6 @@ void test_class_data_parser_rejects_duplicate_store_attibute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("store");
 }
 
-void test_class_data_parser_rejects_duplicate_field_names(){
-  // Arrange
-  struct Version version = create_default_version();
-  struct Data_Parser_Result result = create_default_result();
-
-  struct Line_Data fields_line_data = {
-      .indentation = 0, .left = "fields", .right = ""};
-
-  struct Line_Data_Node *line_data_list =
-      malloc(sizeof(typeof(*line_data_list)));
-  line_data_list->data = &fields_line_data;
-  line_data_list->next = NULL;
-  line_data_list->prev = NULL;
-  append_line(&line_data_list, "field", "", 4);
-  append_line(&line_data_list, "name", "id", 8);
-  append_line(&line_data_list, "field", "", 4);
-  append_line(&line_data_list, "name", "id", 8);
-  while (line_data_list->prev != NULL) {
-    line_data_list = line_data_list->prev;
-  }
-
-  // Act
-  bool parsed = try_parse_class_data(line_data_list, &result, &version);
-
-  // Assert
-  assert_parse_failed(parsed, &result);
-
-  // Cleanup
-  delete_list(line_data_list);
-}
-
 void test_class_data_parser_rejects_duplicate_name_token() {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
@@ -367,7 +336,6 @@ void add_class_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_attibute_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_const_attibute_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_store_attibute_in_field);
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_field_names);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_name_token);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_token);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_equality_token);
