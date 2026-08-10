@@ -251,12 +251,12 @@ void test_class_data_parser_rejects_duplicate_name_token() {
   line_data->right = "test_name";
   line_data->indentation = 0;
   struct Line_Data_Node line = {.prev = NULL, .next = NULL, .data = line_data};
-  append_line(&line_data_list, "name", "DUPLICATE", 0);
+  append_line(&line_data, "name", "DUPLICATE", 0);
 
   bool parsed = try_parse_class_data(&line, &result, &version);
   assert_parse_failed(parsed, &result);
 
-  delete_list(line_data_list);
+  delete_list(line_data);
 }
 
 void test_class_data_parser_rejects_duplicate_visibility_token() {
@@ -268,12 +268,12 @@ void test_class_data_parser_rejects_duplicate_visibility_token() {
   line_data->right = "public";
   line_data->indentation = 0;
   struct Line_Data_Node line = {.prev = NULL, .next = NULL, .data = line_data};
-  append_line(&line_data_list, "visibility", "DUPLICATE", 0);
+  append_line(&line_data, "visibility", "DUPLICATE", 0);
 
   bool parsed = try_parse_class_data(&line, &result, &version);
   assert_parse_failed(parsed, &result);
 
-  delete_list(line_data_list);
+  delete_list(line_data);
 }
 
 void test_class_data_parser_rejects_duplicate_equality_token() {
@@ -285,12 +285,12 @@ void test_class_data_parser_rejects_duplicate_equality_token() {
   line_data->right = "ref";
   line_data->indentation = 0;
   struct Line_Data_Node line = {.prev = NULL, .next = NULL, .data = line_data};
-  append_line(&line_data_list, "equality", "DUPLICATE", 0);
+  append_line(&line_data, "equality", "DUPLICATE", 0);
 
   bool parsed = try_parse_class_data(&line, &result, &version);
   assert_parse_failed(parsed, &result);
 
-  delete_list(line_data_list);
+  delete_list(line_data);
 }
 
 void test_class_data_parser_rejects_duplicate_fields_token() {
