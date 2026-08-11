@@ -250,6 +250,75 @@ void test_class_data_parser_rejects_duplicate_store_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("store");
 }
 
+void test_class_data_parser_rejects_duplicate_token(char *duplicate_field, char *good_value){
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+
+  struct Line_Data line_data = {.indentation = 0, .left = duplicate_field, .right=good_value};
+
+  struct Line_Data_Node *line_data_list =
+    malloc(sizeof(typeof(*line_data_list)));
+  line_data_list->data = &line_data;
+  line_data_list->next = NULL;
+  line_data_list->prev = NULL;
+  append_line(&line_data_list, duplicate_field, "DUPLICATE", 0);
+  while(line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+  }
+
+  bool parsed = try_parse_class_data(line_data_list, &result, &version);
+  assert_parse_failed(parsed, &result);
+
+  while (line_data_list->next != NULL) {
+    line_data_list = line_data_list->next;
+  }
+  while (line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+    free(line_data_list->next);
+  }
+  free(line_data_list);
+}
+
+void test_class_data_parser_rejects_duplicate_name_token(){
+  test_class_data_parser_rejects_duplicate_token("name", "test_name");
+}
+void test_class_data_parser_rejects_duplicate_visibility_token(){
+  test_class_data_parser_rejects_duplicate_token("visibility", "public");
+}
+void test_class_data_parser_rejects_duplicate_equality_token(){
+  test_class_data_parser_rejects_duplicate_token("equality", "ref");
+}
+void test_class_data_parser_rejects_multiple_field_lists(){
+  struct Version version = create_default_version();
+  struct Data_Parser_Result result = create_default_result();
+
+  struct Line_Data line_data = {.indentation = 0, .left = "fields", .right=""};
+
+  struct Line_Data_Node *line_data_list =
+    malloc(sizeof(typeof(*line_data_list)));
+  line_data_list->data = &line_data;
+  line_data_list->next = NULL;
+  line_data_list->prev = NULL;
+  append_line(&line_data_list, "field", "", 4);
+  append_line(&line_data_list, "name", "id", 8);
+  append_line(&line_data_list, "fields", "", 0);
+  while(line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+  }
+
+  bool parsed = try_parse_class_data(line_data_list, &result, &version);
+  assert_parse_failed(parsed, &result);
+
+  while (line_data_list->next != NULL) {
+    line_data_list = line_data_list->next;
+  }
+  while (line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+    free(line_data_list->next);
+  }
+  free(line_data_list);
+}
+
 void add_class_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite,
               test_class_data_parser_no_details_returns_default_values);
@@ -263,4 +332,9 @@ void add_class_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_attribute_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_const_attribute_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_store_attribute_in_field);
+
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_name_token);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_token);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_equality_token);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_multiple_field_lists);
 }
