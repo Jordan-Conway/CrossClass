@@ -47,6 +47,8 @@ void assert_parse_success(bool parsed,
 
 void assert_parse_failed(bool parsed,
                           const struct Data_Parser_Result *result) {
+
+  printf("DIAGNOSING: %d, %s\n", result->is_error, result->error_message);
   CU_ASSERT_FALSE(parsed);
   CU_ASSERT_PTR_NULL(result->result);
   CU_ASSERT(result->is_error);
