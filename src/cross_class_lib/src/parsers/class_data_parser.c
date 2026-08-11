@@ -89,6 +89,10 @@ struct Field *parse_field(struct Line_Data_Node **line) {
     }
     *line = (*line)->next;
   }
+  // If another line exists that wasn't empty, reconsider it
+  if(*line != NULL){
+    *line = (*line)->prev;
+  }
 
   return field;
 }
@@ -146,7 +150,6 @@ bool try_parse_class_data(struct Line_Data_Node *line,
       class_info->equality->type = equality_type_from_str(line->data->right);
       token_seen[2] = true;
     } else if (strcmp(line->data->left, "fields") == 0) {
-      printf("ENTERING - %d\n", token_seen[3]);
       if(token_seen[3]){
         printf("ERROR: Class has multiple field lists - please merge them\n");
         return false;
@@ -157,7 +160,6 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         return false;
       }
       token_seen[3] = true;
-      printf("EXITING - %d\n", token_seen[3]);
     }
 
     if (line != NULL) {
