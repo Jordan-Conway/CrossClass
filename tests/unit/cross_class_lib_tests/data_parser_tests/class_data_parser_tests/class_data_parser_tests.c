@@ -224,10 +224,12 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate
   printf("ASSERTS COMPLETE\n");
   
   delete_list(line_data_list);
+  printf("DELETED LIST\n");
 }
 
 void test_class_data_parser_rejects_duplicate_name_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("name");
+  printf("This test is complete\n");
 }
 void test_class_data_parser_rejects_duplicate_type_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("type");
@@ -251,6 +253,7 @@ void add_class_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_class_data_parser_fields_are_parsed);
 
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_name_attribute_in_field);
+  printf("This test is fully complete\n");
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_type_attribute_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_attribute_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_const_attribute_in_field);
