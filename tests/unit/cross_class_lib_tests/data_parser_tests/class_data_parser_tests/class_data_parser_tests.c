@@ -218,8 +218,10 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate
   }
 
   bool parsed = try_parse_class_data(line_data_list, &result, &version);
+  printf("PARSING COMPLETE: %d\n", parsed);
 
   assert_parse_failed(parsed, &result);
+  printf("ASSERTS COMPLETE\n");
   
   delete_list(line_data_list);
 }
