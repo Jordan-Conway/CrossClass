@@ -53,35 +53,35 @@ struct Field *parse_field(struct Line_Data_Node **line) {
     char *field_property_value = (*line)->data->right;
     if (strcmp(field_property_name, "name") == 0) {
       if(attribute_seen[0]){
-        printf("ERROR: A field has two name attributes\n");
+        printf("ERROR: A field has multiple name attributes\n");
         return NULL;
       }
       field->name = field_property_value;
       attribute_seen[0] = true;
     } else if (strcmp(field_property_name, "type") == 0) {
       if(attribute_seen[1]){
-        printf("ERROR: A field has two type attributes\n");
+        printf("ERROR: A field has multiple type attributes\n");
         return NULL;
       }
       field->data_type = data_type_from_str(field_property_value);
       attribute_seen[1] = true;
     } else if (strcmp(field_property_name, "visibility") == 0) {
       if(attribute_seen[2]){
-        printf("ERROR: A field has two visibility attributes\n");
+        printf("ERROR: A field has multiple visibility attributes\n");
         return NULL;
       }
       field->visibility = visibility_from_str(field_property_value);
       attribute_seen[2] = true;
     } else if (strcmp(field_property_name, "const") == 0) {
       if(attribute_seen[3]){
-        printf("ERROR: A field has two const attributes\n");
+        printf("ERROR: A field has multiple const attributes\n");
         return NULL;
       }
       field->isConstant = str_to_bool(field_property_value);
       attribute_seen[3] = true;
     } else if (strcmp(field_property_name, "store") == 0) {
       if(attribute_seen[4]){
-        printf("ERROR: A field has two store attributes\n");
+        printf("ERROR: A field has multiple store attributes\n");
         return NULL;
       }
       field->store_type = store_type_from_str(field_property_value);
@@ -122,19 +122,40 @@ bool try_parse_class_data(struct Line_Data_Node *line,
                           const struct Version *version) {
   struct Class_Info *class_info = create_default_class();
 
+  bool token_seen[4] = {false, false, false, false}; // token refers to: name, visibility, equality, fields
   while (line != NULL) {
     if (strcmp(line->data->left, "name") == 0) {
+      if(token_seen[0]){
+        printf("ERROR: Class has multiple name tokens\n");
+        return false;
+      }
       class_info->name = line->data->right;
+      token_seen[0] = true;
     } else if (strcmp(line->data->left, "visibility") == 0) {
+      if(token_seen[1]){
+        printf("ERROR: Class has multiple visibility tokens\n");
+        return false;
+      }
       class_info->visibility = visibility_from_str(line->data->right);
+      token_seen[1] = true;
     } else if (strcmp(line->data->left, "equality") == 0) {
+      if(token_seen[2]){
+        printf("ERROR: Class has multiple equality tokens\n");
+        return false;
+      }
       class_info->equality->type = equality_type_from_str(line->data->right);
+      token_seen[2] = true;
     } else if (strcmp(line->data->left, "fields") == 0) {
+      if(token_seen[3]){
+        printf("ERROR: Class has multiple field lists - please merge them\n");
+        return false;
+      }
       line = line->next;
       class_info->fields = parse_fields(&line);
       if(class_info->fields == NULL){
         return false;
       }
+      token_seen[3] = true;
     }
 
     if (line != NULL) {
