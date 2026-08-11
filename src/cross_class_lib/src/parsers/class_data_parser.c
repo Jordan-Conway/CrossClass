@@ -100,7 +100,9 @@ struct Field_List *parse_fields(struct Line_Data_Node **line) {
   while (*line != NULL && strcmp((*line)->data->left, "field") == 0) {
     *line = (*line)->next;
     current_result->data = parse_field(line);
+    printf("Escaped parse_field()\n");
     if(current_result->data == NULL){ // Duplicate field attribute found
+      printf("Entered parse_fields escape route\n");
       return NULL;
     };
 
@@ -132,7 +134,9 @@ bool try_parse_class_data(struct Line_Data_Node *line,
     } else if (strcmp(line->data->left, "fields") == 0) {
       line = line->next;
       class_info->fields = parse_fields(&line);
+      printf("Escaped parse_fields()\n");
       if(class_info->fields == NULL){
+        printf("Entering class_parser() escape route\n");
         return false;
       }
     }
