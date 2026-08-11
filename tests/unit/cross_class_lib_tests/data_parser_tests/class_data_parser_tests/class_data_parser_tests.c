@@ -218,18 +218,21 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate
   }
 
   bool parsed = try_parse_class_data(line_data_list, &result, &version);
-  printf("PARSING COMPLETE: %d\n", parsed);
 
   assert_parse_failed(parsed, &result);
-  printf("ASSERTS COMPLETE\n");
   
-  delete_list(line_data_list);
-  printf("DELETED LIST\n");
+  while (line_data_list->next != NULL) {
+    line_data_list = line_data_list->next;
+  }
+  while (line_data_list->prev != NULL) {
+    line_data_list = line_data_list->prev;
+    free(line_data_list->next);
+  }
+  free(line_data_list);
 }
 
 void test_class_data_parser_rejects_duplicate_name_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("name");
-  printf("This test is complete\n");
 }
 void test_class_data_parser_rejects_duplicate_type_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("type");
@@ -253,7 +256,6 @@ void add_class_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_class_data_parser_fields_are_parsed);
 
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_name_attribute_in_field);
-  printf("This test is fully complete\n");
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_type_attribute_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_attribute_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_const_attribute_in_field);
