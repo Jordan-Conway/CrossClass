@@ -193,6 +193,7 @@ void test_class_data_parser_fields_are_parsed() {
 }
 
 void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate_attribute){
+  printf("BEGINNING TEST\n");
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
 
@@ -215,10 +216,11 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate
     line_data_list = line_data_list->prev;
   }
 
+  printf("Beginning Parsing\n");
   bool parsed = try_parse_class_data(line_data_list, &result, &version);
-
+  printf("Finished Parsing\n");
   assert_parse_failed(parsed, &result);
-  
+  printf("Finished Assert\n");
   while (line_data_list->next != NULL) {
     line_data_list = line_data_list->next;
   }
@@ -230,10 +232,15 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate
 }
 
 void test_class_data_parser_rejects_duplicate_attributes_in_field(){
+  printf("TESTING NAME\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("name");
+  printf("TESTING TYPE\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("type");
+  printf("TESTING VISIBILITY\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("visibility");
+  printf("TESTING CONST\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("const");
+  printf("TESTING STORE\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("store");
 }
 
