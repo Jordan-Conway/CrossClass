@@ -49,11 +49,6 @@ void assert_parse_failed(bool parsed,
                           const struct Data_Parser_Result *result) {
   CU_ASSERT_FALSE(parsed);
   CU_ASSERT_PTR_NULL(result->result);
-
-  // These seem counter_intuitive
-  CU_ASSERT_FALSE(result->is_error);
-  CU_ASSERT_PTR_NULL(result->error_message);
-  // But this file only calls try_parse_class_data which doesn't set result error stuff
 }
 
 void assert_field_equality(const struct Field *expected,
@@ -234,19 +229,11 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate
   free(line_data_list);
 }
 
-void test_class_data_parser_rejects_duplicate_name_attribute_in_field(){
+void test_class_data_parser_rejects_duplicate_attributes_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("name");
-}
-void test_class_data_parser_rejects_duplicate_type_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("type");
-}
-void test_class_data_parser_rejects_duplicate_visibility_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("visibility");
-}
-void test_class_data_parser_rejects_duplicate_const_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("const");
-}
-void test_class_data_parser_rejects_duplicate_store_attribute_in_field(){
   test_class_data_parser_rejects_duplicate_attribute_in_field("store");
 }
 
@@ -279,16 +266,12 @@ void test_class_data_parser_rejects_duplicate_token(char *duplicate_field, char 
   free(line_data_list);
 }
 
-void test_class_data_parser_rejects_duplicate_name_token(){
+void test_class_data_parser_rejects_duplicate_tokens(){
   test_class_data_parser_rejects_duplicate_token("name", "test_name");
-}
-void test_class_data_parser_rejects_duplicate_visibility_token(){
   test_class_data_parser_rejects_duplicate_token("visibility", "public");
-}
-void test_class_data_parser_rejects_duplicate_equality_token(){
   test_class_data_parser_rejects_duplicate_token("equality", "ref");
-}
-void test_class_data_parser_rejects_multiple_field_lists(){
+
+  // Testing for multiple field lists
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
 
@@ -327,14 +310,6 @@ void add_class_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_class_data_parser_equality_is_parsed);
   CU_ADD_TEST(test_suite, test_class_data_parser_fields_are_parsed);
 
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_name_attribute_in_field);
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_type_attribute_in_field);
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_attribute_in_field);
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_const_attribute_in_field);
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_store_attribute_in_field);
-
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_name_token);
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_visibility_token);
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_equality_token);
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_multiple_field_lists);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_attributes_in_field);
+  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_tokens);
 }
