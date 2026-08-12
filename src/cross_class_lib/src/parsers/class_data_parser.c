@@ -121,8 +121,11 @@ struct Field *parse_field(struct Line_Data_Node **line) {
   return field;
 
   rejected_field:
+    printf("ENTERED FIELD REJECTOR\n");
     free(already_set_attributes);
+    printf("Cleared my struct\n");
     free(field);
+    printf("EXITING FIELD REJECTOR\n");
     return NULL;
 }
 
@@ -139,6 +142,7 @@ struct Field_List *parse_fields(struct Line_Data_Node **line) {
         current_result = current_result->prev;
         free(current_result->next);
       }
+      printf("Cleared current_result\n");
       free(current_result);
 
       return NULL;
@@ -210,7 +214,10 @@ bool try_parse_class_data(struct Line_Data_Node *line,
   return true;
 
   rejected_class:
+    printf("ENTERED CLASS REJECTOR\n");
     free(already_set_tokens);
+    printf("Cleared my struct\n");
     free(class_info);
+    printf("EXITING CLASS REJECTOR\n");
     return false;
 }
