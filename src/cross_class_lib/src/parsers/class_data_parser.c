@@ -60,7 +60,7 @@ struct Already_Set_Tokens *initialise_already_set_tokens() {
   ast->equality_set = false;
   ast->fields_set = false;
 
-  return ast
+  return ast;
 }
 
 bool str_to_bool(char *str) { return (strcmp(str, "true") == 0); }
