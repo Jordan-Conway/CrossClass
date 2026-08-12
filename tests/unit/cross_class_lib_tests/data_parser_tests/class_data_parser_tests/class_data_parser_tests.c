@@ -47,7 +47,6 @@ void assert_parse_success(bool parsed,
 
 void assert_parse_failed(bool parsed,
                           const struct Data_Parser_Result *result) {
-  printf("%d, %d\n", parsed, result->result == NULL);
   CU_ASSERT_FALSE(parsed);
   CU_ASSERT_PTR_NULL(result->result);
 }
@@ -194,7 +193,6 @@ void test_class_data_parser_fields_are_parsed() {
 }
 
 void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate_attribute){
-  printf("%s ", duplicate_attribute);
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
 

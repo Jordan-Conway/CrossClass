@@ -43,7 +43,7 @@ struct Equality *create_default_equality() {
 }
 
 struct Already_Set_Attributes *initialise_already_set_attributes() {
-  struct Already_Set_Attributes *asa = malloc(sizeof(typeof(*asa)));
+  struct Already_Set_Attributes *asa = (struct Already_Set_Attributes *)(sizeof(typeof(*asa)));
   asa->name_set = false;
   asa->type_set = false;
   asa->visibility_set = false;
@@ -54,7 +54,7 @@ struct Already_Set_Attributes *initialise_already_set_attributes() {
 }
 
 struct Already_Set_Tokens *initialise_already_set_tokens() {
-  struct Already_Set_Tokens *ast = malloc(sizeof(typeof(*ast)));
+  struct Already_Set_Tokens *ast = (struct Already_Set_Tokens *)malloc(sizeof(typeof(*ast)));
   ast->name_set = false;
   ast->visibility_set = false;
   ast->equality_set = false;
