@@ -8,6 +8,21 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct Already_Set_Field_Attributes {
+  bool name_set;
+  bool type_set;
+  bool visibility_set;
+  bool const_set;
+  bool store_set;
+};
+
+struct Already_Set_Class_Attributes {
+  bool name_set;
+  bool visibility_set;
+  bool equality_set;
+  bool fields_set;
+};
+
 struct Class_Info *create_default_class() {
   struct Class_Info *class_info =
       (struct Class_Info *)malloc(sizeof(struct Class_Info));
@@ -41,9 +56,9 @@ struct Equality *create_default_equality() {
   return equality;
 }
 
-struct Already_Set_Attributes *initialise_already_set_attributes() {
-  struct Already_Set_Attributes *asa =
-      (struct Already_Set_Attributes *)malloc(sizeof(typeof(*asa)));
+struct Already_Set_Field_Attributes *initialise_already_set_attributes() {
+  struct Already_Set_Field_Attributes *asa =
+      (struct Already_Set_Field_Attributes *)malloc(sizeof(typeof(*asa)));
   asa->name_set = false;
   asa->type_set = false;
   asa->visibility_set = false;
@@ -53,9 +68,9 @@ struct Already_Set_Attributes *initialise_already_set_attributes() {
   return asa;
 }
 
-struct Already_Set_Tokens *initialise_already_set_tokens() {
-  struct Already_Set_Tokens *ast =
-      (struct Already_Set_Tokens *)malloc(sizeof(typeof(*ast)));
+struct Already_Set_Class_Attributes *initialise_already_set_tokens() {
+  struct Already_Set_Class_Attributes *ast =
+      (struct Already_Set_Class_Attributes *)malloc(sizeof(typeof(*ast)));
   ast->name_set = false;
   ast->visibility_set = false;
   ast->equality_set = false;
@@ -70,7 +85,7 @@ struct Field *parse_field(struct Line_Data_Node **line) {
   int field_indentation = (*line)->data->indentation;
   struct Field *field = malloc(sizeof(typeof(*field)));
 
-  struct Already_Set_Attributes *already_set_attributes =
+  struct Already_Set_Field_Attributes *already_set_attributes =
       initialise_already_set_attributes();
   while (*line != NULL && (*line)->data->indentation == field_indentation) {
     char *field_property_name = (*line)->data->left;
@@ -167,7 +182,7 @@ bool try_parse_class_data(struct Line_Data_Node *line,
                           const struct Version *version) {
   struct Class_Info *class_info = create_default_class();
 
-  struct Already_Set_Tokens *already_set_tokens =
+  struct Already_Set_Class_Attributes *already_set_tokens =
       initialise_already_set_tokens();
   while (line != NULL) {
     if (strcmp(line->data->left, "name") == 0) {
