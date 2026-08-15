@@ -45,8 +45,7 @@ void assert_parse_success(bool parsed,
   CU_ASSERT_PTR_NULL(result->error_message);
 }
 
-void assert_parse_failed(bool parsed,
-                          const struct Data_Parser_Result *result) {
+void assert_parse_failed(bool parsed, const struct Data_Parser_Result *result) {
   CU_ASSERT_FALSE(parsed);
   CU_ASSERT_PTR_NULL(result->result);
 }
@@ -192,16 +191,16 @@ void test_class_data_parser_fields_are_parsed() {
   free(line_data_list);
 }
 
-void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate_attribute){
-  printf("BEGINNING TEST\n");
+void test_class_data_parser_rejects_duplicate_attribute_in_field(
+    char *duplicate_attribute) {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
 
   struct Line_Data fields_line_data = {
-    .indentation = 0, .left = "fields", .right = ""};
+      .indentation = 0, .left = "fields", .right = ""};
 
-  struct Line_Data_Node *line_data_list = 
-    malloc(sizeof(typeof(*line_data_list)));
+  struct Line_Data_Node *line_data_list =
+      malloc(sizeof(typeof(*line_data_list)));
   line_data_list->data = &fields_line_data;
   line_data_list->next = NULL;
   line_data_list->prev = NULL;
@@ -212,15 +211,12 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate
   append_line(&line_data_list, "const", "false", 8);
   append_line(&line_data_list, "store", "ref", 8);
   append_line(&line_data_list, duplicate_attribute, "DUPLICATE", 8);
-  while (line_data_list->prev != NULL){
+  while (line_data_list->prev != NULL) {
     line_data_list = line_data_list->prev;
   }
 
-  printf("Beginning Parsing\n");
   bool parsed = try_parse_class_data(line_data_list, &result, &version);
-  printf("Finished Parsing\n");
   assert_parse_failed(parsed, &result);
-  printf("Finished Assert\n");
   while (line_data_list->next != NULL) {
     line_data_list = line_data_list->next;
   }
@@ -231,32 +227,29 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(char *duplicate
   free(line_data_list);
 }
 
-void test_class_data_parser_rejects_duplicate_attributes_in_field(){
-  printf("TESTING NAME\n");
+void test_class_data_parser_rejects_duplicate_attributes_in_field() {
   test_class_data_parser_rejects_duplicate_attribute_in_field("name");
-  printf("TESTING TYPE\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("type");
-  printf("TESTING VISIBILITY\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("visibility");
-  printf("TESTING CONST\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("const");
-  printf("TESTING STORE\n");
   test_class_data_parser_rejects_duplicate_attribute_in_field("store");
 }
 
-void test_class_data_parser_rejects_duplicate_token(char *duplicate_field, char *good_value){
+void test_class_data_parser_rejects_duplicate_token(char *duplicate_field,
+                                                    char *good_value) {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
 
-  struct Line_Data line_data = {.indentation = 0, .left = duplicate_field, .right=good_value};
+  struct Line_Data line_data = {
+      .indentation = 0, .left = duplicate_field, .right = good_value};
 
   struct Line_Data_Node *line_data_list =
-    malloc(sizeof(typeof(*line_data_list)));
+      malloc(sizeof(typeof(*line_data_list)));
   line_data_list->data = &line_data;
   line_data_list->next = NULL;
   line_data_list->prev = NULL;
   append_line(&line_data_list, duplicate_field, "DUPLICATE", 0);
-  while(line_data_list->prev != NULL) {
+  while (line_data_list->prev != NULL) {
     line_data_list = line_data_list->prev;
   }
 
@@ -273,7 +266,7 @@ void test_class_data_parser_rejects_duplicate_token(char *duplicate_field, char 
   free(line_data_list);
 }
 
-void test_class_data_parser_rejects_duplicate_tokens(){
+void test_class_data_parser_rejects_duplicate_tokens() {
   test_class_data_parser_rejects_duplicate_token("name", "test_name");
   test_class_data_parser_rejects_duplicate_token("visibility", "public");
   test_class_data_parser_rejects_duplicate_token("equality", "ref");
@@ -282,17 +275,18 @@ void test_class_data_parser_rejects_duplicate_tokens(){
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
 
-  struct Line_Data line_data = {.indentation = 0, .left = "fields", .right=""};
+  struct Line_Data line_data = {
+      .indentation = 0, .left = "fields", .right = ""};
 
   struct Line_Data_Node *line_data_list =
-    malloc(sizeof(typeof(*line_data_list)));
+      malloc(sizeof(typeof(*line_data_list)));
   line_data_list->data = &line_data;
   line_data_list->next = NULL;
   line_data_list->prev = NULL;
   append_line(&line_data_list, "field", "", 4);
   append_line(&line_data_list, "name", "id", 8);
   append_line(&line_data_list, "fields", "", 0);
-  while(line_data_list->prev != NULL) {
+  while (line_data_list->prev != NULL) {
     line_data_list = line_data_list->prev;
   }
 
@@ -317,6 +311,7 @@ void add_class_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_class_data_parser_equality_is_parsed);
   CU_ADD_TEST(test_suite, test_class_data_parser_fields_are_parsed);
 
-  CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_attributes_in_field);
+  CU_ADD_TEST(test_suite,
+              test_class_data_parser_rejects_duplicate_attributes_in_field);
   CU_ADD_TEST(test_suite, test_class_data_parser_rejects_duplicate_tokens);
 }
