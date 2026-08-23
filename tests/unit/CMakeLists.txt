@@ -57,5 +57,5 @@ target_link_libraries(cross_class_tests
     ${CUNIT_LIBRARY}
 )
 
-target_compile_options(cross_class_tests PRIVATE -Wall -Wextra -Werror)
+target_compile_options(cross_class_tests PRIVATE -Wall -Wextra -Werror -Wpedantic)
 #endregion

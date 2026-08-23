@@ -11,7 +11,7 @@ struct Equality {
   char *(*excluded_fields)[]; // Fields to exclude from comparison
 };
 
-LIST_NODE(Field_List, Field);
+LIST_NODE(Field_List, Field)
 
 struct Class_Info {
   enum Visibility visibility;

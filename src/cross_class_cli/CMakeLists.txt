@@ -16,4 +16,4 @@ target_link_libraries(cross_class_cli
     cross_class_lib
 )
 
-target_compile_options(cross_class_cli PRIVATE -Wall -Wextra -Werror)
+target_compile_options(cross_class_cli PRIVATE -Wall -Wextra -Werror -Wpedantic)

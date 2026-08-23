@@ -200,4 +200,4 @@ success:
   free(current_line);
   line_data_list = get_head_of_line_data_list(line_data_list);
   return line_data_list;
-};
+}

@@ -15,4 +15,4 @@ target_include_directories(
 
 set_target_properties(ccx_reader PROPERTIES PREFIX "")
 
-target_compile_options(ccx_reader PRIVATE -Wall -Wextra -Werror)
+target_compile_options(ccx_reader PRIVATE -Wall -Wextra -Werror -Wpedantic)
