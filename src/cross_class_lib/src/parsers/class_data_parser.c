@@ -179,7 +179,7 @@ struct Field_List *parse_fields(struct Line_Data_Node **line) {
 
 bool try_parse_class_data(struct Line_Data_Node *line,
                           struct Data_Parser_Result *result,
-                          const struct Version *version) {
+                          const struct Version *) {
   struct Class_Info *class_info = create_default_class();
 
   struct Already_Set_Class_Attributes *already_set_tokens =
