@@ -5,7 +5,7 @@ CrossClass is a program that allows you to define your data once and transpile m
 - Cmake >= v3.28.0
 - Cunit
 
-Development uses GCC. Any compiler that supports C17 should work, but your mileage may vary.
+Development uses GCC. Any compiler that supports C23 should work, but your mileage may vary.
 
 ## Building From Source
 - Run build.sh in the .ci directory
