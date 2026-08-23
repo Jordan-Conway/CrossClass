@@ -2,10 +2,10 @@
 #include "../command.h"
 #include <stdio.h>
 
-struct command_result help_command(int argc, char *argv[]) {
+struct Command_Result help_command(int, char **) {
   printf("TODO: Add help here\n");
 
-  struct command_result result = {.status = COMMAND_RESULT_SUCCESS,
+  struct Command_Result result = {.status = COMMAND_RESULT_SUCCESS,
                                   .message = "Ok"};
 
   return result;

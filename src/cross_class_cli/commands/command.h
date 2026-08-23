@@ -1,14 +1,14 @@
 #ifndef COMMAND
 #define COMMAND
 
-enum command_status {
+enum Command_Status {
   COMMAND_RESULT_SUCCESS = 0,
   COMMAND_RESULT_FAILURE = 1,
   COMMAND_RESULT_NOT_SET = 2,
 };
 
-struct command_result {
-  enum command_status status;
+struct Command_Result {
+  enum Command_Status status;
   char *message;
 };
 

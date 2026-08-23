@@ -3,11 +3,11 @@
 #include "version.h"
 #include <stdio.h>
 
-struct command_result version_command(int argc, char *argv[]) {
+struct Command_Result version_command(int, char **) {
   struct Version version = get_current_version();
   printf("%d.%d.%d\n", version.major, version.minor, version.patch);
 
-  struct command_result result = {.status = COMMAND_RESULT_SUCCESS,
+  struct Command_Result result = {.status = COMMAND_RESULT_SUCCESS,
                                   .message = "Ok"};
 
   return result;

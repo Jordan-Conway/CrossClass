@@ -15,7 +15,7 @@ bool args_are_valid(struct Command_Data *command, int argc, char *argv[]) {
     return true;
   }
 
-  return true;
+  return command->validate_args(argc, argv);
 }
 
 struct Command_Data *parse_command(int argc, char *argv[]) {

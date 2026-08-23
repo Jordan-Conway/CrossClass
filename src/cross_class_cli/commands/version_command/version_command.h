@@ -9,6 +9,6 @@ bool validate_version_command_args(int argc, char *argv[]);
 /*
     Prints the current version
 */
-struct command_result version_command(int argc, char *argv[]);
+struct Command_Result version_command(int argc, char *argv[]);
 
 #endif

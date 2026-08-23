@@ -6,13 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool validate_parse_command_args(int argc, char *argv[]) {
-  // TOOD validate args
-  return true;
-}
-
-struct command_result parse_file_command(int argc, char *argv[]) {
-  struct command_result result = {.status = COMMAND_RESULT_NOT_SET,
+struct Command_Result parse_file_command(int, char *argv[]) {
+  struct Command_Result result = {.status = COMMAND_RESULT_NOT_SET,
                                   .message = ""};
 
   FILE *fptr = fopen(argv[0], "r");
