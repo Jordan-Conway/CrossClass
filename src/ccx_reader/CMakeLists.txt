@@ -14,3 +14,5 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 
 set_target_properties(ccx_reader PROPERTIES PREFIX "")
+
+target_compile_options(ccx_reader PRIVATE -Wall -Wextra -Werror)
