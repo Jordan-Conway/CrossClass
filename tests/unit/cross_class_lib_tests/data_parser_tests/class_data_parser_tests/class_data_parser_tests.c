@@ -69,8 +69,7 @@ void test_class_data_parser_no_details_returns_default_values() {
   struct Class_Info *class_info = result.result;
 
   CU_ASSERT_PTR_NULL(class_info->name);
-  CU_ASSERT(class_info->equality->type == EQUAL_BY_REFERENCE);
-  CU_ASSERT_PTR_NULL(class_info->equality->excluded_fields);
+  CU_ASSERT(class_info->equality == EQUAL_NOT_SET);
   CU_ASSERT_PTR_NULL(class_info->fields);
   CU_ASSERT(class_info->visibility == VISIBILITY_NOT_SET);
 
@@ -132,8 +131,7 @@ void test_class_data_parser_equality_is_parsed() {
   bool parsed = try_parse_class_data(&line, &result, &version);
   assert_parse_success(parsed, &result);
 
-  CU_ASSERT(result.result->equality->type == EQUAL_BY_REFERENCE);
-  CU_ASSERT(result.result->equality->excluded_fields == NULL);
+  CU_ASSERT(result.result->equality == EQUAL_BY_REFERENCE);
 
   free(line_data);
 }

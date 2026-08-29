@@ -27,9 +27,7 @@ struct Class_Info *create_default_class() {
   struct Class_Info *class_info =
       (struct Class_Info *)malloc(sizeof(struct Class_Info));
 
-  class_info->equality = (struct Equality *)malloc(sizeof(struct Equality));
-  class_info->equality->type = EQUAL_BY_REFERENCE;
-  class_info->equality->excluded_fields = NULL;
+  class_info->equality = EQUAL_NOT_SET;
 
   class_info->fields = NULL;
   class_info->name = NULL;
@@ -47,13 +45,6 @@ struct Field *create_default_field() {
   field->visibility = VISIBILITY_NOT_SET;
 
   return field;
-}
-
-struct Equality *create_default_equality() {
-  struct Equality *equality = malloc(sizeof(typeof(*equality)));
-  equality->type = EQUAL_NOT_SET;
-
-  return equality;
 }
 
 struct Already_Set_Field_Attributes *initialise_already_set_attributes() {
@@ -204,7 +195,7 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         printf("ERROR: Class has multiple equality tokens\n");
         goto rejected_class;
       }
-      class_info->equality->type = equality_type_from_str(line->data->right);
+      class_info->equality = equality_type_from_str(line->data->right);
       already_set_tokens->equality_set = true;
     } else if (strcmp(line->data->left, "fields") == 0) {
       if (already_set_tokens->fields_set) {
