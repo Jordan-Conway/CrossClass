@@ -5,18 +5,12 @@
 #include "./linked_list.h"
 #include "./tokens.h"
 
-// Defines how equality is checked for objects
-struct Equality {
-  enum EqualityType type;
-  char *(*excluded_fields)[]; // Fields to exclude from comparison
-};
-
 LIST_NODE(Field_List, Field)
 
 struct Class_Info {
   enum Visibility visibility;
   char *name;
-  struct Equality *equality;
+  enum EqualityType equality;
   struct Field_List *fields;
 };
 

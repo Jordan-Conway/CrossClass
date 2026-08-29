@@ -14,6 +14,7 @@ struct Already_Set_Field_Attributes {
   bool visibility_set;
   bool const_set;
   bool store_set;
+  bool equitable_set;
 };
 
 struct Already_Set_Class_Attributes {
@@ -27,9 +28,7 @@ struct Class_Info *create_default_class() {
   struct Class_Info *class_info =
       (struct Class_Info *)malloc(sizeof(struct Class_Info));
 
-  class_info->equality = (struct Equality *)malloc(sizeof(struct Equality));
-  class_info->equality->type = EQUAL_BY_REFERENCE;
-  class_info->equality->excluded_fields = NULL;
+  class_info->equality = EQUAL_NOT_SET;
 
   class_info->fields = NULL;
   class_info->name = NULL;
@@ -45,15 +44,9 @@ struct Field *create_default_field() {
   field->store_type = STORETYPE_NOT_SET;
   field->isConstant = true;
   field->visibility = VISIBILITY_NOT_SET;
+  field->equitable = true;
 
   return field;
-}
-
-struct Equality *create_default_equality() {
-  struct Equality *equality = malloc(sizeof(typeof(*equality)));
-  equality->type = EQUAL_NOT_SET;
-
-  return equality;
 }
 
 struct Already_Set_Field_Attributes *initialise_already_set_attributes() {
@@ -64,6 +57,7 @@ struct Already_Set_Field_Attributes *initialise_already_set_attributes() {
   asa->visibility_set = false;
   asa->const_set = false;
   asa->store_set = false;
+  asa->equitable_set = false;
 
   return asa;
 }
@@ -83,7 +77,7 @@ bool str_to_bool(char *str) { return (strcmp(str, "true") == 0); }
 
 struct Field *parse_field(struct Line_Data_Node **line) {
   int field_indentation = (*line)->data->indentation;
-  struct Field *field = malloc(sizeof(typeof(*field)));
+  struct Field *field = create_default_field();
 
   struct Already_Set_Field_Attributes *already_set_attributes =
       initialise_already_set_attributes();
@@ -125,12 +119,15 @@ struct Field *parse_field(struct Line_Data_Node **line) {
       }
       field->store_type = store_type_from_str(field_property_value);
       already_set_attributes->store_set = true;
+    } else if (strcmp(field_property_name, "equitable") == 0) {
+      if (already_set_attributes->equitable_set) {
+        printf("ERROR: A field has multiple equitable attributes\n");
+        goto rejected_field;
+      }
+      field->equitable = str_to_bool(field_property_value);
+      already_set_attributes->equitable_set = true;
     }
     *line = (*line)->next;
-  }
-  // If another line exists that wasn't empty, reconsider it
-  if (*line != NULL) {
-    *line = (*line)->prev;
   }
 
   free(already_set_attributes);
@@ -191,6 +188,7 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         goto rejected_class;
       }
       class_info->name = line->data->right;
+      line = line->next;
       already_set_tokens->name_set = true;
     } else if (strcmp(line->data->left, "visibility") == 0) {
       if (already_set_tokens->visibility_set) {
@@ -198,13 +196,15 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         goto rejected_class;
       }
       class_info->visibility = visibility_from_str(line->data->right);
+      line = line->next;
       already_set_tokens->visibility_set = true;
     } else if (strcmp(line->data->left, "equality") == 0) {
       if (already_set_tokens->equality_set) {
         printf("ERROR: Class has multiple equality tokens\n");
         goto rejected_class;
       }
-      class_info->equality->type = equality_type_from_str(line->data->right);
+      class_info->equality = equality_type_from_str(line->data->right);
+      line = line->next;
       already_set_tokens->equality_set = true;
     } else if (strcmp(line->data->left, "fields") == 0) {
       if (already_set_tokens->fields_set) {
@@ -217,10 +217,6 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         goto rejected_class;
       }
       already_set_tokens->fields_set = true;
-    }
-
-    if (line != NULL) {
-      line = line->next;
     }
   }
 
