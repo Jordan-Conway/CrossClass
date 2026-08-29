@@ -119,10 +119,6 @@ struct Field *parse_field(struct Line_Data_Node **line) {
     }
     *line = (*line)->next;
   }
-  // If another line exists that wasn't empty, reconsider it
-  if (*line != NULL) {
-    *line = (*line)->prev;
-  }
 
   free(already_set_attributes);
 
@@ -182,6 +178,7 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         goto rejected_class;
       }
       class_info->name = line->data->right;
+      line = line->next;
       already_set_tokens->name_set = true;
     } else if (strcmp(line->data->left, "visibility") == 0) {
       if (already_set_tokens->visibility_set) {
@@ -189,6 +186,7 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         goto rejected_class;
       }
       class_info->visibility = visibility_from_str(line->data->right);
+      line = line->next;
       already_set_tokens->visibility_set = true;
     } else if (strcmp(line->data->left, "equality") == 0) {
       if (already_set_tokens->equality_set) {
@@ -196,6 +194,7 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         goto rejected_class;
       }
       class_info->equality = equality_type_from_str(line->data->right);
+      line = line->next;
       already_set_tokens->equality_set = true;
     } else if (strcmp(line->data->left, "fields") == 0) {
       if (already_set_tokens->fields_set) {
@@ -208,10 +207,6 @@ bool try_parse_class_data(struct Line_Data_Node *line,
         goto rejected_class;
       }
       already_set_tokens->fields_set = true;
-    }
-
-    if (line != NULL) {
-      line = line->next;
     }
   }
 
