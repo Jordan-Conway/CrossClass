@@ -1,4 +1,8 @@
 #!/bin/bash
+
+script_directory="$(dirname $(realpath "$0"))"
+cd "$script_directory/.."
+
 cmake -B ./build
 
 if [ $? -ne 0 ]; then
