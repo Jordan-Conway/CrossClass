@@ -1,11 +1,16 @@
 #include "./command_list.h"
+#include "../shared_macros.h"
 #include "./help_command/help_command.h"
 #include "./parse_file_command/parse_file_command.h"
 #include "./version_command/version_command.h"
 #include <stdbool.h>
 #include <stdlib.h>
 
-bool default_validate_args(int, char **) { return true; }
+bool default_validate_args(int argc, char **argv) {
+  UNUSED(argc);
+  UNUSED(argv);
+  return true;
+}
 
 struct Command_Data Help_Command_Data = {.command_function = help_command,
                                          .type = VC_HELP,

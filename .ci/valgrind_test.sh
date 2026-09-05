@@ -1,4 +1,8 @@
 #!/bin/bash
+
+script_directory="$(dirname $(realpath "$0"))"
+cd "$script_directory/.."
+
 executable_path="./bin/cross_class_cli"
 test_executable_path="./tests/unit/bin/cross_class_tests"
 

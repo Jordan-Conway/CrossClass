@@ -1,4 +1,5 @@
 #include "./parse_file_command.h"
+#include "../../shared_macros.h"
 #include "../command.h"
 #include "ccx_line_data.h"
 #include "ccx_reader.h"
@@ -6,7 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Command_Result parse_file_command(int, char *argv[]) {
+struct Command_Result parse_file_command(int argc, char *argv[]) {
+  UNUSED(argc);
+
   struct Command_Result result = {.status = COMMAND_RESULT_NOT_SET,
                                   .message = ""};
 

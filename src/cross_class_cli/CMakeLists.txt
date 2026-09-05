@@ -2,6 +2,7 @@ add_executable(cross_class_cli)
 
 target_sources(cross_class_cli
     PRIVATE
+    shared_macros.h
     commands/command.c
     commands/command_list.c
     commands/help_command/help_command.c
@@ -15,5 +16,3 @@ target_link_libraries(cross_class_cli
     ccx_reader
     cross_class_lib
 )
-
-target_compile_options(cross_class_cli PRIVATE -Wall -Wextra -Werror -Wpedantic)

@@ -4,6 +4,7 @@ target_sources(cross_class_lib
     PRIVATE
     src/data_parser.c
     src/parsers/class_data_parser.c
+    src/shared_macros.h
     src/tokens.c
     src/version.c
     PUBLIC
@@ -26,5 +27,3 @@ target_link_libraries(
 )
 
 set_target_properties(cross_class_lib PROPERTIES PREFIX "")
-
-target_compile_options(cross_class_lib PRIVATE -Wall -Wextra -Werror -Wpedantic)
