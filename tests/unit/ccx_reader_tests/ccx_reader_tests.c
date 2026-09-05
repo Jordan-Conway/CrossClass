@@ -166,7 +166,8 @@ void test_trailing_whitespace_is_trimmed() {
 }
 
 void test_arbitrary_line_lengths() {
-  const char long_string[] = {[0 ... 99] = 'a', [100] = '\0'};
+  char long_string[100] = {'a'};
+  long_string[99] = '\n';
 
   FILE *file = tmpfile();
 

@@ -6,6 +6,12 @@ set(Shared_Object_Directory "${CMAKE_CURRENT_SOURCE_DIR}/../../lib")
 
 project(CrossClassTests)
 
+if(MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-Wall -Wextra -Werror -Wpedantic)
+endif()
+
 #region Installed Packages
 find_path(CUNIT_INCLUDE_DIR
     NAMES CUnit/CUnit.h
@@ -57,5 +63,4 @@ target_link_libraries(cross_class_tests
     ${CUNIT_LIBRARY}
 )
 
-target_compile_options(cross_class_tests PRIVATE -Wall -Wextra -Werror -Wpedantic)
 #endregion

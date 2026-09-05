@@ -26,5 +26,3 @@ target_link_libraries(
 )
 
 set_target_properties(cross_class_lib PROPERTIES PREFIX "")
-
-target_compile_options(cross_class_lib PRIVATE -Wall -Wextra -Werror -Wpedantic)
