@@ -3,60 +3,61 @@
 #include "../includes/ccx_line_data.h"
 #include <ctype.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 // Simple error handler
-void error_invalid_line(char *const reason_msg) {
+void error_invalid_line(const char *const reason_msg) {
   printf("Line is invalid\n");
   printf("%s\n", reason_msg);
   exit(1);
 }
 
-// Determine the length of a line by reading 32 character chunks
-size_t get_line_length(FILE *file, size_t *left_length, size_t *right_length) {
-  int total_length = 0;
-  int chunk_length = 0;
-  char buffer[32];
-  bool is_done = false;
-  bool colon_seen = false;
+size_t get_length_of_part(const char *line, char delimeter) {
+  size_t length = 0;
+  int spaces_in_a_row = 0;
 
-  do {
-    // Count number of characters
-    do {
-      buffer[chunk_length] = fgetc(file);
-      if (feof(file) || buffer[chunk_length] == '\n' ||
-          buffer[chunk_length] == '\0') {
-        is_done = true;
+  while (*line != delimeter && *line != '\0') {
+    if (*line == ' ') {
+      spaces_in_a_row++;
+      if (length != 0) {
+        length++;
       }
-      if (buffer[chunk_length] ==
-          ':') { // Test for colon (switch to counting right side)
-        colon_seen = true;
-      }
-      chunk_length++;
-    } while (chunk_length < 32 && !is_done && !colon_seen);
-
-    // Put back onto the input stream
-    for (int i = chunk_length - 1; i > -1; i--) {
-      ungetc(buffer[i], file);
+    } else {
+      spaces_in_a_row = 0;
+      length++;
     }
+    line++;
+  }
 
-    total_length += chunk_length;
-    fseek(file, chunk_length,
-          SEEK_CUR); // Make sure we don't read the same part repeatedly
-    chunk_length = 0;
+  if (length == 0) {
+    return 0;
+  }
 
-    // Switch to counting right side upon first colon
-    if (colon_seen && *left_length == 0) {
-      *left_length = total_length;
-      colon_seen = false;
+  return length - spaces_in_a_row;
+}
+
+// Determine the length of both parts of the line, excluding leading and
+// trailing white space
+void get_part_lengths(const char *line, size_t *left_length,
+                      size_t *right_length) {
+  *left_length = 0;
+  *right_length = 0;
+
+  if (*line == '\0') {
+    return;
+  }
+
+  *left_length = get_length_of_part(line, ':');
+  while (*line != ':') {
+    if (*line == '\0' || *line == '\n') {
+      return;
     }
-  } while (!is_done);
-
-  *right_length = total_length - *left_length;
-  fseek(file, -total_length,
-        SEEK_CUR); // Roll back the file pointer for the parser
-  return total_length;
+    line++;
+  }
+  line++;
+  *right_length = get_length_of_part(line, '\n');
 }
 
 // Parses the left side of a line. The result is stored in result. Moves line up
@@ -140,61 +141,71 @@ struct Line_Data *parse_line(const char *line, const size_t LEFT_LENGTH,
   return line_data;
 }
 
+char *read_line(FILE *file) {
+  size_t capacity = 128;
+  size_t length = 0;
+  char *line = malloc(capacity);
+
+  if (line == NULL) {
+    return NULL;
+  }
+
+  int last_char;
+
+  while ((last_char = fgetc(file)) != EOF && last_char != '\n') {
+    if (length + 1 >= capacity) {
+      capacity *= 2;
+
+      char *temp = realloc(line, capacity);
+      if (temp == NULL) {
+        free(line);
+        return NULL;
+      }
+
+      line = temp;
+    }
+
+    line[length++] = (char)last_char;
+  }
+
+  if (last_char == EOF && length == 0) {
+    free(line);
+    return NULL;
+  }
+
+  line[length] = '\0';
+  return line;
+}
+
 // Parse a file (top to bottom)
 struct Line_Data_Node *read_ccd_file(FILE *file) {
   char *current_line = NULL;
   struct Line_Data_Node *line_data_list = NULL;
 
-  long chars_read;
-  int lines_read = 0;
-  bool non_empty_line_found = false;
-
-  do {
-    size_t left_length = 0, right_length = 0;
-    size_t line_length = get_line_length(file, &left_length, &right_length);
-    current_line = (char *)realloc(current_line, line_length * sizeof(char));
-    chars_read = getline(&current_line, &line_length, file);
-    if (chars_read <= 0) {
-      if (lines_read == 0) {
-        goto empty_file;
-      }
-      lines_read++;
-      continue;
-    }
-    lines_read++;
-
-    // Skip empty lines
-    if (left_length == 0) {
-      continue;
-    }
-
+  while ((current_line = read_line(file)) != NULL) {
     // Ignore comments
     if (*current_line == *(current_line + 1) && *current_line == '/') {
       continue;
     }
 
-    // Last line of file won't have a new line
-    if (*(current_line + chars_read - 1) != '\n') {
-      *(current_line + chars_read) = '\n';
+    size_t left_length;
+    size_t right_length;
+    get_part_lengths(current_line, &left_length, &right_length);
+
+    // Skip empty lines
+    if (left_length + right_length == 0) {
+      continue;
     }
 
-    if (line_length == 1) {
+    // Right cannot have value if left is empty
+    if (left_length == 0) {
       error_invalid_line("Left is empty");
     }
 
     line_data_list = append_line_data(
         line_data_list, parse_line(current_line, left_length, right_length));
-    non_empty_line_found = true;
-  } while (chars_read != -1);
-  if (!non_empty_line_found) {
-    goto empty_file;
-  }
+  };
   goto success;
-
-empty_file:
-  // TODO print file name
-  printf("File is empty");
-  exit(1);
 
 success:
   free(current_line);
