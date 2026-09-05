@@ -80,7 +80,7 @@ int parse_left(const char **line, char **result) {
       error_invalid_line("Found end of left without finding :");
     }
 
-    (*result)[nextIndex] = tolower(currentChar);
+    (*result)[nextIndex] = (char)tolower(currentChar);
     nextIndex++;
     (*line)++;
   }
