@@ -2,6 +2,7 @@ add_executable(cross_class_cli)
 
 target_sources(cross_class_cli
     PRIVATE
+    shared_macros.h
     commands/command.c
     commands/command_list.c
     commands/help_command/help_command.c

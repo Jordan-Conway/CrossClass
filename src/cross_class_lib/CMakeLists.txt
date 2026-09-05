@@ -4,6 +4,7 @@ target_sources(cross_class_lib
     PRIVATE
     src/data_parser.c
     src/parsers/class_data_parser.c
+    src/shared_macros.h
     src/tokens.c
     src/version.c
     PUBLIC

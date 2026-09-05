@@ -2,6 +2,7 @@
 
 #include "../../includes/class_info.h"
 #include "../../includes/tokens.h"
+#include "../shared_macros.h"
 #include "ccx_line_data.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -176,7 +177,10 @@ struct Field_List *parse_fields(struct Line_Data_Node **line) {
 
 bool try_parse_class_data(struct Line_Data_Node *line,
                           struct Data_Parser_Result *result,
-                          const struct Version *) {
+                          const struct Version *version) {
+
+  UNUSED(version);
+
   struct Class_Info *class_info = create_default_class();
 
   struct Already_Set_Class_Attributes *already_set_tokens =
