@@ -14,8 +14,8 @@ const struct Version CURRENT_VERSION = {
 struct Version get_current_version() { return CURRENT_VERSION; }
 
 // Auxiliary function to minimize space
-void extend_supported_versions(struct Version_List **tail, int major, int minor,
-                               int patch) {
+void add_supported_version(struct Version_List **tail, int major, int minor,
+                           int patch) {
   (*tail)->next = malloc(sizeof(typeof(*((*tail)->next))));
   struct Version_List *new_version = (*tail)->next;
   new_version->data = malloc(sizeof(typeof((*new_version->data))));
@@ -36,8 +36,8 @@ struct Version_List *get_supported_versions() {
   version_list->next = NULL;
   version_list->prev = NULL;
 
-  extend_supported_versions(&version_list, 1, 0,
-                            0); // Initial supporting version
+  add_supported_version(&version_list, 1, 0,
+                        0); // Initial supporting version
   return version_list;
 }
 
@@ -53,6 +53,7 @@ bool ensure_version_supported(const struct Version *version) {
     return false; // Error case/No versions are supported
   }
 
+  // Walk the version list backwards
   bool valid = false;
   bool finished = false;
   while (!finished) {
@@ -60,8 +61,7 @@ bool ensure_version_supported(const struct Version *version) {
       if (supported_versions->prev == NULL) {
         finished = true;
       } else {
-        supported_versions =
-            supported_versions->prev; // As we did not wind back
+        supported_versions = supported_versions->prev;
       }
       continue;
     }
@@ -72,10 +72,8 @@ bool ensure_version_supported(const struct Version *version) {
       valid = true;
     } else if (version->minor > supported_versions->data->minor) {
       valid = false;
-    } else if (version->patch <= supported_versions->data->patch) {
-      valid = true;
     } else {
-      valid = false;
+      valid = true;
     }
   }
 
