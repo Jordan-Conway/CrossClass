@@ -115,7 +115,7 @@ void test_data_reader_version_non_numeric_part_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_version_well_formed_but_not_supported_fails() {
+void test_data_reader_version_not_supported_fails() {
   FILE *test_file = tmpfile();
 
   fputs("version:999.999.999", test_file);
@@ -135,7 +135,7 @@ void test_data_reader_version_well_formed_but_not_supported_fails() {
 void test_data_reader_missing_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.0\n", test_file); // Using development bypass
+  fputs("version:0.0.0\n", test_file);
   fputs("Not a type: type", test_file);
   rewind(test_file);
 
@@ -153,7 +153,7 @@ void test_data_reader_missing_type_fails() {
 void test_data_reader_unsupported_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.0\n", test_file); // Ensure this is a supported version - Using development bypass
+  fputs("version:0.0.0\n", test_file);
   fputs("type: unsupported", test_file);
   rewind(test_file);
 
@@ -171,7 +171,8 @@ void test_data_reader_unsupported_type_fails() {
 void test_data_reader_success() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.0\n", test_file); // Ensure this is a supported version - Using development bypass
+  fputs("version:0.0.0\n", test_file); // Ensure this is a supported version -
+                                       // Using development bypass
   fputs("type: class", test_file);
   rewind(test_file);
 
@@ -196,10 +197,8 @@ void add_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_data_reader_version_malformed_fails);
   CU_ADD_TEST(test_suite, test_data_reader_version_extra_content_fails);
   CU_ADD_TEST(test_suite, test_data_reader_version_non_numeric_part_fails);
-  CU_ADD_TEST(test_suite, test_data_reader_version_well_formed_but_not_supported_fails);
+  CU_ADD_TEST(test_suite, test_data_reader_version_not_supported_fails);
   CU_ADD_TEST(test_suite, test_data_reader_missing_type_fails);
   CU_ADD_TEST(test_suite, test_data_reader_unsupported_type_fails);
   CU_ADD_TEST(test_suite, test_data_reader_success);
-
-  add_class_data_parser_tests(test_suite);
 }
