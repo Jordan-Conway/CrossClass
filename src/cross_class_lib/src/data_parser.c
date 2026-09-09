@@ -78,7 +78,7 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
 
   // Compare against a supported version list
   if (!ensure_version_supported(version)) {
-    printf("This version of CrossClass does not support version %d:%d:%d\n",
+    printf("This version of CrossClass does not support version %d.%d.%d\n",
            version->major, version->minor, version->patch);
     free(version);
     return NULL;
