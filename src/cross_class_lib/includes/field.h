@@ -10,6 +10,7 @@ struct Field {
   enum StoreType store_type;
   char *name;
   bool isConstant;
+  bool equitable;
 };
 
 #endif

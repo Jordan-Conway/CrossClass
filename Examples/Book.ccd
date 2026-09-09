@@ -1,0 +1,32 @@
+version: 0.0.1
+
+type: class
+
+name: Book
+
+visibility: public
+
+equality: value
+
+fields:
+    field: 
+        name: isbn
+        type: string
+        visibility: public
+        const: true
+        store: ref
+        equitable: true
+    field:
+        name: name
+        type: string
+        visibility: public
+        const: false
+        store: ref
+        equitable: false
+    field: 
+        name: author
+        type: string
+        visibility: public
+        const: true
+        store: ref
+        equitable: false
