@@ -4,10 +4,12 @@
 #include "ccx_line_data.h"
 #include "ccx_reader.h"
 #include "data_parser.h"
+#include "version.h"
 #include <CUnit/CUnit.h>
 #include <CUnit/TestDB.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Generic function to test for an error
 void test_error_raised(const char source_func[], const int source_line,
@@ -27,6 +29,18 @@ void test_error_raised(const char source_func[], const int source_line,
     printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func,
            source_line);
   }
+}
+
+/* Returns a string formatted as "version:x.x.x\n" */
+char *get_version_string() {
+  struct Version current_version = get_current_version();
+  char *current_version_str = version_to_str(&current_version);
+  char *version_str = malloc(sizeof(char) * (strlen(current_version_str) + 8));
+  sprintf(version_str, "version:%s\n", current_version_str);
+
+  free(current_version_str);
+
+  return version_str;
 }
 
 void test_data_reader_missing_version_fails() {
@@ -135,7 +149,7 @@ void test_data_reader_version_not_supported_fails() {
 void test_data_reader_missing_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.0\n", test_file);
+  fputs(get_version_string(), test_file);
   fputs("Not a type: type", test_file);
   rewind(test_file);
 
@@ -153,7 +167,7 @@ void test_data_reader_missing_type_fails() {
 void test_data_reader_unsupported_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.0\n", test_file);
+  fputs(get_version_string(), test_file);
   fputs("type: unsupported", test_file);
   rewind(test_file);
 
@@ -171,8 +185,7 @@ void test_data_reader_unsupported_type_fails() {
 void test_data_reader_success() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.0\n", test_file); // Ensure this is a supported version -
-                                       // Using development bypass
+  fputs(get_version_string(), test_file);
   fputs("type: class", test_file);
   rewind(test_file);
 

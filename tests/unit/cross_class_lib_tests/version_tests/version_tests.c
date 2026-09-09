@@ -9,12 +9,12 @@ void test_version_to_str_returns_string_representation() {
   struct Version version = {.major = 1, .minor = 12, .patch = 1432};
 
   // Act
-  char *result = malloc(sizeof(char) * 10);
-  strncpy(result, version_to_str(&version), 9);
-  result[9] = '\0';
+  char *result = version_to_str(&version);
 
   // Assert
   CU_ASSERT_TRUE(strncmp(result, "1.12.1432", 10) == 0);
+
+  free(result);
 }
 
 void test_version_to_str_returns_null_if_version_is_null() {
