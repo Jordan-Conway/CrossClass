@@ -43,7 +43,7 @@ struct Version_List *get_supported_versions() {
 
 bool ensure_version_supported(const struct Version *version) {
   // DEVELOPMENT BYPASS - WILL BE REMOVED ONCE STABLE VERSIONS ARE HERE
-  if (version->major == 0) {
+  if (version->major == 0 && version->minor == 0 && version->patch == 0) {
     return true;
   }
 
