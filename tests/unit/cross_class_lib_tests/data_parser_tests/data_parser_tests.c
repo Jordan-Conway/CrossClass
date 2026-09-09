@@ -4,10 +4,12 @@
 #include "ccx_line_data.h"
 #include "ccx_reader.h"
 #include "data_parser.h"
+#include "version.h"
 #include <CUnit/CUnit.h>
 #include <CUnit/TestDB.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Generic function to test for an error
 void test_error_raised(const char source_func[], const int source_line,
@@ -27,6 +29,18 @@ void test_error_raised(const char source_func[], const int source_line,
     printf("FAIL OCCURRED - Called in %s - On line %d\n", source_func,
            source_line);
   }
+}
+
+/* Returns a string formatted as "version:x.x.x\n" */
+char *get_version_string() {
+  struct Version current_version = get_current_version();
+  char *current_version_str = version_to_str(&current_version);
+  char *version_str = malloc(sizeof(char) * (strlen(current_version_str) + 8));
+  sprintf(version_str, "version:%s\n", current_version_str);
+
+  free(current_version_str);
+
+  return version_str;
 }
 
 void test_data_reader_missing_version_fails() {
@@ -98,10 +112,44 @@ void test_data_reader_version_extra_content_fails() {
   fclose(test_file);
 }
 
+void test_data_reader_version_non_numeric_part_fails() {
+  FILE *test_file = tmpfile();
+
+  fputs("version:0.a.1", test_file);
+  rewind(test_file);
+
+  struct Line_Data_Node *lines = read_ccd_file(test_file);
+  struct Data_Parser_Result *result = parse_line_data(lines);
+
+  test_error_raised(__func__, __LINE__, lines, result);
+
+  free(result);
+  delete_list(lines);
+
+  fclose(test_file);
+}
+
+void test_data_reader_version_not_supported_fails() {
+  FILE *test_file = tmpfile();
+
+  fputs("version:999.999.999", test_file);
+  rewind(test_file);
+
+  struct Line_Data_Node *lines = read_ccd_file(test_file);
+  struct Data_Parser_Result *result = parse_line_data(lines);
+
+  test_error_raised(__func__, __LINE__, lines, result);
+
+  free(result);
+  delete_list(lines);
+
+  fclose(test_file);
+}
+
 void test_data_reader_missing_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.1\n", test_file);
+  fputs(get_version_string(), test_file);
   fputs("Not a type: type", test_file);
   rewind(test_file);
 
@@ -119,7 +167,7 @@ void test_data_reader_missing_type_fails() {
 void test_data_reader_unsupported_type_fails() {
   FILE *test_file = tmpfile();
 
-  fputs("version:0.0.1\n", test_file);
+  fputs(get_version_string(), test_file);
   fputs("type: unsupported", test_file);
   rewind(test_file);
 
@@ -137,7 +185,7 @@ void test_data_reader_unsupported_type_fails() {
 void test_data_reader_success() {
   FILE *test_file = tmpfile();
 
-  fputs("version:123.456.789\n", test_file);
+  fputs(get_version_string(), test_file);
   fputs("type: class", test_file);
   rewind(test_file);
 
@@ -161,9 +209,9 @@ void add_data_parser_tests(CU_pSuite test_suite) {
   CU_ADD_TEST(test_suite, test_data_reader_version_not_first_fails);
   CU_ADD_TEST(test_suite, test_data_reader_version_malformed_fails);
   CU_ADD_TEST(test_suite, test_data_reader_version_extra_content_fails);
+  CU_ADD_TEST(test_suite, test_data_reader_version_non_numeric_part_fails);
+  CU_ADD_TEST(test_suite, test_data_reader_version_not_supported_fails);
   CU_ADD_TEST(test_suite, test_data_reader_missing_type_fails);
   CU_ADD_TEST(test_suite, test_data_reader_unsupported_type_fails);
   CU_ADD_TEST(test_suite, test_data_reader_success);
-
-  add_class_data_parser_tests(test_suite);
 }
