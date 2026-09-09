@@ -3,12 +3,12 @@
 #include "../includes/parsers/class_data_parser.h"
 #include "../includes/tokens.h"
 #include "../includes/version.h"
+#include <ctype.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <limits.h>
 
 static struct Data_Parser_Result *create_default_result() {
   struct Data_Parser_Result *result =
@@ -32,41 +32,39 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
   int current_part = 0;
   bool part_empty = true;
   int char_index = 0;
-  while (version_string[char_index] != '\0'){
-    if (version_string[char_index] == '.'){
-      if (part_empty){
+  while (version_string[char_index] != '\0') {
+    if (version_string[char_index] == '.') {
+      if (part_empty) {
         printf("Malformed version found. Part of the version is empty, "
-           "instead found %s\n",
-           version_string);
+               "instead found %s\n",
+               version_string);
         return NULL;
       }
       current_part += 1;
-      if (current_part >= 3){
+      if (current_part >= 3) {
         printf("Malformed version found. Version should be formatted as x.x.x, "
-           "instead found %s\n",
-           version_string);
+               "instead found %s\n",
+               version_string);
         return NULL;
       };
       part_empty = true;
-    }
-    else if (isdigit(version_string[char_index]) == 0){
+    } else if (isdigit(version_string[char_index]) == 0) {
       printf("Malformed version found. Version should not contain non-numeric "
-           "characters as digits, instead found %s\n",
-           version_string);
+             "characters as digits, instead found %s\n",
+             version_string);
       return NULL;
-    }
-    else if (part_empty){
+    } else if (part_empty) {
       long int outcome = strtol(&version_string[char_index], NULL, 10);
-      if(outcome > INT_MAX || outcome < 0){
+      if (outcome > INT_MAX || outcome < 0) {
         parts[current_part] = INT_MAX;
-      } else{
+      } else {
         parts[current_part] = outcome;
       }
       part_empty = false;
     };
     char_index++;
   }
-  if(current_part != 2 || part_empty){
+  if (current_part != 2 || part_empty) {
     printf("Malformed version found. Version should be formatted as x.x.x, "
            "instead found %s\n",
            version_string);
@@ -79,8 +77,9 @@ struct Version *ensure_version(const struct Line_Data_Node *line) {
   version->patch = parts[2];
 
   // Compare against a supported version list
-  if(!ensure_version_supported(version)){
-    printf("This version of CrossClass does not support this file\n");
+  if (!ensure_version_supported(version)) {
+    printf("This version of CrossClass does not support version %d:%d:%d\n",
+           version->major, version->minor, version->patch);
     free(version);
     return NULL;
   }
