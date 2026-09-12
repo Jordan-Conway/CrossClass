@@ -12,8 +12,8 @@ const int indentation = 4;
 
 static const char *export_type_string = "export type ";
 static const int export_type_length = 12;
-static const char *post_type_name_suffix_string = " {";
-static const int post_type_name_suffix_length = 2;
+static const char *post_type_name_suffix_string = " = {";
+static const int post_type_name_suffix_length = 4;
 
 struct Transpiled_Line *next_line(struct Transpiled_Line *current_line) {
   struct Transpiled_Line *next_line = malloc(sizeof(typeof(*next_line)));
@@ -44,11 +44,35 @@ char *data_type_to_typescript_type(enum DataType type) {
     return "number";
   case DATA_BOOL:
     return "boolean";
+  case DATA_DATE:
+  case DATA_TIME:
+  case DATA_DATETIME:
+    return "Date";
   default:
     // TODO: Replace with actual type at some point
     printf("Encountered unknown type %d\n", type);
     return "";
   }
+}
+
+char *create_type_declaration_line(const char *type_name) {
+  // export type <type_name> = {
+  int type_name_length = strlen(type_name);
+  int type_line_length =
+      type_name_length + export_type_length + post_type_name_suffix_length + 1;
+
+  char *line = malloc(sizeof(char) * type_line_length);
+  char *line_ptr = line;
+
+  strncpy(line_ptr, export_type_string, export_type_length);
+  line_ptr += export_type_length;
+  strncpy(line_ptr, type_name, type_name_length);
+  line_ptr += type_name_length;
+  strncpy(line_ptr, post_type_name_suffix_string, post_type_name_suffix_length);
+  line_ptr += post_type_name_suffix_length;
+  *line_ptr = '\0';
+
+  return line;
 }
 
 char *create_field_line(const struct Field_List *field) {
@@ -85,17 +109,7 @@ transpile_typescript(const struct Class_Info *class_info) {
   struct Transpiled_Line *first_line = next_line(NULL);
   struct Transpiled_Line *current_line = first_line;
 
-  // export type <type_name> {
-  int type_name_length = strlen(class_info->name);
-  int type_line_length =
-      type_name_length + export_type_length + post_type_name_suffix_length + 1;
-  current_line->data = malloc(sizeof(char) * type_line_length);
-  strncpy(current_line->data, export_type_string, export_type_length);
-  strncpy(current_line->data + export_type_length, class_info->name,
-          type_name_length);
-  strncpy(current_line->data + export_type_length + type_name_length,
-          post_type_name_suffix_string, post_type_name_suffix_length);
-  current_line->data[type_line_length] = '\0';
+  current_line->data = create_type_declaration_line(class_info->name);
   current_line = next_line(current_line);
 
   // add fields

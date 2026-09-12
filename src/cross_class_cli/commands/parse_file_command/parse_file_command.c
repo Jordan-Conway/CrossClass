@@ -1,19 +1,28 @@
 #include "./parse_file_command.h"
-#include "../../shared_macros.h"
 #include "../command.h"
 #include "ccx_line_data.h"
 #include "ccx_reader.h"
 #include "data_parser.h"
+#include "file_writer.h"
+#include "transpilers/transpiler.h"
+#include "transpilers/typescript_transpiler.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 struct Command_Result parse_file_command(int argc, char *argv[]) {
-  UNUSED(argc);
+  if (argc != 2) {
+    // TODO: include usage information
+    printf("Parse file requires 2 arguments\n");
+    exit(1);
+  }
+
+  char *input_file = argv[0];
+  char *output_file = argv[1];
 
   struct Command_Result result = {.status = COMMAND_RESULT_NOT_SET,
                                   .message = ""};
 
-  FILE *fptr = fopen(argv[0], "r");
+  FILE *fptr = fopen(input_file, "r");
 
   if (fptr == NULL) {
     result.status = COMMAND_RESULT_FAILURE;
@@ -22,6 +31,8 @@ struct Command_Result parse_file_command(int argc, char *argv[]) {
   }
 
   struct Line_Data_Node *line_list = read_ccd_file(fptr);
+  fclose(fptr);
+
   struct Data_Parser_Result *parse_result = parse_line_data(line_list);
 
   if (parse_result->error_message) {
@@ -30,9 +41,12 @@ struct Command_Result parse_file_command(int argc, char *argv[]) {
     printf("Parsed successfully\n");
   }
 
+  struct Transpiled_Line *transpiled_lines =
+      transpile_typescript(parse_result->result);
+  write_to_file(transpiled_lines, output_file);
+
   delete_list(line_list);
   free(parse_result);
-  fclose(fptr);
 
   result.status = COMMAND_RESULT_SUCCESS;
   result.message = "Ok";

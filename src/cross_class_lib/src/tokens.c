@@ -10,11 +10,11 @@ enum DataType data_type_from_str(char *str) {
   match(str, "char", DATA_CHAR);
   match(str, "string", DATA_STRING);
 
-  match(str, "i8", DATA_INT8);
-  match(str, "i16", DATA_INT16);
-  match(str, "i32", DATA_INT32);
-  match(str, "i64", DATA_INT64);
-  match(str, "i128", DATA_INT128);
+  match(str, "int8", DATA_INT8);
+  match(str, "int16", DATA_INT16);
+  match(str, "int32", DATA_INT32);
+  match(str, "int64", DATA_INT64);
+  match(str, "int128", DATA_INT128);
 
   match(str, "float", DATA_FLOAT);
   match(str, "double", DATA_DOUBLE);
