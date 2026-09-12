@@ -3,16 +3,21 @@ add_library(cross_class_lib SHARED)
 target_sources(cross_class_lib
     PRIVATE
     src/data_parser.c
+    src/file_writer.c
     src/parsers/class_data_parser.c
     src/shared_macros.h
     src/tokens.c
+    src/transpilers/typescript_transpiler.c
     src/version.c
     PUBLIC
     includes/class_info.h
     includes/data_parser.h
     includes/field.h
+    includes/file_writer.h
     includes/linked_list.h
     includes/tokens.h
+    includes/transpilers/transpiler.h
+    includes/transpilers/typescript_transpiler.h
     includes/parsers/class_data_parser.h)
 
 target_include_directories(

@@ -10,7 +10,7 @@ struct Version {
   int patch;
 };
 
-LIST_NODE(Version_List, Version)
+LIST_NODE(Version_List, struct Version)
 
 struct Version get_current_version();
 

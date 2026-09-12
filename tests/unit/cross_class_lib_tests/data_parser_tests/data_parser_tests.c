@@ -1,6 +1,5 @@
 #include "./data_parser_tests.h"
 
-#include "./class_data_parser_tests/class_data_parser_tests.h"
 #include "ccx_line_data.h"
 #include "ccx_reader.h"
 #include "data_parser.h"
