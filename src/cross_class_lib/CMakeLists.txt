@@ -6,6 +6,7 @@ target_sources(cross_class_lib
     src/parsers/class_data_parser.c
     src/shared_macros.h
     src/tokens.c
+    src/transpilers/typescript_transpiler.c
     src/version.c
     PUBLIC
     includes/class_info.h
@@ -13,6 +14,8 @@ target_sources(cross_class_lib
     includes/field.h
     includes/linked_list.h
     includes/tokens.h
+    includes/transpilers/transpiler.h
+    includes/transpilers/typescript_transpiler.h
     includes/parsers/class_data_parser.h)
 
 target_include_directories(

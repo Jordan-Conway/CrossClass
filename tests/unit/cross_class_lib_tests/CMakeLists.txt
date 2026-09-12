@@ -7,6 +7,10 @@ target_sources(cross_class_lib_tests
     data_parser_tests/data_parser_tests.c
     data_parser_tests/class_data_parser_tests/class_data_parser_tests.h
     data_parser_tests/class_data_parser_tests/class_data_parser_tests.c
+    transpiler_tests/transpiler_tests.h
+    transpiler_tests/transpiler_tests.c
+    transpiler_tests/typescript_transpiler_tests.h
+    transpiler_tests/typescript_transpiler_tests.c
     version_tests/version_tests.h
     version_tests/version_tests.c
     PUBLIC
