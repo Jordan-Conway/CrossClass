@@ -5,7 +5,7 @@
 #include "./linked_list.h"
 #include "./tokens.h"
 
-LIST_NODE(Field_List, Field)
+LIST_NODE(Field_List, struct Field)
 
 struct Class_Info {
   enum Visibility visibility;
