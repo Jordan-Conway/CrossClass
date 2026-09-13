@@ -7,6 +7,7 @@ target_sources(cross_class_lib
     src/parsers/class_data_parser.c
     src/shared_macros.h
     src/tokens.c
+    src/transpilers/transpiler.c
     src/transpilers/typescript_transpiler.c
     src/version.c
     PUBLIC
