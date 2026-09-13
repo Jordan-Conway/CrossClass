@@ -11,7 +11,11 @@ void write_to_file(const struct Transpiled_Line *line, const char *file_path) {
   }
 
   while (line != NULL) {
-    fprintf(file, "%s\n", line->data);
+    if (line->data == NULL) {
+      fprintf(file, "\n");
+    } else {
+      fprintf(file, "%s\n", line->data);
+    }
     line = line->next;
   }
 
