@@ -1,8 +1,8 @@
 #include "../includes/data_parser.h"
 
-#include "../includes/parsers/class_data_parser.h"
 #include "../includes/tokens.h"
 #include "../includes/version.h"
+#include "./parsers/class_data_parser.h"
 #include <ctype.h>
 #include <limits.h>
 #include <stdbool.h>

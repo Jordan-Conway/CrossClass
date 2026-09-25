@@ -4,10 +4,10 @@ target_sources(cross_class_lib
     PRIVATE
     src/data_parser.c
     src/file_writer.c
+    src/parsers/class_data_parser.h
     src/parsers/class_data_parser.c
     src/shared_macros.h
     src/tokens.c
-    src/transpilers/transpiler.c
     src/transpilers/typescript_transpiler.c
     src/version.c
     PUBLIC
@@ -18,8 +18,7 @@ target_sources(cross_class_lib
     includes/linked_list.h
     includes/tokens.h
     includes/transpilers/transpiler.h
-    includes/transpilers/typescript_transpiler.h
-    includes/parsers/class_data_parser.h)
+    includes/transpilers/typescript_transpiler.h)
 
 target_include_directories(
     cross_class_lib

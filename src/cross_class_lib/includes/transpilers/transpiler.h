@@ -5,7 +5,4 @@
 
 LIST_NODE(Transpiled_Line, char)
 
-extern const char *equality_param_a_name;
-extern const char *equality_param_b_name;
-
 #endif

@@ -1,4 +1,4 @@
-#include "../../includes/parsers/class_data_parser.h"
+#include "./class_data_parser.h"
 
 #include "../../includes/class_info.h"
 #include "../../includes/tokens.h"

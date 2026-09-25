@@ -1,8 +1,8 @@
 #include "../../includes/transpilers/typescript_transpiler.h"
+
 #include "class_info.h"
 #include "tokens.h"
 #include "transpilers/transpiler.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

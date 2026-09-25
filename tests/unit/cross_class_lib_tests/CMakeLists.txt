@@ -1,5 +1,10 @@
 add_library(cross_class_lib_tests SHARED)
 
+target_include_directories(cross_class_lib_tests
+    PRIVATE
+    ../../../src/cross_class_lib/src/
+)
+
 target_sources(cross_class_lib_tests
     PRIVATE
     cross_class_lib_tests.c
