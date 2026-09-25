@@ -33,6 +33,11 @@ struct Command_Data *parse_command(int argc, char *argv[]) {
     goto parsed;
   }
 
+  if (strcmp(argv[0], "list-transpilers") == 0) {
+    result = &List_Transpilers_Command_Data;
+    goto parsed;
+  }
+
   // For now, we'll assume it's a parse file command
   if (!result->command_function) {
     result = &Parse_File_Command_Data;

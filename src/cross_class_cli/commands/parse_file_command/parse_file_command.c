@@ -8,16 +8,18 @@
 #include "transpilers/typescript_transpiler.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct Command_Result parse_file_command(int argc, char *argv[]) {
-  if (argc != 2) {
-    // TODO: include usage information
-    printf("Parse file requires 2 arguments\n");
+  if (argc != 3) {
+    printf("Usage:\n");
+    printf("cross_class_cli <transpiler> <input-file> <output-file>\n");
     exit(1);
   }
 
-  char *input_file = argv[0];
-  char *output_file = argv[1];
+  char *transpiler = argv[0];
+  char *input_file = argv[1];
+  char *output_file = argv[2];
 
   struct Command_Result result = {.status = COMMAND_RESULT_NOT_SET,
                                   .message = ""};
@@ -41,9 +43,20 @@ struct Command_Result parse_file_command(int argc, char *argv[]) {
     printf("Parsed successfully\n");
   }
 
-  struct Transpiled_Line *transpiled_lines =
-      transpile_typescript(parse_result->result);
-  write_to_file(transpiled_lines, output_file);
+  struct Transpiled_Line *(*transpiler_command_ptr)(
+      const struct Class_Info *class_info) = NULL;
+
+  if (strcmp(transpiler, "ts") == 0) {
+    transpiler_command_ptr = transpile_typescript;
+  }
+
+  if (transpiler_command_ptr == NULL) {
+    printf("%s is not recognised as a valid transpiler\n", transpiler);
+  } else {
+    struct Transpiled_Line *transpiled_lines =
+        transpiler_command_ptr(parse_result->result);
+    write_to_file(transpiled_lines, output_file);
+  }
 
   delete_list(line_list);
   free(parse_result);

@@ -3,6 +3,7 @@
 #include "./help_command/help_command.h"
 #include "./parse_file_command/parse_file_command.h"
 #include "./version_command/version_command.h"
+#include "list_transpilers_command/list_transpilers_command.h"
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -16,6 +17,11 @@ struct Command_Data Help_Command_Data = {.command_function = help_command,
                                          .type = VC_HELP,
                                          .validate_args =
                                              &default_validate_args};
+
+struct Command_Data List_Transpilers_Command_Data = {
+    .command_function = list_transpiler_command,
+    .type = VC_LIST_TRANSPILERS,
+    .validate_args = &default_validate_args};
 
 struct Command_Data Parse_File_Command_Data = {
     .command_function = parse_file_command,
