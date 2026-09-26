@@ -31,7 +31,7 @@ void test_error_raised(const char source_func[], const int source_line,
 }
 
 /* Returns a string formatted as "version:x.x.x\n" */
-char *get_version_string() {
+char *get_version_string(void) {
   struct Version current_version = get_current_version();
   char *current_version_str = version_to_str(&current_version);
   char *version_str = malloc(sizeof(char) * (strlen(current_version_str) + 8));
@@ -42,7 +42,7 @@ char *get_version_string() {
   return version_str;
 }
 
-void test_data_reader_missing_version_fails() {
+void test_data_reader_missing_version_fails(void) {
   FILE *test_file = tmpfile();
 
   fputs("Not a version: 0.0.1\n", test_file);
@@ -59,7 +59,7 @@ void test_data_reader_missing_version_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_version_not_first_fails() {
+void test_data_reader_version_not_first_fails(void) {
   FILE *test_file = tmpfile();
 
   fputs("Not a version: 0.0.1", test_file);
@@ -77,7 +77,7 @@ void test_data_reader_version_not_first_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_version_malformed_fails() {
+void test_data_reader_version_malformed_fails(void) {
   FILE *test_file = tmpfile();
 
   fputs("version:0.1", test_file);
@@ -94,7 +94,7 @@ void test_data_reader_version_malformed_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_version_extra_content_fails() {
+void test_data_reader_version_extra_content_fails(void) {
   FILE *test_file = tmpfile();
 
   fputs("version:0.0.1.2", test_file);
@@ -111,7 +111,7 @@ void test_data_reader_version_extra_content_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_version_non_numeric_part_fails() {
+void test_data_reader_version_non_numeric_part_fails(void) {
   FILE *test_file = tmpfile();
 
   fputs("version:0.a.1", test_file);
@@ -128,7 +128,7 @@ void test_data_reader_version_non_numeric_part_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_version_not_supported_fails() {
+void test_data_reader_version_not_supported_fails(void) {
   FILE *test_file = tmpfile();
 
   fputs("version:999.999.999", test_file);
@@ -145,7 +145,7 @@ void test_data_reader_version_not_supported_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_missing_type_fails() {
+void test_data_reader_missing_type_fails(void) {
   FILE *test_file = tmpfile();
 
   fputs(get_version_string(), test_file);
@@ -163,7 +163,7 @@ void test_data_reader_missing_type_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_unsupported_type_fails() {
+void test_data_reader_unsupported_type_fails(void) {
   FILE *test_file = tmpfile();
 
   fputs(get_version_string(), test_file);
@@ -181,7 +181,7 @@ void test_data_reader_unsupported_type_fails() {
   fclose(test_file);
 }
 
-void test_data_reader_success() {
+void test_data_reader_success(void) {
   FILE *test_file = tmpfile();
 
   fputs(get_version_string(), test_file);

@@ -26,7 +26,7 @@ void assert_lines_are(const struct Transpiled_Line *line, int num_lines, ...) {
   CU_ASSERT_PTR_NULL(line);
 }
 
-void test_transpiles_valid_class_info() {
+void test_transpiles_valid_class_info(void) {
   // Arrange
   struct Field first_field = {
       .name = "first_field", .data_type = DATA_BOOL, .equitable = true};
