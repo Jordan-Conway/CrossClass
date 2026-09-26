@@ -10,7 +10,9 @@
             "request": "launch",
             "program": "${workspaceFolder}/bin/cross_class_cli",
             "args": [
-                "${workspaceFolder}/Examples/Person.ccd"
+                "ts",
+                "${workspaceFolder}/Examples/Person.ccd",
+                "${workspaceFolder}/Examples/Person.ts"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
