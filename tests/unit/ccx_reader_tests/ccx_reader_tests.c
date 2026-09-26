@@ -30,7 +30,7 @@ void assert_expected_line(const char source_func[], const int source_line,
 }
 
 // Tests
-void test_read_ccd_file() {
+void test_read_ccd_file(void) {
   FILE *file = tmpfile();
 
   fputs("version:0.1\n", file);
@@ -69,7 +69,7 @@ void test_read_ccd_file() {
   fclose(file);
 }
 
-void test_read_ccd_file_handle_spaces() {
+void test_read_ccd_file_handle_spaces(void) {
   FILE *file = tmpfile();
 
   fputs("ver sion:0 .1", file);
@@ -87,7 +87,7 @@ void test_read_ccd_file_handle_spaces() {
   fclose(file);
 }
 
-void test_read_ccd_file_lowercase_left() {
+void test_read_ccd_file_lowercase_left(void) {
   FILE *file = tmpfile();
 
   fputs("lowercase left:lowercase right\n", file);
@@ -121,7 +121,7 @@ void test_read_ccd_file_lowercase_left() {
   fclose(file);
 }
 
-void test_trailing_whitespace_is_trimmed() {
+void test_trailing_whitespace_is_trimmed(void) {
   FILE *file = tmpfile();
 
   fputs("nothing trailing:nothing trailing\n", file);
@@ -165,7 +165,7 @@ void test_trailing_whitespace_is_trimmed() {
   fclose(file);
 }
 
-void test_arbitrary_line_lengths() {
+void test_arbitrary_line_lengths(void) {
   char long_string[100] = {'a'};
   long_string[99] = '\n';
 
@@ -210,7 +210,7 @@ void test_arbitrary_line_lengths() {
   fclose(file);
 }
 
-void test_handle_whitespace_lines() {
+void test_handle_whitespace_lines(void) {
   FILE *file = tmpfile();
 
   fputs("\n", file);

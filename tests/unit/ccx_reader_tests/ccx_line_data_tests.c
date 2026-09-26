@@ -5,7 +5,7 @@
 #include <time.h>
 
 // Helper functions
-struct Line_Data *create_empty_line_data() {
+struct Line_Data *create_empty_line_data(void) {
   struct Line_Data *data =
       (struct Line_Data *)calloc(1, sizeof(struct Line_Data));
   data->left = (char *)malloc(100 * sizeof(char));
@@ -16,7 +16,7 @@ struct Line_Data *create_empty_line_data() {
 }
 
 // Tests
-void test_line_data_equality() {
+void test_line_data_equality(void) {
   struct Line_Data original = {
       .indentation = 4, .left = "int", .right = "count"};
   struct Line_Data copy = {.indentation = 4, .left = "int", .right = "count"};
@@ -38,7 +38,7 @@ void test_line_data_equality() {
   CU_ASSERT_FALSE(line_data_equality(&original, &bad_right));
 }
 
-void test_line_data_list_count_ahead() {
+void test_line_data_list_count_ahead(void) {
   struct Line_Data *dummy_data = create_empty_line_data();
 
   struct Line_Data_Node head = {.data = dummy_data, .next = NULL, .prev = NULL};
@@ -54,7 +54,7 @@ void test_line_data_list_count_ahead() {
   CU_ASSERT(count_ahead(&tail) == 0);
 }
 
-void test_create_line_data_list() {
+void test_create_line_data_list(void) {
   struct Line_Data_Node *list = create_line_data_list();
   struct Line_Data_Node *expected_list =
       (struct Line_Data_Node *)calloc(1, sizeof(struct Line_Data_Node));
@@ -71,7 +71,7 @@ void test_create_line_data_list() {
   delete_list(expected_list);
 }
 
-void test_append_line_data() {
+void test_append_line_data(void) {
   struct Line_Data_Node *list = create_line_data_list();
 
   struct Line_Data *line_data_1 = create_empty_line_data();
@@ -105,7 +105,7 @@ void test_append_line_data() {
   delete_list(list);
 }
 
-void test_append_line_data_null_head() {
+void test_append_line_data_null_head(void) {
   struct Line_Data_Node *head = NULL;
 
   struct Line_Data *line_data = create_empty_line_data();
@@ -124,7 +124,7 @@ void test_append_line_data_null_head() {
   delete_list(head);
 }
 
-void test_get_head_of_line_data_list() {
+void test_get_head_of_line_data_list(void) {
   struct Line_Data_Node *list = create_line_data_list();
 
   struct Line_Data *data1 = create_empty_line_data();

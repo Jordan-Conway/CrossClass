@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void test_ensure_version_supported_higher_version_returns_false() {
+void test_ensure_version_supported_higher_version_returns_false(void) {
   // Arrange
   struct Version current_version = get_current_version();
 
@@ -25,7 +25,7 @@ void test_ensure_version_supported_higher_version_returns_false() {
   CU_ASSERT_FALSE(higher_minor_result);
 }
 
-void test_ensure_version_supported_current_version_returns_true() {
+void test_ensure_version_supported_current_version_returns_true(void) {
   // Arrange
   struct Version current_version = get_current_version();
 
@@ -36,7 +36,7 @@ void test_ensure_version_supported_current_version_returns_true() {
   CU_ASSERT_TRUE(result);
 }
 
-void test_ensure_version_patch_is_ignored() {
+void test_ensure_version_patch_is_ignored(void) {
   // Arrange
   struct Version current_version = get_current_version();
   current_version.patch += 10;
@@ -48,7 +48,7 @@ void test_ensure_version_patch_is_ignored() {
   CU_ASSERT_TRUE(result);
 }
 
-void test_version_to_str_returns_string_representation() {
+void test_version_to_str_returns_string_representation(void) {
   // Arrange
   struct Version version = {.major = 1, .minor = 12, .patch = 1432};
 
@@ -61,7 +61,7 @@ void test_version_to_str_returns_string_representation() {
   free(result);
 }
 
-void test_version_to_str_returns_null_if_version_is_null() {
+void test_version_to_str_returns_null_if_version_is_null(void) {
   // Act
   char *result = version_to_str(NULL);
 

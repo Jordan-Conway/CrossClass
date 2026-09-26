@@ -13,12 +13,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Version create_default_version() {
+struct Version create_default_version(void) {
   struct Version version = {.major = 0, .minor = 0, .patch = 1};
   return version;
 }
 
-static struct Data_Parser_Result create_default_result() {
+static struct Data_Parser_Result create_default_result(void) {
   struct Data_Parser_Result result = {
       .is_error = false, .error_message = NULL, .result = NULL};
   return result;
@@ -59,7 +59,7 @@ void assert_field_equality(const struct Field *expected,
   CU_ASSERT(expected->visibility == actual->visibility);
 }
 
-void test_class_data_parser_no_details_returns_default_values() {
+void test_class_data_parser_no_details_returns_default_values(void) {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
 
@@ -76,7 +76,7 @@ void test_class_data_parser_no_details_returns_default_values() {
   free(class_info);
 }
 
-void test_class_data_parser_name_is_parsed() {
+void test_class_data_parser_name_is_parsed(void) {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
   struct Line_Data *line_data =
@@ -97,7 +97,7 @@ void test_class_data_parser_name_is_parsed() {
   free(class_info);
 }
 
-void test_class_data_parser_visibilty_is_parsed() {
+void test_class_data_parser_visibilty_is_parsed(void) {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
   struct Line_Data *line_data =
@@ -118,7 +118,7 @@ void test_class_data_parser_visibilty_is_parsed() {
   free(class_info);
 }
 
-void test_class_data_parser_equality_is_parsed() {
+void test_class_data_parser_equality_is_parsed(void) {
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
   struct Line_Data *line_data =
@@ -136,7 +136,7 @@ void test_class_data_parser_equality_is_parsed() {
   free(line_data);
 }
 
-void test_class_data_parser_fields_are_parsed() {
+void test_class_data_parser_fields_are_parsed(void) {
   // Arrange
   struct Version version = create_default_version();
   struct Data_Parser_Result result = create_default_result();
@@ -228,7 +228,7 @@ void test_class_data_parser_rejects_duplicate_attribute_in_field(
   free(line_data_list);
 }
 
-void test_class_data_parser_rejects_duplicate_attributes_in_field() {
+void test_class_data_parser_rejects_duplicate_attributes_in_field(void) {
   test_class_data_parser_rejects_duplicate_attribute_in_field("name");
   test_class_data_parser_rejects_duplicate_attribute_in_field("type");
   test_class_data_parser_rejects_duplicate_attribute_in_field("visibility");
@@ -267,7 +267,7 @@ void test_class_data_parser_rejects_duplicate_token(char *duplicate_field,
   free(line_data_list);
 }
 
-void test_class_data_parser_rejects_duplicate_tokens() {
+void test_class_data_parser_rejects_duplicate_tokens(void) {
   test_class_data_parser_rejects_duplicate_token("name", "test_name");
   test_class_data_parser_rejects_duplicate_token("visibility", "public");
   test_class_data_parser_rejects_duplicate_token("equality", "ref");
