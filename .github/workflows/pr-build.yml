@@ -1,6 +1,9 @@
 name: PR Build Check
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -18,3 +21,6 @@ jobs:
       
       - name: Run Tests
         run: ./.ci/test.sh
+
+      - name: Run E2E Tests
+        run: ./.ci/run_e2e_tests.sh -s

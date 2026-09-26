@@ -64,3 +64,7 @@ lib/
 
 # reports
 reports
+
+# test output
+tests/e2e/test_data/output/*
+!tests/e2e/test_data/output/.gitkeep
