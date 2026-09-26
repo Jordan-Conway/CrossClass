@@ -1,0 +1,30 @@
+// Defines a public class called Person
+version: 0.0.1
+
+type: class
+
+name: Person
+
+visibility: public
+
+equality: value
+
+fields:
+    field: 
+        name: name
+        type: string
+        visibility: public
+        const: false
+        store: ref
+    field:
+        name: age
+        type: int32
+        visibility: public
+        const: false
+        store: value
+    field: 
+        name: date_of_birth
+        type: date
+        visibility: private
+        const: true
+        store: ref
