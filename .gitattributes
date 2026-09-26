@@ -1,0 +1,5 @@
+# Ignore files used for ci and
+.ci/** linguist-documentation
+
+# Ignore test data files for E2E tests
+tests/e2e/test_data/** linguist-documentation
